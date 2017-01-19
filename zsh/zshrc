@@ -1,0 +1,128 @@
+export USE_ZSH="1"
+
+# Disable ctrl+S
+stty -ixon
+
+# ZPlug plugin manager
+source /usr/share/zsh/scripts/zplug/init.zsh
+zplug "zplug/zplug"
+#zplug "miekg/lean"
+zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zsh-users/zsh-history-substring-search"
+zplug "zsh-users/zsh-completions"
+#zplug "zsh-users/zsh-autosuggestions"
+zplug "rupa/z", use:z.sh
+
+#Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+   printf "Install? [y/N]: "
+   if read -q; then
+      echo; zplug install
+   fi
+fi
+zplug load #--verbose
+
+#################################
+# Main configuration
+
+# Autoload zsh command completion
+autoload -U compinit
+
+# Cd to directory if command is a directory
+setopt autocd
+
+# Do not close bg processes when leaving
+#unsetopt hup
+
+# Make cd behave like pushd
+setopt pushdtohome autopushd
+
+# Do not allow terminal to be frozen with ^s/^q
+unsetopt flowcontrol
+
+# do not autoselect the first completion entry
+unsetopt menu_complete
+
+# Show completion menu on succesive tab press
+setopt auto_menu
+
+# Complete at cursor position (ie: "M[CURSOR]file" to "Makefile")
+setopt complete_in_word
+
+# Cursor is moved to end of word after completion
+setopt always_to_end
+
+# Enable extended glob, e.g. "rm ^*sysc" to match all files that dont end in "sysc"
+setopt extendedglob
+
+# Completion style
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*' #case insensitive completion
+zstyle ':completion:*' special-dirs true #completion for cd ..
+zstyle ':completion:*:sudo::' environ PATH="$PATH:/sbin:/usr/sbin" #Update autocompletion path for sudo
+compinit
+
+#Sane defaults for history
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+setopt append_history
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups # ignore duplication command history list
+setopt hist_ignore_space
+setopt hist_verify
+setopt inc_append_history
+setopt share_history # share command history data
+
+# LS_COLORS
+eval `dircolors $HOME/src/dircolors-solarized/dircolors.256dark`
+
+# Completion for cd ..
+zstyle ':completion:*' special-dirs true
+# Use LS_COLORS for completion
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# Set some defaults
+export EDITOR="nvim"
+export PAGER="less"
+export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
+
+# Bind useful keys
+bindkey -v
+bindkey "^[[7~" beginning-of-line
+bindkey "^A" beginning-of-line
+bindkey "^[[8~" end-of-line
+bindkey "^E" end-of-line
+bindkey "^[[3~" delete-char
+#bindkey -a "^[[3~" delete-char
+bindkey "^[[2~" overwrite-mode
+bindkey "^[[5~" beginning-of-buffer-or-history
+bindkey "^[[6~" end-of-buffer-or-history
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+bindkey -v '^?' backward-delete-char
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+# Avoid waiting for escape timeouts
+export KEYTIMEOUT=1
+
+# Auto-suggestions
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=10"
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+#bindkey '^ ' autosuggest-accept
+
+# Prepare ruby
+eval "$(rbenv init -)"
+export PATH="$PATH:/home/rui/.gem/ruby/2.4.0/bin"
+
+###############################
+# Source custom scripts
+source $HOME/dotfiles/zsh/zsh_main.zsh

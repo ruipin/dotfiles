@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=MusicBee
+Exec=env WINEPREFIX="/home/rui/.wine32-MusicBee" WINEDEBUG="-all" wine "C:/Program Files/MusicBee/MusicBee.exe"
+StartupNotify=true

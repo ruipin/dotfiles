@@ -400,7 +400,7 @@ function! InsertModeTab()
 	endif
 
 	" Get current column
-	let curcol = col('.')
+	let curcol = virtcol('.')
 
 	" Check if line is empty or whitespace-only
 	let line_empty = ( strlen(Strip(getline('.'))) <= 0 )
@@ -469,6 +469,7 @@ nnoremap <leader>g :GitFiles<CR>
 nnoremap <C-P> :Files<CR>
 
 " NERDtree
+map <C-n> :NERDTreeToggle<CR>
 " Start automatically if no files specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -477,6 +478,3 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 " Close vim if only NERDtree left
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" Ruby syntax highlighting
-let ruby_no_expensive=1

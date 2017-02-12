@@ -63,6 +63,9 @@ bindsym $mod+s layout stacking
 bindsym $mod+t layout tabbed
 bindsym $mod+e layout toggle split
 
+# If a window requests focus, give it to it
+focus_on_window_activation focus
+
 # Mod+Space switches to PREFIX mode
 set $prefix_mode PREFIX
 bindsym $mod+space mode "$prefix_mode"
@@ -205,4 +208,4 @@ assign [class="skype"] $ws10
 exec --no-startup-id skypeforlinux
 
 # For rails browser testing
-assign [class="Chromium-browser"] 11
+assign [class="Chromium-browser"] $ws2

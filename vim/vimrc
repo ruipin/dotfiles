@@ -392,6 +392,14 @@ function! Strip(input_string)
 	return substitute(a:input_string, '^\s*\(.\{-}\)\s*$', '\1', '')
 endfunction
 
+function! GetTabCharacters()
+	if &expandtab
+		return repeat(' ', &tabstop)
+	else
+		return '\<Tab>'
+	endif
+endfunction
+
 function! InsertModeTab()
 	" If auto-complete is visible
 	" insert current choice
@@ -411,13 +419,13 @@ function! InsertModeTab()
 		" If cursor is before cindent, add spaces until correct indent, then
 		" delete rest of line
 		if curcol < curcindent
-			return "\<C-O>0\<C-O>\"_D" . repeat('	', (curcindent/&tabstop))
-			"return "\<C-O>0\<C-O>\"_D" . repeat(' ', curcindent-1)
+			return "\<C-O>0\<C-O>\"_D" . repeat(GetTabCharacters(), (curcindent/&tabstop))
 
 		" Otherwise, insert a Tab
 		else
-			return "	"
+			return GetTabCharacters()
 		endif
+
 	else
 		let curindent = indent('.')+1 " get indent of existing text
 
@@ -427,9 +435,8 @@ function! InsertModeTab()
 
 		" Otherwise, insert a tab
 		else
-			return "	"
+			return GetTabCharacters()
 		endif
-
 	endif
 endfunction
 
@@ -470,6 +477,7 @@ nnoremap <C-P> :Files<CR>
 
 " NERDtree
 map <C-n> :NERDTreeToggle<CR>
+let NERDTreeIgnore = ['\.pyc$']
 " Start automatically if no files specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif

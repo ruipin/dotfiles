@@ -4,14 +4,15 @@ export USE_ZSH="1"
 stty -ixon
 
 # ZPlug plugin manager
+export ZPLUG_HOME=$HOME/.zplug
 source /usr/share/zsh/scripts/zplug/init.zsh
 zplug "zplug/zplug"
 #zplug "miekg/lean"
-zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-completions"
 #zplug "zsh-users/zsh-autosuggestions"
-zplug "rupa/z", use:z.sh
+#zplug "rupa/z", use:z.sh
 
 #Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -26,6 +27,7 @@ zplug load #--verbose
 # Main configuration
 
 # Autoload zsh command completion
+fpath=($HOME/.zsh/zimg/completion $fpath)
 autoload -U compinit
 
 # Cd to directory if command is a directory
@@ -40,14 +42,23 @@ setopt pushdtohome autopushd
 # Do not allow terminal to be frozen with ^s/^q
 unsetopt flowcontrol
 
-# do not autoselect the first completion entry
+# For ambiguous completion, show completion menu on succesive tab press
+setopt auto_menu
+
+# For ambiguous completion, only start menu-completion after pressing tab again
 unsetopt menu_complete
 
-# Show completion menu on succesive tab press
-setopt auto_menu
+# Show list of ambiguous matches immediately, without needing to press tab again
+unsetopt list_ambiguous
 
 # Complete at cursor position (ie: "M[CURSOR]file" to "Makefile")
 setopt complete_in_word
+
+# Show list of completions per row, instead of per column
+setopt list_rows_first
+
+# Try to make the completion lists as small as possible
+setopt list_packed
 
 # Cursor is moved to end of word after completion
 setopt always_to_end
@@ -55,16 +66,25 @@ setopt always_to_end
 # Enable extended glob, e.g. "rm ^*sysc" to match all files that dont end in "sysc"
 setopt extendedglob
 
+# LS_COLORS
+eval `dircolors $HOME/src/dircolors-solarized/dircolors.256dark`
+
 # Completion style
+zstyle ':completion:*' completer _complete _match _approximate:-one _approximate:-two
+zstyle ':completion:*:approximate-one:*' max-errors 1
+zstyle ':completion:*:approximate-two:*' max-errors 2
+
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*:descriptions' format '%B%d%b'
 zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:warnings' format 'No matches for: %d'
 
 zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*' #case insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' special-dirs true #completion for cd ..
 zstyle ':completion:*:sudo::' environ PATH="$PATH:/sbin:/usr/sbin" #Update autocompletion path for sudo
+# Completion for cd ..
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 compinit
 
 #Sane defaults for history
@@ -80,19 +100,6 @@ setopt hist_verify
 setopt inc_append_history
 setopt share_history # share command history data
 
-# LS_COLORS
-eval `dircolors $HOME/src/dircolors-solarized/dircolors.256dark`
-
-# Completion for cd ..
-zstyle ':completion:*' special-dirs true
-# Use LS_COLORS for completion
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
-# Set some defaults
-export EDITOR="nvim"
-export PAGER="less"
-export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
-
 # Bind useful keys
 bindkey -v
 bindkey "^[[7~" beginning-of-line
@@ -100,7 +107,6 @@ bindkey "^A" beginning-of-line
 bindkey "^[[8~" end-of-line
 bindkey "^E" end-of-line
 bindkey "^[[3~" delete-char
-#bindkey -a "^[[3~" delete-char
 bindkey "^[[2~" overwrite-mode
 bindkey "^[[5~" beginning-of-buffer-or-history
 bindkey "^[[6~" end-of-buffer-or-history
@@ -110,6 +116,14 @@ bindkey -v '^?' backward-delete-char
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+
+bindkey "^i" complete-word # Tab
+bindkey "^[[Z" expand-word # Shift-Tab
+
+# Set some defaults
+export EDITOR="vim"
+export PAGER="less"
+export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
 
 # Avoid waiting for escape timeouts
 export KEYTIMEOUT=1

@@ -396,7 +396,7 @@ function! GetTabCharacters()
 	if &expandtab
 		return repeat(' ', &tabstop)
 	else
-		return '\<Tab>'
+		return "\<Tab>"
 	endif
 endfunction
 

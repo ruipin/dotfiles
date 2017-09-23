@@ -77,10 +77,4 @@ endif
 	" Tmux syntax highlighting
 	Plug 'tmux-plugins/vim-tmux'
 
-
-	"""""""""""""""
-	" Local plugins
-	if !empty($VIMRC_LOCAL_PATH)
-		source $VIMRC_LOCAL_PATH/plugins.vim
-	endif
 call plug#end()

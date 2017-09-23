@@ -21,8 +21,7 @@ export ZSH_SCRIPT_TITLE="SCRIPT"
 export ZSH_CREATE_DOTFILE_SUBFOLDER_ALIASES=1
 
 # Folders to exclude from dotfile hash aliases
-# Note: Should always include "zsh"
-export ZSH_EXCLUDE_DOTFILE_ALIASES=("zsh" "applications")
+export ZSH_EXCLUDE_DOTFILE_ALIASES=("applications")
 
 
 ########################

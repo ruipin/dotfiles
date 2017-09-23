@@ -134,6 +134,9 @@ endfunction
 
 command ToggleShowBlanks call ToggleShowBlanks()
 map <F2> :ToggleShowBlanks<CR>
+
+" Necessary in order to make sure the syntax is loaded when vim starts or a new buffer is opened
+autocmd VimEnter * call RefreshShowBlanks()
 autocmd BufEnter * call RefreshShowBlanks()
 
 

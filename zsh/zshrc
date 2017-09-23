@@ -6,5 +6,22 @@
 
 export USE_ZSH="1"
 
+# Local zsh configuration
+if [[ -d "$HOME/dotfiles_local" ]]; then
+	export LOCAL_DOTFILES="$HOME/dotfiles_local"
+	hash -d ldotf="$LOCAL_DOTFILES"
+fi
+
+function dotfiles_source {
+	source ~zsh/"$@"
+
+	local local_fname="$LOCAL_DOTFILES/zsh/$@"
+	if [[ -f "$local_fname" ]]; then
+		source "$local_fname"
+	fi
+}
+
+# Main zsh configuration
 export ZSH_HOME=$(dirname "$(readlink -f "${(%):-%N}")" )
-source $ZSH_HOME/zsh_init.zsh
+hash -d zsh="$ZSH_HOME"
+dotfiles_source "zsh_init.zsh"

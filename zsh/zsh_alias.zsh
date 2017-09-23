@@ -40,6 +40,10 @@ if is_true $ZSH_CREATE_DOTFILE_SUBFOLDER_ALIASES ; then
 		# Only create aliases for folders that are not excluded
 		if [[ ${ZSH_EXCLUDE_DOTFILE_ALIASES[(I)$basename]} -eq 0 ]]; then
 			hash -d "$basename"=~dotf/$basename
+
+			if [[ -d "$LOCAL_DOTFILES/$basename" ]]; then
+				hash -d "l$basename"=~ldotf/$basename
+			fi
 		fi
 	done
 fi

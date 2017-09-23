@@ -6,8 +6,11 @@
 """""""""""""""""""""""""""""""""""""""""
 
 
-" Disable automatic comment on next line
-autocmd BufNewFile,BufRead * setlocal formatoptions-=ro
+" Disable automatic comments
+" 'c': When exceeded certain line width
+" 'r': When pressing 'Enter'
+" 'o': When pressing 'o'/'O'
+autocmd FileType * setlocal formatoptions-=c "formatoptions-=r formatoptions-=o
 
 " Live command preview
 if (has('nvim'))

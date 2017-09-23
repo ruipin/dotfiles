@@ -17,26 +17,47 @@ function! GetVimrcPath()
 endfunction
 let $VIMRC_PATH = GetVimrcPath()
 
+" Helper function to source dotfiles
+" If $LOCAL_DOTFILES is defined, searches for a local version of the loaded dotfile
+function! SourceDotfile(fname)
+	" Load main version
+	execute 'source ' . $VIMRC_PATH . '/' . a:fname . ''
+
+	" Load local version
+	if !empty($LOCAL_DOTFILES)
+		let local_fpath= $LOCAL_DOTFILES . '/vim/' . a:fname
+
+		if filereadable(local_fpath)
+			execute 'source "' . local_fpath . '"' 
+		endif
+	endif
+endfunction
+
 " Configuration file
-source $VIMRC_PATH/vimrc_config.vim
+call SourceDotfile('vimrc_config.vim')
 
 " Vimscript utilities
-source $VIMRC_PATH/vimrc_utils.vim
+call SourceDotfile('vimrc_utils.vim')
 
 " Plugins
-source $VIMRC_PATH/plugins.vim
+call SourceDotfile('plugins.vim')
 
 " Tab/Spaces
-source $VIMRC_PATH/tabs.vim
+call SourceDotfile('tabs.vim')
 
 " Input
-source $VIMRC_PATH/input.vim
+call SourceDotfile('input.vim')
 
 " Miscellaneous
-source $VIMRC_PATH/misc.vim
+call SourceDotfile('misc.vim')
 
 " Tmux
-source $VIMRC_PATH/tmux.vim
+call SourceDotfile('tmux.vim')
 
 " Auto Highlight
-source $VIMRC_PATH/auto_highlight.vim
+call SourceDotfile('auto_highlight.vim')
+
+" Local vimrc file
+if !empty($VIMRC_LOCAL_PATH)
+	source $VIMRC_LOCAL_PATH/vimrc_local.vim
+endif

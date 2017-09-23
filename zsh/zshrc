@@ -1,3 +1,9 @@
+#########################################
+# zshrc
+# Author: Rui Pinheiro
+#
+# Zsh configuration file
+
 export USE_ZSH="1"
 
 export ZSH_HOME=$(dirname "$(readlink -f "${(%):-%N}")" )

@@ -45,7 +45,7 @@ endif
 
 	Plug 'jlanzarotta/bufexplorer' " Easily navigate buffers using \be, \bv, \bs
 
-	"Plug 'guns/xterm-color-table.vim'
+	Plug 'guns/xterm-color-table.vim'
 
 	"Linter
 	Plug 'scrooloose/syntastic'
@@ -220,8 +220,9 @@ function! ToggleShowBlanks()
 	if g:blanks_shown
 		let g:blanks_shown=0
 		" Default values:
-		hi SpecialKey ctermfg=237 ctermbg=NONE
-		hi Conceal ctermfg=237 ctermbg=NONE
+		"hi SpecialKey ctermfg=237 ctermbg=NONE
+		"hi Conceal ctermfg=237 ctermbg=NONE
+		hi NonText ctermfg=237 ctermbg=NONE
 		set conceallevel=2
 		set concealcursor=nvic
 		set listchars=tab:>\ ,trail:·
@@ -229,8 +230,9 @@ function! ToggleShowBlanks()
 		call clearmatches()
 	else
 		let g:blanks_shown=1
-		hi SpecialKey ctermfg=240 ctermbg=NONE
-		hi Conceal ctermfg=240 ctermbg=NONE
+		"hi SpecialKey ctermfg=237 ctermbg=NONE
+		"hi Conceal ctermfg=237 ctermbg=NONE
+		hi NonText ctermfg=240 ctermbg=NONE
 		set conceallevel=2
 		set concealcursor=nvic
 		set listchars=nbsp:·,trail:·,tab:>·,trail:~,extends:>,precedes:<,space:·
@@ -348,46 +350,8 @@ augroup IndentIgnoringBlanks
 	au FileType * IndentIgnoringBlanks
 augroup END
 
-""""""""""""""
-" Plugins
-""""""""""""""
-
-" TagBar
-nmap <F4> :TagbarToggle<CR>
-
-"Airline
-set laststatus=2 "Show a status line always
-let g:airline#extensions#tabline#enabled = 1 "Display all buffers
-let g:airline#extensions#whitespace#enabled = 1 "Show whitespace
-let g:airline#extensions#whitespace#checks = [ 'indent' ]
-let g:airline_powerline_fonts = 1 "Powerline symbols (requires compatible font)
-let g:airline_theme = 'molokai' "'solarized'
-
-"Undo tree
-nnoremap <F5> :UndotreeToggle<CR>
-
-" Vim indent guides
-let g:indent_guides_start_level = 2
-let g:indent_guides_guide_size = 1
-
-if has('nvim')
-	" Use deoplete.
-	let g:deoplete#enable_at_startup = 1"
-
-	"inoremap <silent> <ESC> <C-r>=<SID>my_esc_function()<ESC>
-	"function! s:my_esc_function() abort
-	"	return deoplete#close_popup() . "\<ESC>"
-	"endfunction
-else
-	" Neocomplete:
-	let g:neocomplete#enable_at_startup = 1
-	let g:acp_enableAtStartup = 0
-	let g:neocomplete#sources#syntax#min_keyword_length = 3
-	let g:neocomplete#enable_smart_case = 1
-endif
 
 " <TAB>: completion.
-" TODO: Use a single function for mapping
 function! Strip(input_string)
 	return substitute(a:input_string, '^\s*\(.\{-}\)\s*$', '\1', '')
 endfunction
@@ -446,6 +410,45 @@ nnoremap <expr><TAB> "i" . InsertModeTab()
 " Use Tab/Shift-Tab to indent/unindent multiple lines at once in visual mode
 vnoremap <expr><TAB>  ">gv"
 vnoremap <expr><S-TAB> "<gv"
+
+""""""""""""""
+" Plugins
+""""""""""""""
+
+" TagBar
+nmap <F4> :TagbarToggle<CR>
+
+"Airline
+set laststatus=2 "Show a status line always
+let g:airline#extensions#tabline#enabled = 1 "Display all buffers
+let g:airline#extensions#whitespace#enabled = 1 "Show whitespace
+let g:airline#extensions#whitespace#checks = [ 'indent' ]
+let g:airline_powerline_fonts = 1 "Powerline symbols (requires compatible font)
+let g:airline_theme = 'molokai' "'solarized'
+
+"Undo tree
+nnoremap <F5> :UndotreeToggle<CR>
+
+" Vim indent guides
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
+
+if has('nvim')
+	" Use deoplete.
+	let g:deoplete#enable_at_startup = 1"
+
+	"inoremap <silent> <ESC> <C-r>=<SID>my_esc_function()<ESC>
+	"function! s:my_esc_function() abort
+	"	return deoplete#close_popup() . "\<ESC>"
+	"endfunction
+else
+	" Neocomplete:
+	let g:neocomplete#enable_at_startup = 1
+	let g:acp_enableAtStartup = 0
+	let g:neocomplete#sources#syntax#min_keyword_length = 3
+	let g:neocomplete#enable_smart_case = 1
+endif
+
 
 " indentLine
 let g:indentLine_char = '|'

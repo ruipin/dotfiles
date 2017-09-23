@@ -21,7 +21,7 @@ let $VIMRC_PATH = GetVimrcPath()
 " If $LOCAL_DOTFILES is defined, searches for a local version of the loaded dotfile
 function! SourceDotfile(fname)
 	" Load main version
-	execute 'source ' . $VIMRC_PATH . '/' . a:fname . ''
+	execute 'source ' . $VIMRC_PATH . '/' . a:fname
 
 	" Load local version
 	if !empty($LOCAL_DOTFILES)

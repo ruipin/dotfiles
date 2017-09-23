@@ -129,6 +129,9 @@ mode "$prefix_mode" {
 	# Kill window with middle button
 	bindsym --whole-window button2 kill; mode "default"
 
+	# Call xkill when kill is not enough
+	bindsym --release k exec xkill; mode "default"
+
 	# Exit PREFIX mode
 	bindsym $mod+space mode "default"
 	bindsym Escape mode "default"

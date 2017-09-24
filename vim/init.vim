@@ -6,10 +6,10 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Configuration file
-call SourceDotfile('vimrc_config.vim')
+call SourceDotfile('config.vim')
 
 " Vimscript utilities
-call SourceDotfile('vimrc_utils.vim')
+call SourceDotfile('script_utils.vim')
 
 " Plugins
 call SourceDotfile('plugins.vim')

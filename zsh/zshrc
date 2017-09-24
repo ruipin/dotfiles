@@ -6,13 +6,17 @@
 
 export USE_ZSH="1"
 
+# Main zsh configuration path
+export ZSH_HOME=$(dirname "$(readlink -f "${(%):-%N}")" )
+hash -d zsh="$ZSH_HOME"
+
 # Local zsh configuration
 if [[ -d "$HOME/dotfiles_local" ]]; then
 	export LOCAL_DOTFILES="$HOME/dotfiles_local"
 	hash -d ldotf="$LOCAL_DOTFILES"
 fi
 
-function dotfiles_source {
+function source_dotfiles {
 	source ~zsh/"$@"
 
 	local local_fname="$LOCAL_DOTFILES/zsh/$@"
@@ -21,7 +25,5 @@ function dotfiles_source {
 	fi
 }
 
-# Main zsh configuration
-export ZSH_HOME=$(dirname "$(readlink -f "${(%):-%N}")" )
-hash -d zsh="$ZSH_HOME"
-dotfiles_source "zsh_init.zsh"
+# Source init.zsh, responsible for setting up everything else
+source_dotfiles "init.zsh"

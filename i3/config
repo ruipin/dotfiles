@@ -76,6 +76,9 @@ bindsym $mod+s layout stacking
 bindsym $mod+t layout tabbed
 bindsym $mod+e layout toggle split
 
+# The middle button over a titlebar kills the window
+bindsym --release button2 kill
+
 # If a window requests focus, give it to it
 focus_on_window_activation focus
 
@@ -148,34 +151,34 @@ bindsym $mod+z focus child
 # resize window (you can also use the mouse for that)
 bindsym $mod+r mode "resize"
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+	# These bindings trigger as soon as you enter the resize mode
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+	# Pressing left will shrink the window’s width.
+	# Pressing right will grow the window’s width.
+	# Pressing up will shrink the window’s height.
+	# Pressing down will grow the window’s height.
+	bindsym j resize shrink width 10 px or 10 ppt
+	bindsym k resize grow height 10 px or 10 ppt
+	bindsym l resize shrink height 10 px or 10 ppt
+	bindsym semicolon resize grow width 10 px or 10 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+	# same bindings, but for the arrow keys
+	bindsym Left resize shrink width 10 px or 10 ppt
+	bindsym Down resize grow height 10 px or 10 ppt
+	bindsym Up resize shrink height 10 px or 10 ppt
+	bindsym Right resize grow width 10 px or 10 ppt
 
-        # back to normal: Enter or Escape
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+	# back to normal: Enter or Escape
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
 }
 
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        #status_command i3status --config ~/.config/i3/i3status.conf
-        status_command ~/.config/i3/conky-i3bar
+	#status_command i3status --config ~/.config/i3/i3status.conf
+	status_command ~/.config/i3/conky-i3bar
 	font pango:DejaVu Sans Mono, FontAwesome 12
 }
 
@@ -216,8 +219,11 @@ exec --no-startup-id thunderbird
 assign [class="Wine" instance="musicbee.exe"] $ws9
 exec --no-startup-id gtk-launch MusicBee.desktop
 
-assign [class="skype"] $ws10
+assign [class="Skype Preview"] $ws10
 exec --no-startup-id skypeforlinux
 
 # For rails browser testing
 assign [class="Chromium-browser"] $ws2
+
+# Keepass Password Safe
+for_window [class="KeePass2"] floating enable

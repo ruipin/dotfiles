@@ -16,7 +16,8 @@ if g:expand_tabs
 	set expandtab
 endif
 
-" Override specific filetypes
+" Some filetypes ignore the above settings
+" We need to override them individually here
 function! FileTypeSetl(ftype)
 	execute 'au FileType ' . a:ftype . ' setl shiftwidth=' . g:tab_width . ' softtabstop=' . g:tab_width . ( g:expand_tabs ? ' expandtab' : '' )
 endfunction
@@ -76,7 +77,6 @@ function! InsertModeTab()
 		else
 			return GetTabCharacters()
 		endif
-
 	endif
 endfunction
 
@@ -84,19 +84,24 @@ endfunction
 inoremap <expr><TAB> InsertModeTab()
 nnoremap <expr><TAB> "i" . InsertModeTab()
 
+
+"""""""""""""""""""
 " Use Tab/Shift-Tab to indent/unindent multiple lines at once in visual mode
 vnoremap <expr><TAB>  ">gv"
 vnoremap <expr><S-TAB> "<gv"
 
+
 """""""""""""""
 " Show tabs and spaces
+" By default, shows only tabs and trailing spaces
+" 'ToggleShowBlanks' can be used to also show other blank characters (such as normal spaces)
 let g:blanks_shown=0
 
 function! ShowBlanks()
 	let g:blanks_shown=1
 	hi SpecialKey ctermfg=240 ctermbg=NONE
-	hi Conceal ctermfg=240 ctermbg=NONE
-	hi NonText ctermfg=240 ctermbg=NONE
+	hi Conceal    ctermfg=240 ctermbg=NONE
+	hi NonText    ctermfg=240 ctermbg=NONE
 	set conceallevel=2
 	set concealcursor=nvic
 	set listchars=nbsp:·,tab:>·,trail:~,extends:>,precedes:<,space:·
@@ -107,8 +112,8 @@ function! HideBlanks()
 	let g:blanks_shown=0
 	" Default values:
 	hi SpecialKey ctermfg=237 ctermbg=NONE
-	hi Conceal ctermfg=237 ctermbg=NONE
-	hi NonText ctermfg=237 ctermbg=NONE
+	hi Conceal    ctermfg=237 ctermbg=NONE
+	hi NonText    ctermfg=237 ctermbg=NONE
 	set conceallevel=2
 	set concealcursor=nvic
 	set listchars=tab:>\ ,trail:·
@@ -133,17 +138,17 @@ function! ToggleShowBlanks()
 endfunction
 
 command ToggleShowBlanks call ToggleShowBlanks()
+command ShowBlanks call ShowBlanks()
+command HideBlanks call HideBlanks()
+command RefreshShowBlanks call RefreshShowBlanks()
 map <F2> :ToggleShowBlanks<CR>
 
-" Necessary in order to make sure the syntax is loaded when vim starts or a new buffer is opened
-autocmd VimEnter * call RefreshShowBlanks()
-autocmd BufEnter * call RefreshShowBlanks()
+" Necessary in order to make sure the correct syntax highlighting is used on any new buffer
+autocmd VimEnter * RefreshShowBlanks
+autocmd BufEnter * RefreshShowBlanks
 
 
 
 """""""""""""""
 " Remove Trailing blanks
 command RemoveTrailing %s/\s\+$//
-
-
-

@@ -9,9 +9,9 @@
 set nocompatible
 
 " Detect vimrc file path
+let s:vimrc_origpath = expand('<sfile>:p')
 function! GetVimrcPath()
-	let symlinkpath = $HOME . "/.vimrc"
-	let realpath = resolve(symlinkpath)
+	let realpath = resolve(s:vimrc_origpath)
 	let dirname = fnamemodify(realpath, ":h")
 	return dirname
 endfunction
@@ -28,36 +28,10 @@ function! SourceDotfile(fname)
 		let local_fpath= $LOCAL_DOTFILES . '/vim/' . a:fname
 
 		if filereadable(local_fpath)
-			execute 'source "' . local_fpath . '"' 
+			execute 'source ' . local_fpath
 		endif
 	endif
 endfunction
 
-" Configuration file
-call SourceDotfile('vimrc_config.vim')
-
-" Vimscript utilities
-call SourceDotfile('vimrc_utils.vim')
-
-" Plugins
-call SourceDotfile('plugins.vim')
-
-" Tab/Spaces
-call SourceDotfile('tabs.vim')
-
-" Input
-call SourceDotfile('input.vim')
-
-" Miscellaneous
-call SourceDotfile('misc.vim')
-
-" Tmux
-call SourceDotfile('tmux.vim')
-
-" Auto Highlight
-call SourceDotfile('auto_highlight.vim')
-
-" Local vimrc file
-if !empty($VIMRC_LOCAL_PATH)
-	source $VIMRC_LOCAL_PATH/vimrc_local.vim
-endif
+" Source init.vim, responsible for doing everything else
+call SourceDotfile('init.vim')

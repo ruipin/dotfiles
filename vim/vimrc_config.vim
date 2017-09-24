@@ -8,7 +8,7 @@
 """""""""""""""
 " Tabs/Spaces
 
-" Should tabs be expanded?
+" Should tabs be expanded as spaces?
 let g:expand_tabs=0
 
 " Number of spaces per tab

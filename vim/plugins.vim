@@ -14,40 +14,40 @@ endif
 	" Plugins with separate configuration
 
 	" Vim theme, color, etc
-	source $VIMRC_PATH/theme.vim
+	call SourceDotfile('theme.vim')
 
 	" Vim-airline
-	source $VIMRC_PATH/plugins/airline.vim
+	call SourceDotfile('plugins/airline.vim')
 
 	" Autocomplete
-	source $VIMRC_PATH/plugins/autocomplete.vim
+	call SourceDotfile('plugins/autocomplete.vim')
 
 	" NERDTree
-	source $VIMRC_PATH/plugins/nerdtree.vim
+	call SourceDotfile('plugins/nerdtree.vim')
 
 	" FastFold
-	source $VIMRC_PATH/plugins/fastfold.vim
+	call SourceDotfile('plugins/fastfold.vim')
 
 	" System Verilog highligting
-	source $VIMRC_PATH/plugins/system_verilog.vim
+	call SourceDotfile('plugins/system_verilog.vim')
 
 	" Tagbar
-	source $VIMRC_PATH/plugins/tagbar.vim
+	call SourceDotfile('plugins/tagbar.vim')
 
 	" indentLine
-	source $VIMRC_PATH/plugins/indentline.vim
+	call SourceDotfile('plugins/indentline.vim')
 
 	" EasyAlign
-	source $VIMRC_PATH/plugins/easyalign.vim
+	call SourceDotfile('plugins/easyalign.vim')
 
 	" Fzf fuzzy finder
-	source $VIMRC_PATH/plugins/fzf.vim
+	call SourceDotfile('plugins/fzf.vim')
 
 	" Auto pairs
-	source $VIMRC_PATH/plugins/auto-pairs.vim
+	call SourceDotfile('plugins/auto-pairs.vim')
 
 	" Rainbow Parentheses
-	source $VIMRC_PATH/plugins/rainbow.vim
+	call SourceDotfile('plugins/rainbow.vim')
 
 
 	"""""""""""""""

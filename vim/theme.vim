@@ -5,7 +5,11 @@
 " Vim color/theme configuration
 """""""""""""""""""""""""""""""""""""""""
 
-Plug 'iCyMind/NeoSolarized'
+if has('nvim')
+	Plug 'iCyMind/NeoSolarized'
+else
+	Plug 'altercation/vim-\colors-solarized'
+endif
 
 " Background color
 set background=dark
@@ -14,7 +18,11 @@ set background=dark
 autocmd VimEnter * call SetColorScheme()
 function SetColorScheme()
 	" Color Scheme
-	colorscheme NeoSolarized
+	if has('nvim')
+		colorscheme NeoSolarized
+	else
+		colorscheme solarized
+	endif
 
 	" Refresh vim-airline to fix colors
 	AirlineRefresh

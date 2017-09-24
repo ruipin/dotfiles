@@ -1,11 +1,11 @@
 #########################################
-# zsh_main
+# misc.zsh
 # Author: Rui Pinheiro
 #
-# Main zsh configuration
+# Miscellaneous zsh configuration
 
 #################################
-# Main configuration
+# Misc configuration
 
 # Disable ctrl+S
 stty -ixon

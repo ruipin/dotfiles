@@ -1,5 +1,5 @@
 #########################################
-# "init
+# init.zsh
 # Author: Rui Pinheiro
 #
 # Initializes and configures zsh
@@ -11,17 +11,17 @@
 # Environment
 source_dotfiles "env.zsh"
 
+# Zshrc configuration variables
+source_dotfiles "config.zsh"
+
 # Zsh script utility functions
 source_dotfiles "script_utils.zsh"
-
-# Zsh configuration
-source_dotfiles "config.zsh"
 
 # Zplug
 source_dotfiles "zplug.zsh"
 
-# Main configuration
-source_dotfiles "main.zsh"
+# Miscellaneous configuration
+source_dotfiles "misc.zsh"
 
 # Aliases
 source_dotfiles "alias.zsh"

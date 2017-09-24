@@ -1,5 +1,5 @@
 #########################################
-# zsh_env
+# env.zsh
 # Author: Rui Pinheiro
 #
 # Set of methods, functions and tweaks that set up the system/development/build environment

@@ -1,5 +1,5 @@
 #########################################
-# zsh_keys
+# keys.zsh 
 # Author: Rui Pinheiro
 #
 # Zsh key bindings

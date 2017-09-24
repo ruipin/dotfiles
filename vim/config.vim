@@ -1,5 +1,5 @@
 """""""""""""""""""""""""""""""""""""""""
-" vimrc_config.vim
+" config.vim
 " Author: Rui Pinheiro
 "
 " Vimrc configuration options

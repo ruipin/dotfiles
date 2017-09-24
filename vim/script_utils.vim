@@ -1,5 +1,5 @@
 """""""""""""""""""""""""""""""""""""""""
-" vimrc_utils.vim
+" script_utils.vim
 " Author: Rui Pinheiro
 "
 " Various vimscript utility functions

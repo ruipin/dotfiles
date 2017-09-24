@@ -1,5 +1,5 @@
 #########################################
-# zsh_config
+# config.zsh
 # Author: Rui Pinheiro
 #
 # Configuration file for the zsh scripts

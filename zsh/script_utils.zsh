@@ -1,5 +1,5 @@
 #########################################
-# zsh_script_utils
+# script_utils.zsh
 # Author: Rui Pinheiro
 #
 # Utility methods for zsh script functions and methods

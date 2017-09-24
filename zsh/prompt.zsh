@@ -1,5 +1,5 @@
 #########################################
-# zsh_prompt
+# prompt.zsh
 # Author: Rui Pinheiro
 #
 # Zsh prompt

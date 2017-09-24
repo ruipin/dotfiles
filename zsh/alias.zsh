@@ -1,5 +1,5 @@
 #########################################
-# zsh_alias
+# alias.zsh
 # Author: Rui Pinheiro
 #
 # Defines multiple useful shell aliases and directory hashes

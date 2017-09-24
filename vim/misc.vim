@@ -13,7 +13,7 @@
 autocmd FileType * setlocal formatoptions-=c "formatoptions-=r formatoptions-=o
 
 " Live command preview
-if (has('nvim'))
+if has('nvim')
 	set inccommand=nosplit
 endif
 

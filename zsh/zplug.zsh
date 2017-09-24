@@ -1,5 +1,5 @@
 #########################################
-# zsh_zplug
+# zplug.zsh
 # Author: Rui Pinheiro
 #
 # Initializes and load Zplug and corresponding plugins

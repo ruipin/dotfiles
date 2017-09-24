@@ -1,5 +1,5 @@
 #########################################
-# zsh_func
+# func.zsh
 # Author: Rui Pinheiro
 #
 # Defines multiple useful shell functions

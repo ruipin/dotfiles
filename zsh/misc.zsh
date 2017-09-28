@@ -51,7 +51,7 @@ setopt always_to_end
 setopt extendedglob
 
 # LS_COLORS
-eval `dircolors $ZSH_DIRCOLORS_PATH`
+eval `dircolors --sh $ZSH_DIRCOLORS_PATH`
 
 
 ####################

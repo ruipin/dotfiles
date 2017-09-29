@@ -5,13 +5,17 @@
 # Utility methods for zsh script functions and methods
 
 
+# Enable colors for scripts
+autoload -U colors && colors
+
+
 #################
 # Echo
 function echo_error {
 	echo "$fg_bold[red][$ZSH_SCRIPT_TITLE] ERROR: ${@}${reset_color}"
 }
 
-function echo_warning {
+function echo_warn {
 	echo "$fg[magenta][$ZSH_SCRIPT_TITLE] WARNING: ${@}${reset_color}"
 }
 

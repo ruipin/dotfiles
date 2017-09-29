@@ -15,7 +15,7 @@ source "$ZPLUG_ROOT/init.zsh"
 zplug "zplug/zplug"
 zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-completions", defer:2
 #zplug "zsh-users/zsh-autosuggestions"
 #zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
 

@@ -21,13 +21,15 @@ if has('nvim')
 
 " Vim
 else
-	Plug 'Shougo/neocomplete.vim' " Autocomplete (with tab)
-	Plug 'Shougo/vimproc.vim', { 'do' : 'make'  }
+	if has('lua')
+		Plug 'Shougo/neocomplete.vim' " Autocomplete (with tab)
+		Plug 'Shougo/vimproc.vim', { 'do' : 'make'  }
 
-	" Configure
-	let g:neocomplete#enable_at_startup = 1
-	let g:acp_enableAtStartup = 0
-	let g:neocomplete#sources#syntax#min_keyword_length = 3
-	let g:neocomplete#enable_smart_case = 1
+		" Configure
+		let g:neocomplete#enable_at_startup = 1
+		let g:acp_enableAtStartup = 0
+		let g:neocomplete#sources#syntax#min_keyword_length = 3
+		let g:neocomplete#enable_smart_case = 1
+	endif
 
 endif " has('nvim')

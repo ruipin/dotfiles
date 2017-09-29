@@ -32,3 +32,16 @@ export ZPLUG_ROOT="/usr/share/zsh/scripts/zplug"
 ########################
 # Dircolors
 export ZSH_DIRCOLORS_PATH="$HOME/src/dircolors-solarized/dircolors.256dark"
+
+
+########################
+# Locale
+
+# Force UTF-8 locale
+export ZSH_FORCE_UTF8=1
+
+
+########################
+# Local Prefix
+export LOCAL_PREFIX=""
+export LOCAL_BUILD_FOLDER="$HOME/src"

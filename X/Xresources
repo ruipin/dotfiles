@@ -61,6 +61,19 @@
 ! Set TERM
 XTerm.termName: xterm-256color
 
+!! Font
+! Alt keys send correct escape sequence
+XTerm.vt100.eightBitInput: false
+XTerm.vt100.metaSendsEscape: true
+
+! UTF-8
+xterm*locale: true
+xterm*utf8: 1
+
+! Consolas
+XTerm.vt100.faceName: xft:Powerline Consolas:regular:size=10:antialias=true:hinting=true,xft:FontAwesome:regular:size=10:antialias=true:hinting=true
+XTerm.vt100.forceBoxChars: true
+
 
 
 !!! URxvt config
@@ -90,11 +103,6 @@ URxvt.secondaryScroll: 0
 !URxvt.letterSpace: -1
 URxvt.lineSpace: -5
 
-! Fira Code
-!URxvt.font: xft:Fira Code:regular:size=10:antialias=true:hinting=true
-!URxvt.boldFont: xft:Fira Code:bold:size=10:antialias=true:hinting=true
-!URxvt.italicFont: xft:Fira Code:italic:size=10:antialias=true:hinting=true
-!URxvt.boldItalicFont: xft:Fira Code:bold:italic:size=10:antialias=true:hinting=true
 ! Consolas
 URxvt.font: xft:Consolas for Powerline:regular:size=11:antialias=true:hinting=true,xft:FontAwesome:regular:size=11:antialias=true:hinting=true
 URxvt.boldFont: xft:Consolas for Powerline:bold:size=11:antialias=true:hinting=true,xft:FontAwesome:regular:size=11:antialias=true:hinting=true

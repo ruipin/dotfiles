@@ -4,8 +4,6 @@
 #
 # Zsh prompt
 
-autoload -U colors && colors
-
 setopt PROMPT_SUBST
 setopt PROMPT_CR
 

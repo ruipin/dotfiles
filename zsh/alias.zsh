@@ -13,6 +13,7 @@ alias xemacs='imgemacs'
 whence -p nvim > /dev/null && alias vim='nvim' # Use nvim if it can be found in PATH
 alias vimdiff='vim -d'
 
+
 ##############
 # System tools
 alias grep='grep --color'
@@ -53,6 +54,7 @@ fi
 # Software source code/builds
 hash -d src=$HOME/src
 hash -d aur=$HOME/aur
+
 
 ############
 # User directories

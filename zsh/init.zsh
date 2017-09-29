@@ -4,18 +4,23 @@
 #
 # Initializes and configures zsh
 
-
 ###################
 # Load all files in the correct order
-
-# Environment
-source_dotfiles "env.zsh"
 
 # Zshrc configuration variables
 source_dotfiles "config.zsh"
 
 # Zsh script utility functions
 source_dotfiles "script_utils.zsh"
+
+# Environment
+source_dotfiles "env.zsh"
+
+# Locale
+source_dotfiles "locale.zsh"
+
+# Local prefix
+source_dotfiles "local_prefix.zsh"
 
 # Zplug
 source_dotfiles "zplug.zsh"

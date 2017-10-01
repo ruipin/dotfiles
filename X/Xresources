@@ -57,6 +57,7 @@
 
 
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!! Xterm config
 ! Set TERM
 XTerm.termName: xterm-256color
@@ -70,12 +71,18 @@ XTerm.vt100.metaSendsEscape: true
 xterm*locale: true
 xterm*utf8: 1
 
-! Consolas
-XTerm.vt100.faceName: xft:Powerline Consolas:regular:size=10:antialias=true:hinting=true,xft:FontAwesome:regular:size=10:antialias=true:hinting=true
+! Force good line-drawing characters
 XTerm.vt100.forceBoxChars: true
 
+! Hasklug (Hasklig Nerd Font)
+XTerm.vt100.faceName: xft:Hasklug Nerd Font Mono:regular:size=10:antialias=true:hinting=true
+
+! Consolas (manually patched Nerd Fonts version)
+!XTerm.vt100.faceName: xft:Consolas NF:regular:size=11:antialias=true:hinting=true
 
 
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!! URxvt config
 ! Disable scrollbar
 URxvt.scrollBar: off
@@ -100,14 +107,20 @@ URxvt.secondaryScreen: 1
 URxvt.secondaryScroll: 0
 
 !! Font
-!URxvt.letterSpace: -1
+!URxvt.letterSpace: -5
 URxvt.lineSpace: -5
 
-! Consolas
-URxvt.font: xft:Consolas for Powerline:regular:size=11:antialias=true:hinting=true,xft:FontAwesome:regular:size=11:antialias=true:hinting=true
-URxvt.boldFont: xft:Consolas for Powerline:bold:size=11:antialias=true:hinting=true,xft:FontAwesome:regular:size=11:antialias=true:hinting=true
-URxvt.italicFont: xft:Consolas for Powerline:italic:size=11:antialias=true:hinting=true,xft:FontAwesome:regular:size=11:antialias=true:hinting=true
-URxvt.boldItalicFont: xft:Consolas for Powerline:bold:italic:size=11:antialias=true:hinting=true,xft:FontAwesome:regular:size=11:antialias=true:hinting=true
+! Hasklug (Hasklig Nerd Font)
+URxvt.font: xft:Hasklug Nerd Font Mono:regular:size=10:antialias=true:hinting=true
+URxvt.boldFont: xft:Hasklug Nerd Font Mono:bold:size=10:antialias=true:hinting=true
+URxvt.italicFont: xft:Hasklug Nerd Font Mono:italic:size=10:antialias=true:hinting=true
+URxvt.boldItalicFont: xft:Hasklug Nerd Font Mono:bold:italic:size=10:antialias=true:hinting=true
+
+! Consolas (manually patched Nerd Fonts version)
+!URxvt.font: xft:Consolas NF:regular:size=10:antialias=true:hinting=true
+!URxvt.boldFont: xft:Consolas NF:bold:size=10:antialias=true:hinting=true
+!URxvt.italicFont: xft:Consolas NF:italic:size=10:antialias=true:hinting=true
+!URxvt.boldItalicFont: xft:Consolas NF:bold:italic:size=10:antialias=true:hinting=true
 
 ! Fix arrow keys in vim
 URxvt.keysym.M-Down:        \033[1;3B

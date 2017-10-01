@@ -25,3 +25,20 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 
 " Close vim if only NERDtree left
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" nerdtree-git
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "\uf459",
+    \ "Staged"    : "\uf067",
+    \ "Untracked" : "\uf005",
+    \ "Renamed"   : "\uf45a",
+    \ "Unmerged"  : "\uf402",
+    \ "Deleted"   : "\uf014",
+    \ "Dirty"     : "\uf06a",
+    \ "Clean"     : "\uf046",
+    \ "Ignored"   : "\uf474",
+    \ "Unknown"   : "\uf420"
+    \ }
+
+" Vim-devicons + NerdTree
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ''

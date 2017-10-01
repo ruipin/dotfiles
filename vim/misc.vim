@@ -23,8 +23,8 @@ set incsearch
 " Highlight all search matches
 set hlsearch
 
-" Use bash for shell commands and scripts (faster)
-set shell=bash
+" Use sh for shell commands and scripts (faster)
+set shell=sh
 
 " Allow opening of other files without closing buffers
 set hidden

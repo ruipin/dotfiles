@@ -77,6 +77,9 @@ endif
 	" Tmux syntax highlighting
 	Plug 'tmux-plugins/vim-tmux'
 
+	" Gitgutter: Shows signs for added, modifed, removed lines in current git repo
+	Plug 'airblade/vim-gitgutter'
+
 	" Vim-DevIcons: Adds a lot more icons to vim (e.g. NerdTree file types)
 	" NOTE: Requires a "Nerd Font" (i.e. patched font), from https://github.com/ryanoasis/nerd-fonts
 	Plug 'ryanoasis/vim-devicons'

@@ -32,3 +32,5 @@ set hidden
 " Wild mode
 set wildmode=full
 
+" Update more often
+set updatetime=1000

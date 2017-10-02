@@ -45,3 +45,8 @@ export ZSH_FORCE_UTF8=1
 # Local Prefix
 export LOCAL_PREFIX=""
 export LOCAL_BUILD_FOLDER="$HOME/src"
+
+
+########################
+# Tmux
+export TMUX_MAIN_SESSION="main"

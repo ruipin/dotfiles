@@ -1,0 +1,39 @@
+#########################################
+# tmux.zsh
+# Author: Rui Pinheiro
+#
+# Tmux-related functionality
+
+
+##########
+# Tmux helper: Create new session, attach to main session if it exists
+function tmux_new {
+	if [[ ! -z "$TMUX" ]]; then
+		echo_error "tmux_attach: Already inside a tmux session"
+		return 1
+	fi
+
+	local has_session
+	tmux has-session -t "$TMUX_MAIN_SESSION" 2>&1 /dev/null
+	has_session=$?
+
+	# If main session doesn't exist, create it (in detached form)
+	if [[ "$has_session" -ne "0" ]]; then
+		echo_info "Creating tmux session \"$TMUX_MAIN_SESSION\"..."
+		tmux new -s "$TMUX_MAIN_SESSION" -d
+	fi
+
+	# Attach to the main session
+	echo_info "Attaching to tmux session \"$TMUX_MAIN_SESSION\"..."
+	tmux new -t "$TMUX_MAIN_SESSION"
+
+	echo_info "Done."
+	return 0
+}
+alias tn="tmux_new"
+
+
+# If USE_TMUX, we want to boot straight into tmux
+if [[ -z "$TMUX" ]] && is_true "$USE_TMUX" ; then
+	tmux_new
+fi

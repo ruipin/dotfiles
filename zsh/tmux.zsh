@@ -14,7 +14,7 @@ function tmux_new {
 	fi
 
 	local has_session
-	tmux has-session -t "$TMUX_MAIN_SESSION" 2>&1 /dev/null
+	tmux has-session -t "$TMUX_MAIN_SESSION" > /dev/null 2>&1
 	has_session=$?
 
 	# If main session doesn't exist, create it (in detached form)

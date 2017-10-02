@@ -28,17 +28,19 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " nerdtree-git
 let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "\uf459",
+    \ "Modified"  : "\uf448",
     \ "Staged"    : "\uf067",
     \ "Untracked" : "\uf005",
-    \ "Renamed"   : "\uf45a",
+    \ "Renamed"   : "\uf49e",
     \ "Unmerged"  : "\uf402",
     \ "Deleted"   : "\uf014",
-    \ "Dirty"     : "\uf06a",
-    \ "Clean"     : "\uf046",
-    \ "Ignored"   : "\uf474",
+    \ "Dirty"     : "\uf448 ",
+    \ "Clean"     : "\uf00c",
+    \ "Ignored"   : "\uf468",
     \ "Unknown"   : "\uf420"
     \ }
 
 " Vim-devicons + NerdTree
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+let g:webdevicons_conceal_nerdtree_brackets = 1

@@ -113,7 +113,6 @@ function! ShowBlanks()
 endfunction
 
 function! HideBlanks()
-                               sdfioadfio
 	let g:blanks_shown=0
 	" Default values:
 	hi SpecialKey ctermfg=237 ctermbg=NONE

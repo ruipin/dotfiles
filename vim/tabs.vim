@@ -106,9 +106,14 @@ function! ShowBlanks()
 	set concealcursor=nvic
 	set listchars=nbsp:·,tab:>·,trail:~,extends:>,precedes:<,space:·
 	set list
+
+	if exists(":IndentLinesEnable") && g:indentLine_enabled
+		IndentLinesEnable
+	endif
 endfunction
 
 function! HideBlanks()
+                               sdfioadfio
 	let g:blanks_shown=0
 	" Default values:
 	hi SpecialKey ctermfg=237 ctermbg=NONE
@@ -119,6 +124,10 @@ function! HideBlanks()
 	set listchars=tab:>\ ,trail:·
 	set list
 	call clearmatches()
+
+	if exists(":IndentLinesEnable") && g:indentLine_enabled
+		IndentLinesEnable
+	endif
 endfunction
 
 function! RefreshShowBlanks()

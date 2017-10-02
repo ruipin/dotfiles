@@ -28,6 +28,10 @@ function SetColorScheme()
 	AirlineRefresh
 endfunction
 
+" Split separator glyphs:
+set fillchars=vert:│
+
+
 " Line numbering
 set number
 "set relativenumber

@@ -1,0 +1,70 @@
+[user]
+	name = Rui Pinheiro
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+
+[alias]
+	# Simple aliases
+	d = diff
+	cp = cherry-pick
+	st = status -s
+	cl = clone
+	ci = commit
+	co = checkout
+	br = branch 
+
+	sl = stash list
+	sa = stash apply
+	ss = stash save
+
+	unstage = reset HEAD --
+
+	##############
+	# Last commit shortcuts
+	last = log -1 HEAD --decorate
+	l = !git last
+
+	dlast = diff --cached HEAD^
+	dl = !git dlast
+
+	###################
+	# Listing
+
+	# List commits showing changed files
+	list = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --stat
+	ll = !git list
+
+	# Short list
+	le = log --oneline --decorate
+
+	# List commits in short form, with colors and branch/tag annotations
+	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+
+	# List one-line commits with dates
+	lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+
+	# List one-line commits with relative dates
+	ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+
+	# List all changes to a file
+	file = log -u
+	f = !git file
+
+	###################
+	# Specific commit shortcuts
+	diffc  = "!f() { git diff "$1"^.."$1"; }; f"
+	dc = !git diffc
+
+	listc  = "!f() { git ll "$1"^.."$1"; }; f"
+	lc  = !git listc
+
+	##################
+	# Search
+	grep = grep -Ii
+
+	##################
+	# Aliases
+	# Better: zsh "git_aliases" helper
+	alias = "!git config -l | grep alias | cut -c 7-"

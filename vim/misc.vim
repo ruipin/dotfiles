@@ -34,3 +34,8 @@ set wildmode=full
 
 " Update more often
 set updatetime=1000
+
+" Automatically use syntax highlighting for various files
+autocmd BufNewFile,BufRead gitconfig set filetype=gitconfig
+autocmd BufNewFile,BufRead zshrc set filetype=zsh
+autocmd BufNewFile,BufRead vimrc set filetype=vim

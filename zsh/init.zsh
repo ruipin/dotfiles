@@ -40,5 +40,8 @@ source_dotfiles "func.zsh"
 # Prompt
 source_dotfiles "prompt.zsh"
 
+# Git
+source_dotfiles "git.zsh"
+
 # Tmux (must be last)
 source_dotfiles "tmux.zsh"

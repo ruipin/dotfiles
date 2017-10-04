@@ -31,8 +31,6 @@ alias tmux='tmux -u -2' # Enable UTF-8, 256 color mode by default
 
 #############
 # Dotfiles
-hash -d dotf=$(readlink -f ~zsh/..)
-
 if is_true $ZSH_CREATE_DOTFILE_SUBFOLDER_ALIASES ; then
 	for dir in ~dotf/*/ ; do
 		local basename=$(basename "$dir")

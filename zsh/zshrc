@@ -6,9 +6,11 @@
 
 export USE_ZSH="1"
 
-# Main zsh configuration path
+# Main zsh + dotfiles configuration path
 export ZSH_HOME=$(dirname "$(readlink -f "${(%):-%N}")" )
+export DOTFILES=$(readlink -f "$ZSH_HOME/..")
 hash -d zsh="$ZSH_HOME"
+hash -d dotf="$DOTFILES"
 
 # Local zsh configuration
 if [[ -d "$HOME/dotfiles_local" ]]; then

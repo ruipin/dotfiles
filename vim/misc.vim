@@ -39,3 +39,4 @@ set updatetime=1000
 autocmd BufNewFile,BufRead gitconfig set filetype=gitconfig
 autocmd BufNewFile,BufRead zshrc set filetype=zsh
 autocmd BufNewFile,BufRead vimrc set filetype=vim
+autocmd BufNewFile,BufRead *.tmux set filetype=tmux

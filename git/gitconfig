@@ -4,22 +4,31 @@
 	tool = vimdiff
 [difftool]
 	prompt = false
+#[rerere]
+#	enabled = true
+[merge]
+	conflictstyle = diff3
 
 [alias]
 	# Simple aliases
+	a = add
 	d = diff
 	cp = cherry-pick
-	st = status -s
+	s = status -s
 	cl = clone
 	ci = commit
 	co = checkout
-	br = branch 
+	b = branch
+	rst = reset
+	rb = rebase
 
 	sl = stash list
 	sa = stash apply
 	ss = stash save
 
 	unstage = reset HEAD --
+	cbranch = checkout -b
+	squash = merge --squash
 
 	##############
 	# Last commit shortcuts
@@ -47,6 +56,20 @@
 
 	# List one-line commits with relative dates
 	ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+
+	# Graph view
+	graph = log --oneline --decorate --graph --all
+
+	# List branches (verbose)
+	lb = branch -vv
+
+	# List commits not in upstream
+	lpush = !git graph @{upstream}..HEAD
+	lp = !git lpush
+
+	# Diff against upstream
+	dpush = diff @{upstream}..HEAD
+	dp = !git dpush
 
 	# List all changes to a file
 	file = log -u

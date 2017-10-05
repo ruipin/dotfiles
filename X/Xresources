@@ -64,6 +64,11 @@
 ! Set TERM
 XTerm.termName: xterm-256color
 
+! Fix Shift-Tab escape sequence
+XTerm*VT100.translations: #override \
+  ~Meta Shift<Key>Tab: string(\033[Z) \n\
+   Meta Shift<Key>Tab: string(\033\033[Z) \n
+
 !! Font
 ! Alt keys send correct escape sequence
 XTerm.vt100.eightBitInput: false
@@ -81,7 +86,6 @@ XTerm.vt100.faceName: xft:Hasklug Nerd Font Mono:regular:size=10:antialias=true:
 
 ! Consolas (manually patched Nerd Fonts version)
 !XTerm.vt100.faceName: xft:Consolas NF:regular:size=11:antialias=true:hinting=true
-
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -18,11 +18,15 @@ endif
 
 " Some filetypes ignore the above settings
 " We need to override them individually here
-function! FileTypeSetl(ftype)
-	execute 'au FileType ' . a:ftype . ' setl shiftwidth=' . g:tab_width . ' softtabstop=' . g:tab_width . ( g:expand_tabs ? ' expandtab' : '' )
+" Parameters: file_type, [tab_width, [expand_tabs]]
+function! AutoFileTypeSetl(ftype,...)
+  let tab_width = (a:0 >= 1) ? a:1 : g:tab_width
+  let expand_tabs = (a:0 >= 2) ? a:2 : g:expand_tabs
+
+	execute 'au FileType ' . a:ftype . ' setl shiftwidth=' . tab_width . ' softtabstop=' . tab_width . ' tabstop=' . tab_width . ' expandtab' ( expand_tabs ? '' : '!' )
 endfunction
 
-call FileTypeSetl('python')
+call AutoFileTypeSetl('python')
 
 
 """""""""""""""""
@@ -115,9 +119,9 @@ endfunction
 function! HideBlanks()
 	let g:blanks_shown=0
 	" Default values:
-	hi SpecialKey ctermfg=237 ctermbg=NONE
-	hi Conceal    ctermfg=237 ctermbg=NONE
-	hi NonText    ctermfg=237 ctermbg=NONE
+	hi SpecialKey ctermfg=238 ctermbg=NONE
+	hi Conceal    ctermfg=238 ctermbg=NONE
+	hi NonText    ctermfg=238 ctermbg=NONE
 	set conceallevel=2
 	set concealcursor=nvic
 	set listchars=tab:>\ ,trail:·
@@ -154,7 +158,6 @@ map <F2> :ToggleShowBlanks<CR>
 " Necessary in order to make sure the correct syntax highlighting is used on any new buffer
 autocmd VimEnter * RefreshShowBlanks
 autocmd BufEnter * RefreshShowBlanks
-
 
 
 """""""""""""""

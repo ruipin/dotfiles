@@ -10,7 +10,7 @@ execute 'set tabstop='     . g:tab_width
 execute 'set softtabstop=' . g:tab_width
 execute 'set shiftwidth='  . g:tab_width
 set autoindent
-set smartindent "This copies from previous line and does not interfere with filetype
+"set smartindent
 
 if g:expand_tabs
 	set expandtab

@@ -19,7 +19,9 @@ if [[ -d "$HOME/dotfiles_local" ]]; then
 fi
 
 function source_dotfiles {
-	source ~zsh/"$@"
+	if [[ -f ~zsh/"$@" ]]; then
+		source ~zsh/"$@"
+	fi
 
 	local local_fname="$LOCAL_DOTFILES/zsh/$@"
 	if [[ -f "$local_fname" ]]; then

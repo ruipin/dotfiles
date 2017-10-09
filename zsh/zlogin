@@ -1,0 +1,9 @@
+#########################################
+# zlogin
+# Author: Rui Pinheiro
+#
+# If running on tty0, automatically start X
+
+if [ -z "$DISPLAY" ] && [ "$(fgconsole)" -eq 1 ]; then
+   exec startx
+fi

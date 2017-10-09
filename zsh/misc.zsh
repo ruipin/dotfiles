@@ -90,7 +90,7 @@ setopt share_history # share command history data
 
 ###################
 # Defaults
-export EDITOR="vim"
+export EDITOR="nvim"
 export PAGER="less"
 export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
 

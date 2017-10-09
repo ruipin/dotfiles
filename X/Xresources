@@ -69,6 +69,9 @@ XTerm*VT100.translations: #override \
   ~Meta Shift<Key>Tab: string(\033[Z) \n\
    Meta Shift<Key>Tab: string(\033\033[Z) \n
 
+! Use system clipboard
+XTerm*selectToClipboard: true
+
 !! Font
 ! Alt keys send correct escape sequence
 XTerm.vt100.eightBitInput: false
@@ -111,6 +114,9 @@ URxvt*scrollTtyKeypress: true
 ! Disable scrollback on 2nd screen
 URxvt.secondaryScreen: 1
 URxvt.secondaryScroll: 0
+
+! Use clipboard
+URxvt.perl-ext-common: selection-to-clipboard
 
 !! Font
 !URxvt.letterSpace: -5

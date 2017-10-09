@@ -43,5 +43,8 @@ source_dotfiles "prompt.zsh"
 # Git
 source_dotfiles "git.zsh"
 
+# Load any extra scripts
+source_dotfiles "extra.zsh"
+
 # Tmux (must be last)
 source_dotfiles "tmux.zsh"

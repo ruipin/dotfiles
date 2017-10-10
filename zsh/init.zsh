@@ -17,10 +17,10 @@ source_dotfiles "script_utils.zsh"
 source_dotfiles "env.zsh"
 
 # Locale
-source_dotfiles "locale.zsh"
+source_dotfiles "opt/locale.zsh"
 
 # Local prefix
-source_dotfiles "local_prefix.zsh"
+source_dotfiles "opt/local_prefix.zsh"
 
 # Zplug
 source_dotfiles "zplug.zsh"
@@ -41,10 +41,10 @@ source_dotfiles "func.zsh"
 source_dotfiles "prompt.zsh"
 
 # Git
-source_dotfiles "git.zsh"
+source_dotfiles "opt/git.zsh"
 
-# Load any extra scripts
-source_dotfiles "extra.zsh"
+# X11
+source_dotfiles "opt/x11.zsh"
 
 # Tmux (must be last)
-source_dotfiles "tmux.zsh"
+source_dotfiles "opt/tmux.zsh"

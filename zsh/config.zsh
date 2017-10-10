@@ -26,7 +26,7 @@ export ZSH_EXCLUDE_DOTFILE_ALIASES=("applications")
 
 ########################
 # Zplug
-export ZPLUG_ROOT="/usr/share/zsh/scripts/zplug"
+export ZPLUG_ROOT="$HOME/.zplug"
 
 
 ########################

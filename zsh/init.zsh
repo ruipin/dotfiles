@@ -37,14 +37,17 @@ source_dotfiles "keys.zsh"
 # Helper functions
 source_dotfiles "func.zsh"
 
-# Prompt
-source_dotfiles "prompt.zsh"
-
 # Git
 source_dotfiles "opt/git.zsh"
 
 # X11
 source_dotfiles "opt/x11.zsh"
+
+# SSH
+source_dotfiles "opt/ssh.zsh"
+
+# Prompt (should be last, before tmux.zsh)
+source_dotfiles "prompt.zsh"
 
 # Tmux (must be last)
 source_dotfiles "opt/tmux.zsh"

@@ -24,7 +24,7 @@ function source_dotfiles {
 	fi
 
 	local local_fname="$LOCAL_DOTFILES/zsh/$@"
-	if [[ -f "$local_fname" ]]; then
+	if [[ ! -z "$LOCAL_DOTFILES" && -f "$local_fname" ]]; then
 		source "$local_fname"
 	fi
 }

@@ -19,6 +19,12 @@ function gateway_x {
 	local gateway
 	local display
 	gateway=$(ip route show 0.0.0.0/0 | cut -d\  -f3)
+
+	if [[ -z "$gateway" ]]; then
+		echo_error "Could not obtain gateway IP address"
+		return 1
+	fi
+
 	display="$gateway:0.0"
 	echo_info "DISPLAY=\"$display\""
 
@@ -34,3 +40,10 @@ function gateway_x {
 	fi
 }
 alias gwx="gateway_x"
+
+
+# Move X primary selection to clipboard
+alias xp2c="xsel -p | xsel -b"
+
+# Move X clipboard to primary
+alias xc2p="xsel -b | xsel -p"

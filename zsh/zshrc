@@ -18,16 +18,32 @@ if [[ -d "$HOME/dotfiles_local" ]]; then
 	hash -d ldotf="$LOCAL_DOTFILES"
 fi
 
-function source_dotfiles {
-	if [[ -f ~zsh/"$@" ]]; then
-		source ~zsh/"$@"
-	fi
+# Source zshrc.d files
+if [[ -z "$LOCAL_DOTFILES" || ! -d "$LOCAL_DOTFILES/zsh/zshrc.d" ]]; then
+    # If no local dotfiles exist, use shell globbing directly
+    source "$ZSH_HOME/zshrc.d/"**/*.zsh
+else
+{
+    # Collect files
+    local sourcefiles=($ZSH_HOME/zshrc.d/**/*.zsh)
+    sourcefiles+=($LOCAL_DOTFILES/zsh/zshrc.d/**/*.zsh)
 
-	local local_fname="$LOCAL_DOTFILES/zsh/$@"
-	if [[ ! -z "$LOCAL_DOTFILES" && -f "$local_fname" ]]; then
-		source "$local_fname"
-	fi
+    # Remove zshrc.d path prefixes
+    sourcefiles=(${${sourcefiles##"$ZSH_HOME/zshrc.d/"}#"$LOCAL_DOTFILES/zsh/zshrc.d/"})
+
+    # Sort and remove duplicates
+    sourcefiles=(${(@ui)sourcefiles})
+
+    # Source files
+    for f in $sourcefiles ; do
+        if [[ -f "$ZSH_HOME/zshrc.d/$f" ]]; then
+            source "$ZSH_HOME/zshrc.d/$f"
+        fi
+
+        if [[ -f "$LOCAL_DOTFILES/zsh/zshrc.d/$f" ]]; then
+            source "$LOCAL_DOTFILES/zsh/zshrc.d/$f"
+        fi
+    done
+    unset f
 }
-
-# Source init.zsh, responsible for setting up everything else
-source_dotfiles "init.zsh"
+fi

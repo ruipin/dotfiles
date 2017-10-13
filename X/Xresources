@@ -70,7 +70,7 @@ XTerm*VT100.translations: #override \
    Meta Shift<Key>Tab: string(\033\033[Z) \n
 
 ! Use system clipboard
-XTerm*selectToClipboard: true
+XTerm*selectToClipboard: false
 
 !! Font
 ! Alt keys send correct escape sequence

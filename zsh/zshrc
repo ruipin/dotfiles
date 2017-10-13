@@ -20,30 +20,28 @@ fi
 
 # Source zshrc.d files
 if [[ -z "$LOCAL_DOTFILES" || ! -d "$LOCAL_DOTFILES/zsh/zshrc.d" ]]; then
-    # If no local dotfiles exist, use shell globbing directly
-    source "$ZSH_HOME/zshrc.d/"**/*.zsh
+    # If no local dotfiles exist, use shell globbing directly (faster)
+    for f in "$ZSH_HOME/zshrc.d/"**/*.zsh ; do
+        source "$f"
+    done; unset f
 else
 {
     # Collect files
-    local sourcefiles=($ZSH_HOME/zshrc.d/**/*.zsh)
-    sourcefiles+=($LOCAL_DOTFILES/zsh/zshrc.d/**/*.zsh)
+    local sourcefiles=("$ZSH_HOME/zshrc.d/"**/*.zsh "$LOCAL_DOTFILES/zsh/zshrc.d/"**/*.zsh)
 
-    # Remove zshrc.d path prefixes
-    sourcefiles=(${${sourcefiles##"$ZSH_HOME/zshrc.d/"}#"$LOCAL_DOTFILES/zsh/zshrc.d/"})
+    # Remove path prefix up to the zshrc.d folder
+    sourcefiles=(${sourcefiles#*/zshrc.d/})
 
     # Sort and remove duplicates
     sourcefiles=(${(@ui)sourcefiles})
 
     # Source files
     for f in $sourcefiles ; do
-        if [[ -f "$ZSH_HOME/zshrc.d/$f" ]]; then
-            source "$ZSH_HOME/zshrc.d/$f"
-        fi
-
         if [[ -f "$LOCAL_DOTFILES/zsh/zshrc.d/$f" ]]; then
             source "$LOCAL_DOTFILES/zsh/zshrc.d/$f"
+        else
+            source "$ZSH_HOME/zshrc.d/$f"
         fi
-    done
-    unset f
+    done; unset f
 }
 fi

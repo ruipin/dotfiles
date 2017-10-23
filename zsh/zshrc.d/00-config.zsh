@@ -50,3 +50,9 @@ export LOCAL_BUILD_FOLDER="$HOME/src"
 ########################
 # Tmux
 export TMUX_MAIN_SESSION="main"
+
+
+########################
+# Prompt
+export PROMPT_CMD_MAX_EXEC_TIME=5
+export PROMPT_VIMODE_INDICATOR="%{%S%B%F{red}%}vi%{%s%b%f%} "

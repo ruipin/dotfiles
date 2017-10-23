@@ -23,7 +23,7 @@ function prompt_hostname {
 	is_ssh
 	is_ssh=$?
 	if [[ "$is_ssh" -ne 0 ]]; then
-		echo -n "%{$bg[green]$fg_bold[black]%}%m%{$reset_color%} "
+		echo -n "%{$fg[yellow]%}%m%{$reset_color%}:"
 	fi
 }
 

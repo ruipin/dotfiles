@@ -28,6 +28,6 @@ function prompt_hostname {
 }
 
 #PROMPT=$'%{\e[7l\e[2K\e[2K\e[1A\n\e[7h%}%{$fg_no_bold[yellow]%}%~ %{$reset_color%}%# '
-PROMPT="%{$fg_no_bold[yellow]%}%~ %{$reset_color%}%# "
-RPROMPT="$(prompt_hostname)%{%F{13}%}%T %{%f%k%}"
+PROMPT="$(prompt_hostname)%{$fg_no_bold[yellow]%}%~ %{$reset_color%}%# "
+RPROMPT="%{%F{13}%}%T %{%f%k%}"
 

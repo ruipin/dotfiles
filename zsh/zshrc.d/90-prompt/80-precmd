@@ -1,0 +1,21 @@
+#########################################
+# prompt/precmd
+# Author: Rui Pinheiro
+#
+# precmd hook
+
+############
+# Prompt commands
+function precmd() {
+	# Print error code
+	local error_code=$?
+	if [[ "$error_code" -ne 0 ]]; then
+		echo -n "\n$fg_bold[red]ERROR CODE: $error_code"
+	fi
+
+	# Add extra line-break
+	echo -n "\n"
+
+	# Update window/pane title
+	print -Pn "\e]0;%25<..<%~\a" # Update pane title with current path. NOTE: %3~ means "show at most 3 parent folders"
+}

@@ -1,0 +1,34 @@
+#########################################
+# prompt/modules/vcs_info
+# Author: Rui Pinheiro
+#
+# Zsh prompt "vcs_info" module
+
+function mkprompt_vcs_info {
+	# vcs_info module
+	autoload -Uz vcs_info
+	zstyle ':vcs_info:*' enable git svn
+
+	zstyle ':vcs_info:*' formats "%b%c%u"
+	zstyle ':vcs_info:*' actionformats "%b%c%u (%a:%m)"
+	zstyle ':vcs_info:*' unstagedstr "%{$2%}!%{$1%}"
+	zstyle ':vcs_info:*' stagedstr "%{$2%}+%{$1%}"
+	zstyle ':vcs_info:git:*' patch-format '%7>>%p%<< %n/%a'
+	zstyle ':vcs_info:git:*' nopatch-format '%b %n/%a'
+	zstyle ':vcs_info:*' check-for-changes true
+
+	# Reload VCS information before every prompt
+	function _prompt_vcs_info {
+		vcs_info
+
+		if [[ -z "$vcs_info_msg_0_" ]]; then
+			export _prompt_vcs_info_delim=""
+		else
+			export _prompt_vcs_info_delim=" "
+		fi
+	}
+	add-zsh-hook precmd _prompt_vcs_info
+
+	# Add vcs_info information to the prompt
+	mkprompt_add "$1" "\${vcs_info_msg_0_}" "\${_prompt_vcs_info_delim}"
+}

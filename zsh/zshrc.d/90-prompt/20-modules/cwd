@@ -1,0 +1,9 @@
+#########################################
+# prompt/modules/cwd
+# Author: Rui Pinheiro
+#
+# Zsh prompt "cwd" module
+
+function mkprompt_cwd {
+	mkprompt_add "$1" "%~"
+}

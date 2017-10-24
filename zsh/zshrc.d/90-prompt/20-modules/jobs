@@ -1,0 +1,32 @@
+#########################################
+# prompt/modules/jobs
+# Author: Rui Pinheiro
+#
+# Zsh prompt "jobs" module
+
+function mkprompt_jobs {
+	# Generate prompt message
+	function _prompt_jobs_update {
+		local jobs_arr=()
+		local j i
+		for a (${(k)jobstates}) {
+			j=$jobstates[$a]
+			i="${${(@s,:,)j}[2]}"
+			jobs_arr+=($a${i//[^+-]/})
+		}
+		unset j i
+
+		if [[ -n $jobs_arr ]]; then
+			export _prompt_jobs_msg="[${(j:,:)jobs_arr}]"
+			export _prompt_jobs_delim=" "
+		else
+			export _prompt_jobs_msg=""
+			export _prompt_jobs_delim=""
+		fi
+	}
+
+	add-zsh-hook precmd _prompt_jobs_update
+
+	# Add message to the prompt
+	mkprompt_add "$1" "\${_prompt_jobs_msg}" "\${_prompt_jobs_delim}"
+}

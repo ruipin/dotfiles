@@ -1,5 +1,5 @@
 #########################################
-# locale.zsh
+# env/locale
 # Author: Rui Pinheiro
 #
 # Responsible for setting up anything to do with the system locale

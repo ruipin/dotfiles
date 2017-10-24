@@ -1,0 +1,38 @@
+#########################################
+# prompt/config
+# Author: Rui Pinheiro
+#
+# Configuration file for the prompt
+
+
+########################
+# Configuration
+
+# The minimum number of seconds for the execution time of a command to be printed as part of the prompt
+export ZSH_PROMPT_MIN_EXEC_TIME=2
+
+
+########################
+# Make prompts
+mkprompt_start
+
+# Left Prompt
+mkprompt_left
+mkprompt_ssh_hostname "$fg[yellow]"
+mkprompt_delim ":"
+mkprompt_cwd "$fg[yellow]"
+mkprompt_prompt ""
+mkprompt_text " "
+mkprompt_save "PROMPT"
+
+# Right Prompt
+mkprompt_right
+mkprompt_clock "%F{13}"
+mkprompt_jobs "%F{13}"
+mkprompt_exec_time "%F{13}"
+mkprompt_vcs_info "$fg_bold[gray]" "$fg_bold[red]"
+mkprompt_vimode "%S%B%F{red}"
+mkprompt_save "RPROMPT"
+
+# Finish
+mkprompt_finish

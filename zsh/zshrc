@@ -22,8 +22,8 @@ hash -d zshscratch="$ZSH_SCRATCH"
 if [[ -d "$HOME/dotfiles_local" ]]; then
 	export LOCAL_DOTFILES="$HOME/dotfiles_local"
 	hash -d ldotf="$LOCAL_DOTFILES"
-    export ZSH_HOME_LOCAL="$LOCAL_DOTFILES/zsh"
-    hash -d lzsh="$ZSH_HOME_LOCAL"
+	export ZSH_HOME_LOCAL="$LOCAL_DOTFILES/zsh"
+	hash -d lzsh="$ZSH_HOME_LOCAL"
 fi
 
 #################
@@ -31,9 +31,9 @@ fi
 #export ZSH_TMP="$ZSH_SCRATCH/tmp"
 #hash -d zshtmp="$ZSH_TMP"
 #if [[ ! -d "$ZSH_TMP" ]] ; then
-#    mkdir -p "$ZSH_TMP"
+#	mkdir -p "$ZSH_TMP"
 #else
-#    find "$ZSH_TMP" -mindepth 1 -mtime +1 -delete
+#	find "$ZSH_TMP" -mindepth 1 -mtime +1 -delete
 #fi
 
 
@@ -45,7 +45,7 @@ fi
 # Supports a separate, local dotfiles directory with an additional zshrc.d folder
 # Files inside this "local zshrc.d" get loaded as if they were in the "primary zshrc.d"
 # NOTE: If a file in "local zshrc.d" has the same name as a file in "primary zshrc.d",
-#       only the local version is loaded
+#		only the local version is loaded
 #
 # If configured to do so, in order to avoid sourcing dozens of files everytime zsh
 #
@@ -57,17 +57,17 @@ fi
 #
 # During step 4, files can be sourced in different ways:
 # - By default =>
-#     Files are sourced using the "." zsh builtin by default.
+#	Files are sourced using the "." zsh builtin by default.
 # - If ZSH_ZSHRCD_CONCATENATE=1 =>
-#     Files are first concatenated into a "zshrc.d.cat" file,
-#     which is then sourced. If "zshrc.d.cat" already exists, and it is newer than "zshrc"
-#     and both "zshrc.d" directories, then it is sourced directly.
-#     This allows a single file to be read, which can optimize systems where the "zshrc.d" firectories
-#     are in a networked filesystem, as it reduces the number of file accesses.
+#	Files are first concatenated into a "zshrc.d.cat" file,
+#	which is then sourced. If "zshrc.d.cat" already exists, and it is newer than "zshrc"
+#	and both "zshrc.d" directories, then it is sourced directly.
+#	This allows a single file to be read, which can optimize systems where the "zshrc.d" firectories
+#	are in a networked filesystem, as it reduces the number of file accesses.
 # - If ZSH_ZSHRCD_CONCATENATE=1 && ZSH_ZSHRCD_COMPILE=1 =>
-#     Concatenates the files as above, but also uses the "zcompile" builtin to pre-parse "zshrc.d.cat".
-#     This should (very slightly) improve the zsh startup time, and allows zsh to map the file to memory,
-#     sharing its memory page between processes.
+#	Concatenates the files as above, but also uses the "zcompile" builtin to pre-parse "zshrc.d.cat".
+#	This should (very slightly) improve the zsh startup time, and allows zsh to map the file to memory,
+#	sharing its memory page between processes.
 
 export ZSH_ZSHRCD="$ZSH_HOME/zshrc.d"
 hash -d zshrcd="$ZSH_ZSHRCD"
@@ -76,8 +76,16 @@ hash -d lzshrcd="$ZSH_ZSHRCD_LOCAL"
 export ZSH_ZSHRCD_SCRATCH="$ZSH_SCRATCH/zshrcd"
 export ZSH_ZSHRCD_CONCATENATE=1
 export ZSH_ZSHRCD_COMPILE=1
+export ZSH_ZSHRCD_FRESHNESS_CHECK=0 # Can be expensive for network filesystems
 export ZSH_ZSHRCD_DEBUG=0
 
+# Clean zshrcd files
+function zshrcd_regen {
+	setopt rmstarsilent
+	[[ -d "$ZSH_ZSHRCD_SCRATCH" ]] && \rm -f "$ZSH_ZSHRCD_SCRATCH/"*
+	unsetopt rmstarsilent
+	exec zsh -l -i
+}
 
 # Debug helper
 function zshrcd_debug {
@@ -86,74 +94,80 @@ function zshrcd_debug {
 
 # Iterates through all files inside zshrc.d
 # Calls "$1" for each file to be sourced
+setopt extended_glob
 function iterate_zshrcd {
-    # Source zshrc.d files
-    if [[ -z "$LOCAL_DOTFILES" || ! -d "$ZSH_ZSHRCD_LOCAL" ]]; then
-        # If no local dotfiles exist, use shell globbing directly (faster)
-        # NOTE: "(.)" is a globbing qualifier to match regular files only
-        for f in "$ZSH_ZSHRCD/"**/*(.) ; do
-			zshrcd_debug "Included file '$f'."
-            $1 "$f"
-        done; unset f
-    else
-        # Collect files
-        # NOTE: "(.)" is a globbing qualifier to match regular files only
-        local sourcefiles=("$ZSH_ZSHRCD/"**/*(.) "$ZSH_ZSHRCD_LOCAL/"**/*(.))
+	# Source zshrc.d files
+	if [[ -z "$LOCAL_DOTFILES" || ! -d "$ZSH_ZSHRCD_LOCAL" ]]; then
+		# If no local dotfiles exist, use shell globbing directly (faster)
+		# NOTE: "(.)" is a globbing qualifier to match regular files only
+		for f in "$ZSH_ZSHRCD/"**/*(.) ; do
+			zshrcd_debug "Including file '$f'."
+			$1 "$f"
+		done; unset f
+	else
+		# Collect files
+		# NOTE: "(.)" is a globbing qualifier to match regular files only
+		local filemask='**/^*.(bak|ignore)(.)'
+		#local sourcefiles=("$ZSH_ZSHRCD/"**/*(.) "$ZSH_ZSHRCD_LOCAL/"**/*(.))
+		local sourcefiles=("$ZSH_ZSHRCD/"${~filemask} "$ZSH_ZSHRCD_LOCAL/"${~filemask})
 
-        # Remove path prefix up to the zshrc.d folder
-        sourcefiles=(${sourcefiles#*/zshrc.d/})
+		# Remove path prefix up to the zshrc.d folder
+		sourcefiles=(${sourcefiles#*/zshrc.d/})
 
-        # Sort and remove duplicates
-        sourcefiles=(${(@ui)sourcefiles})
+		# Sort and remove duplicates
+		sourcefiles=(${(@ui)sourcefiles})
 
-        # Source files
-        for f in $sourcefiles ; do
-			zshrcd_debug "Included file '$f'."
-            if [[ -f "$ZSH_ZSHRCD_LOCAL/$f" ]]; then
-                $1 "$ZSH_ZSHRCD_LOCAL/$f"
-            else
-                $1 "$ZSH_ZSHRCD/$f"
-            fi
-        done; unset f
-    fi
+		# Source files
+		for f in $sourcefiles ; do
+			if [[ -f "$ZSH_ZSHRCD_LOCAL/$f" ]]; then
+				$1 "$ZSH_ZSHRCD_LOCAL/$f"
+			else
+				$1 "$ZSH_ZSHRCD/$f"
+			fi
+			zshrcd_debug "Including file '$f'."
+		done; unset f
+	fi
 }
 
 # If we want to concatenate/compile the files
 if [[ "$ZSH_ZSHRCD_CONCATENATE" -eq "1" ]]; then
-    # Initialize directory
-    [[ ! -d "$ZSH_ZSHRCD_SCRATCH" ]] && mkdir -p "$ZSH_ZSHRCD_SCRATCH"
-    export ZSH_ZSHRCD_CAT="$ZSH_ZSHRCD_SCRATCH/zshrc.d.cat"
+	# Initialize directory
+	[[ ! -d "$ZSH_ZSHRCD_SCRATCH" ]] && mkdir -p "$ZSH_ZSHRCD_SCRATCH"
+	export ZSH_ZSHRCD_CAT="$ZSH_ZSHRCD_SCRATCH/zshrc.d.cat"
 
-    # Regenerate zshrc.d.cat if it is no longer fresh
-    if [[
-        ! "$ZSH_ZSHRCD_CAT" -nt "$ZSH_ZSHRCD" ||
-        ! "$ZSH_ZSHRCD_CAT" -nt "$ZSH_ZSHRCD_LOCAL" ||
-        ! "$ZSH_ZSHRCD_CAT" -nt "$ZSH_ZSHRC"
-    ]]; then
+	# Regenerate zshrc.d.cat if it is no longer fresh
+	if [[
+		! -f "$ZSH_ZSHRCD_CAT" ||
+		"$ZSH_ZSHRCD_FRESHNESS_CHECK" -eq "1" && (
+			! -z "$( find "$ZSH_HOME" -newer "$ZSH_ZSHRCD_CAT" -print -quit )" ||
+			( ! -z "$LOCAL_DOTFILES" && ! -z "$( find "$ZSH_HOME_LOCAL" -newer "$ZSH_ZSHRCD_CAT" -print -quit )" )
+		)
+	]]; then
+
 		echo "[zshrc.d] Regenerating 'zshrc.d.cat'..."
-        [[ -f "$ZSH_ZSHRCD_CAT" ]] && rm -f "$ZSH_ZSHRCD_CAT" && touch "$ZSH_ZSHRCD_CAT"
-        function do_zshrcd_cat {
-            echo "\n\n#****************************************\n#** $1\n(){\n" >> "$ZSH_ZSHRCD_CAT"
-            cat "$1" >> "$ZSH_ZSHRCD_CAT"
-            echo "\n} #** end of $1\n#****************************************\n\n" >> "$ZSH_ZSHRCD_CAT"
-        }
-        iterate_zshrcd "do_zshrcd_cat"
-        unfunction do_zshrcd_cat
-    fi
+		[[ -f "$ZSH_ZSHRCD_CAT" ]] && rm -f "$ZSH_ZSHRCD_CAT" && touch "$ZSH_ZSHRCD_CAT"
+		function do_zshrcd_cat {
+			echo "\n\n#****************************************\n#** $1\n(){\nlocal 0=${(qqqq)1}\n" >> "$ZSH_ZSHRCD_CAT"
+			cat "$1" >> "$ZSH_ZSHRCD_CAT"
+			echo "\n} #** end of $1\n#****************************************\n\n" >> "$ZSH_ZSHRCD_CAT"
+		}
+		iterate_zshrcd "do_zshrcd_cat"
+		unfunction do_zshrcd_cat
+	fi
 
-    # Re-compile zshrc.d.cat if it is no longer fresh
-    if [[ "$ZSH_ZSHRCD_COMPILE" -eq "1" && ! "$ZSH_ZSHRCD_CAT.zwc" -nt "$ZSH_ZSHRCD_CAT" ]]; then
+	# Re-compile zshrc.d.cat if it is no longer fresh
+	if [[ "$ZSH_ZSHRCD_COMPILE" -eq "1" && ! "$ZSH_ZSHRCD_CAT.zwc" -nt "$ZSH_ZSHRCD_CAT" ]]; then
 		echo "[zshrc.d] Recompiling 'zshrc.d.cat'..."
-        [[ -f "$ZSH_ZSHRCD_CAT.zwc" ]] && rm -f "$ZSH_ZSHRCD_CAT.zwc"
-        zcompile -M "$ZSH_ZSHRCD_CAT"
-    fi
+		[[ -f "$ZSH_ZSHRCD_CAT.zwc" ]] && rm -f "$ZSH_ZSHRCD_CAT.zwc"
+		zcompile -M "$ZSH_ZSHRCD_CAT"
+	fi
 
-    # Source zshrc.d.cat
-    . "$ZSH_ZSHRCD_CAT"
+	# Source zshrc.d.cat
+	. "$ZSH_ZSHRCD_CAT"
 
 # Otherwise, just source them all individually
 else
-    iterate_zshrcd '.'
+	iterate_zshrcd '.'
 fi
 
 # Cleanup

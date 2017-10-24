@@ -1,0 +1,44 @@
+#########################################
+# prompt/modules/exec_time
+# Author: Rui Pinheiro
+#
+# Zsh prompt "exec_time" module
+
+function mkprompt_exec_time {
+	# Generate prompt message
+	function _prompt_exec_time_update {
+		local stop=$EPOCHSECONDS
+		local start=${_prompt_cmd_timestamp:-$stop}
+		integer elapsed=$stop-$start
+		if (($elapsed > ${ZSH_PROMPT_MIN_EXEC_TIME})); then
+			export _prompt_exec_time_msg="$( _prompt_human_time $elapsed )"
+			export _prompt_exec_time_delim=" "
+		else
+			export _prompt_exec_time_msg=""
+			export _prompt_exec_time_delim=""
+		fi
+		unset _prompt_cmd_timestamp # Reset timestamp
+	}
+
+	function _prompt_human_time {
+		local tmp=$1
+		local days=$(( tmp / 60 / 60 / 24 ))
+		local hours=$(( tmp / 60 / 60 % 24 ))
+		local minutes=$(( tmp / 60 % 60 ))
+		local seconds=$(( tmp % 60 ))
+		(( $days > 0 )) && echo -n "${days}d "
+		(( $hours > 0 )) && echo -n "${hours}h "
+		(( $minutes > 0 )) && echo -n "${minutes}m "
+		echo -n "${seconds}s"
+	}
+
+	function _prompt_exec_time_preexec {
+		export _prompt_cmd_timestamp=$EPOCHSECONDS
+	}
+
+	add-zsh-hook preexec _prompt_exec_time_preexec
+	add-zsh-hook precmd _prompt_exec_time_update
+
+	# Add message to the prompt
+	mkprompt_add "$1" "\${_prompt_exec_time_msg}" "\${_prompt_exec_time_delim}"
+}

@@ -1,5 +1,5 @@
 #########################################
-# local_prefix.zsh
+# env/local_prefix
 # Author: Rui Pinheiro
 #
 # Sets up a local prefix folder

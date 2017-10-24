@@ -1,0 +1,28 @@
+#########################################
+# prompt/modules/vimode
+# Author: Rui Pinheiro
+#
+# Zsh prompt "vimode" module
+
+function mkprompt_vimode {
+	# Regenerate the vimode prompt message anytime the prompt is redrawn
+	function _prompt_vimode {
+		export _prompt_vimode_msg="${${KEYMAP/vicmd/vi}/(main|viins)/}"
+		if [[ -z "$_prompt_vimode_msg" ]]; then
+			export _prompt_vimode_delim=""
+		else
+			export _prompt_vimode_delim=" "
+		fi
+	}
+	add-zsh-hook precmd _prompt_vimode
+
+	# Hook Zsh keymap change event
+	function zle-keymap-select {
+		_prompt_vimode
+		zle reset-prompt
+	}
+	zle -N zle-keymap-select
+
+	# Add to prompt
+	mkprompt_add "$1" "\${_prompt_vimode_msg}" "\${_prompt_vimode_delim}"
+}

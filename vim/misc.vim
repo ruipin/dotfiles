@@ -41,3 +41,5 @@ autocmd BufNewFile,BufRead zshrc set filetype=zsh
 autocmd BufNewFile,BufRead vimrc set filetype=vim
 autocmd BufNewFile,BufRead *.tmux set filetype=tmux
 autocmd BufNewFile,BufRead $DOTFILES/i3/config.d/*.conf set filetype=i3
+autocmd BufNewFile,BufRead $DOTFILES/zsh/* set filetype=zsh
+autocmd BufNewFile,BufRead $LOCAL_DOTFILES/zsh/* set filetype=zsh

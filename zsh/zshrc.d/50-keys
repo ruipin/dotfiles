@@ -13,9 +13,10 @@ bindkey "^[[3~" delete-char
 bindkey "^[[2~" overwrite-mode
 bindkey "^[[5~" beginning-of-buffer-or-history
 bindkey "^[[6~" end-of-buffer-or-history
-bindkey -M      vicmd 'k' history-substring-search-up
-bindkey -M      vicmd 'j' history-substring-search-down
-bindkey -v      '^?'  backward-delete-char
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+bindkey -M viins '^H'  backward-delete-char
+bindkey -M viins '^H' backward-delete-char
 
 bindkey '^[[A'  history-substring-search-up
 bindkey '^[[B'  history-substring-search-down

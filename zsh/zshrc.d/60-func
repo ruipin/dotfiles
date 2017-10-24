@@ -5,6 +5,10 @@
 # Defines multiple useful shell functions
 
 #############
+# Enable 'zmv' extension
+autoload -U zmv
+
+#############
 # Make directory and enter it
 function mkcd {
 	mkdir -p "$*" && cd "$*"

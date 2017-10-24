@@ -36,3 +36,8 @@
 .nfs*
 ehthumbs.db
 Thumbs.db
+
+# ZSH compiled files #
+######################
+*.zwc
+*.zwc.old

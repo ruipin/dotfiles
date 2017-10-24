@@ -56,6 +56,8 @@ eval `dircolors --sh $ZSH_DIRCOLORS_PATH`
 
 ####################
 # Completion style
+zstyle ':completion:*' use-cache on
+
 zstyle ':completion:*' completer _complete _match _approximate:-one #_approximate:-two
 zstyle ':completion:*:approximate-one:*' max-errors 1
 zstyle ':completion:*:approximate-two:*' max-errors 2

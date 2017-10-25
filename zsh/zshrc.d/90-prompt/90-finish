@@ -1,0 +1,7 @@
+#########################################
+# prompt/finish
+# Author: Rui Pinheiro
+#
+# Cleans up after mkprompt
+
+mkprompt_finish

@@ -6,7 +6,7 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Load plugin
-Plug 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
 " Configuration
 nmap <F4> :TagbarToggle<CR>

@@ -6,7 +6,7 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Load plugin
-Plug 'mbbill/undotree' "More efficient undo tree
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' } "More efficient undo tree
 
 
 " Persistent History

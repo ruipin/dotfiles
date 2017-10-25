@@ -8,7 +8,7 @@
 " Neovim
 if has('nvim')
 	Plug 'Shougo/deoplete.nvim'
-	Plug 'fishbullet/deoplete-ruby'
+	Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
 
 	" Enable deoplete.
 	let g:deoplete#enable_at_startup = 1"

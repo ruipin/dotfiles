@@ -6,7 +6,7 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Load plugin
-Plug 'vhda/verilog_systemverilog.vim'
+Plug 'vhda/verilog_systemverilog.vim', { 'for': [ 'verilog', 'systemverilog', 'verilog_systemverilog' ] }
 
 " Set file types
 au bufread,bufnewfile *.vh set filetype=verilog

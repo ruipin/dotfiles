@@ -6,7 +6,7 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Load plugin
-Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
 
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)

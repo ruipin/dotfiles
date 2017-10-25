@@ -6,8 +6,9 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Load plugin
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+let g:scrooloose_nerdtree_oncmd = ['NERDTree', 'NERDTreeToggle']
+Plug 'scrooloose/nerdtree', { 'on': g:scrooloose_nerdtree_oncmd }
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': g:scrooloose_nerdtree_oncmd }
 
 " Key binding
 map <C-n> :NERDTreeToggle<CR>
@@ -17,7 +18,7 @@ let NERDTreeIgnore = ['\.pyc$']
 
 " Start automatically if no files specified
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | exe 'NERDTree' | endif
 
 " Start if opening a directory
 autocmd StdinReadPre * let s:std_in=1

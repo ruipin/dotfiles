@@ -69,13 +69,10 @@ endif
 	"Plug 'guns/xterm-color-table.vim'
 
 	" i3 status syntax
-	Plug 'PotatoesMaster/i3-vim-syntax'
-
-	" Allow to close buffers without closing split
-	Plug 'qpkorr/vim-bufkill'
+	Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'vim' }
 
 	" Tmux syntax highlighting
-	Plug 'tmux-plugins/vim-tmux'
+	Plug 'tmux-plugins/vim-tmux', { 'for': 'tmux' }
 
 	" Gitgutter: Shows signs for added, modifed, removed lines in current git repo
 	Plug 'airblade/vim-gitgutter'

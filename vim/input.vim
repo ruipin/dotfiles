@@ -60,4 +60,3 @@ nnoremap <silent> <C-Down> <c-w>j
 
 nnoremap <silent> <C-a> :bp<CR>
 nnoremap <silent> <C-d> :bn<CR>
-nnoremap <silent> <C-s> :BD<CR>

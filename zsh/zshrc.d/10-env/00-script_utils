@@ -4,9 +4,45 @@
 #
 # Utility methods for zsh script functions and methods
 
+# Basic escape codes
+typeset -g esc=$'\e[' rc=$'m'
 
-# Enable colors for scripts
+################
+# Colors
+typeset -g fg256="${esc}38;5;" bg256="${esc}48;5;"
+
 autoload -U colors && colors
+
+function list_colors {
+	i2=0
+	for i in {0..255} ; do
+		(( i2 += 1 ))
+		echo -en "$fg_bold[black]"
+		echo -en "${bg256}${i}${rc}${i}${reset_color}\t"
+		
+		if [[ "$i2" -eq 10 ]]; then
+			echo -en "\n"
+			i2=0
+		fi
+	done
+	echo
+}
+
+function add_named_color {
+	local name="$1" cnum="$2"
+
+	fg[$name]="$fg256$cnum$rc"
+	fg_bold[$name]="$fg256$cnum;$color[bold]$rc"
+	fg_no_bold[$name]="$fg256$cnum;$color[normal]$rc"
+
+	bg[$name]="$bg256$cnum$rc"
+	bg_bold[$name]="$bg256$cnum;$color[bold]$rc"
+	bg_no_bold[$name]="$bg256$cnum;$color[no_bold]$rc"
+}
+
+# Custom colors
+add_named_color "purple" 13
+add_named_color "lime" 154
 
 
 #################

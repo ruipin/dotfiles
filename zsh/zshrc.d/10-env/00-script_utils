@@ -46,6 +46,11 @@ add_named_color "lime" 154
 
 
 #################
+# Datetime
+zmodload "zsh/datetime"
+
+
+#################
 # Echo
 function echo_error {
 	echo "$fg_bold[red][$ZSH_SCRIPT_TITLE] ERROR: ${@}${reset_color}"

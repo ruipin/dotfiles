@@ -79,7 +79,7 @@ typeset -g ZSH_ZSHRCD_FRESHNESS_CHECK=0 # Can be expensive for network filesyste
 typeset -g ZSH_ZSHRCD_DEBUG=0
 
 # Clean zshrcd files
-function zshrcd_regen {
+function regen_zshrcd {
 	setopt rmstarsilent
 	[[ -d "$ZSH_ZSHRCD_SCRATCH" ]] && \rm -f "$ZSH_ZSHRCD_SCRATCH/"*
 	unsetopt rmstarsilent

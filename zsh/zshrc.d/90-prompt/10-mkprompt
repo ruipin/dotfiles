@@ -10,40 +10,27 @@ autoload -Uz add-zsh-hook
 setopt promptsubst
 setopt prompt_cr
 
-# Initialize mkprompt environment
-
-# Helper functions
 function mkprompt_init {
-	typeset -g  _mkprompt_default_delim=" "
-	typeset -g  _mkprompt_init=1
-	typeset -g  _mkprompt_vars=()
-	typeset -g  _mkprompt_var
-	typeset -g  _mkprompt_arr
-	typeset -gA _mkprompt_lefts
-	typeset -g  _mkprompt_left
-	typeset -gA _mkprompt_next_delim
-	typeset -gA _mkprompt_next_delim_chr
-	typeset -gA _mkprompt_next_delim_var
+	typeset -g _mkprompt_default_delim=" "
+	typeset -g _mkprompt_init=1
+	typeset -g _mkprompt_left=0
+	typeset -g _mkprompt_var=""
+	typeset -g _mkprompt_arr=""
 }
 
 function mkprompt_start {
 	is_false "$_mkprompt_init" && mkprompt_init
-	[[ ! -z "$_mkprompt_var" ]] && mkprompt_save
 
-	if (( ! ${_mkprompt_vars[(I)$1]} )); then
-		_mkprompt_vars+="$1"
+	if [[ "$1" != "$_mkprompt_var" ]]; then
+		mkprompt_save
 		_mkprompt_arr=()
 		_mkprompt_left="${2:-1}"
-		_mkprompt_lefts[$1]="$_mkprompt_left"
-		_mkprompt_next_delim[$1]=0
+		_mkprompt_next_delim=0
 
 		if is_true "$_mkprompt_left" ; then
-			_mkprompt_next_delim_chr[$1]=""
-			_mkprompt_next_delim_var[$1]=""
+			_mkprompt_next_delim_chr=""
+			_mkprompt_next_delim_var=""
 		fi
-	else
-		_mkprompt_arr=("${(P)1}")
-		_mkprompt_left="$_mkprompt_lefts[$1]"
 	fi
 	_mkprompt_var="$1"
 }
@@ -51,14 +38,14 @@ function mkprompt_start {
 function mkprompt_apply_delim {
 	local new_delim_chr="${1:-$_mkprompt_default_delim}" new_delim_var="$2"
 
-	local next_delim="$_mkprompt_next_delim[$_mkprompt_var]"
+	local next_delim="$_mkprompt_next_delim"
 	if is_true "$next_delim" ; then
 		local delim_var
 		local delim_chr
 
 		if is_true "$_mkprompt_left" ; then
-			delim_var="$_mkprompt_next_delim_var[$_mkprompt_var]"
-			delim_chr="$_mkprompt_next_delim_chr[$_mkprompt_var]"
+			delim_var="$_mkprompt_next_delim_var"
+			delim_chr="$_mkprompt_next_delim_chr"
 		else
 			delim_var="$new_delim_var"
 			delim_chr="$new_delim_chr"
@@ -71,10 +58,10 @@ function mkprompt_apply_delim {
 		fi
 	fi
 
-	_mkprompt_next_delim[$_mkprompt_var]=0
+	_mkprompt_next_delim=0
 	if is_true "$_mkprompt_left" ; then
-		_mkprompt_next_delim_chr[$_mkprompt_var]="$new_delim_chr"
-		_mkprompt_next_delim_var[$_mkprompt_var]="$new_delim_var"
+		_mkprompt_next_delim_chr="$new_delim_chr"
+		_mkprompt_next_delim_var="$new_delim_var"
 	fi
 }
 
@@ -91,9 +78,9 @@ function mkprompt_add {
 		local add="${color}${value}${reset}"
 
 		mkprompt_apply_delim "$new_delim_chr" "$new_delim_var"
-		_mkprompt_arr+=("${add}")
+		_mkprompt_arr+=("$add")
 
-		_mkprompt_next_delim[$_mkprompt_var]=1
+		_mkprompt_next_delim=1
 	fi
 }
 
@@ -108,13 +95,15 @@ function mkprompt_text {
 }
 
 function mkprompt_delim {
-	_mkprompt_next_delim_chr[$_mkprompt_var]="$@"
+	_mkprompt_next_delim_chr="$@"
 }
 function mkprompt_no_delim {
-	_mkprompt_next_delim[$_mkprompt_var]=0
+	_mkprompt_next_delim=0
 }
 
 function mkprompt_save {
+	[[ -z "$_mkprompt_var" ]] && return
+
 	local arr
 	if is_true "$_mkprompt_left"; then
 		arr=(${_mkprompt_arr})
@@ -126,6 +115,6 @@ function mkprompt_save {
 
 function mkprompt_finish {
 	mkprompt_save
-	#unset -m "_mkprompt_*"
-	#unfunction -m "mkprompt_*"
+	unset -m "_mkprompt_*"
+	unfunction -m "mkprompt_*"
 }

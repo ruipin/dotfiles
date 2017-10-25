@@ -96,11 +96,6 @@ export EDITOR="nvim"
 export PAGER="less"
 export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS --quit-if-one-screen --no-init"
 
-###################
-# Auto-suggestions
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=10"
-export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-
 
 ###################
 # Ruby

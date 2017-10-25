@@ -9,20 +9,20 @@ export USE_ZSH=1
 
 #################
 # Obtain zsh configuration file paths
-export ZSH_ZSHRC="$(readlink -f "${(%):-%N}")"
-export ZSH_HOME=$(dirname "$ZSH_ZSHRC" )
+typeset -g ZSH_ZSHRC="$(readlink -f "${(%):-%N}")"
+typeset -g ZSH_HOME=$(dirname "$ZSH_ZSHRC" )
 hash -d zsh="$ZSH_HOME"
 export DOTFILES=$(readlink -f "$ZSH_HOME/..")
 hash -d dotf="$DOTFILES"
 
-export ZSH_SCRATCH="$HOME/.zsh"
+typeset -g ZSH_SCRATCH="$HOME/.zsh"
 hash -d zshscratch="$ZSH_SCRATCH"
 
 # Local zsh configuration
 if [[ -d "$HOME/dotfiles_local" ]]; then
 	export LOCAL_DOTFILES="$HOME/dotfiles_local"
 	hash -d ldotf="$LOCAL_DOTFILES"
-	export ZSH_HOME_LOCAL="$LOCAL_DOTFILES/zsh"
+	typeset -g ZSH_HOME_LOCAL="$LOCAL_DOTFILES/zsh"
 	hash -d lzsh="$ZSH_HOME_LOCAL"
 fi
 
@@ -60,8 +60,7 @@ fi
 #	Files are sourced using the "." zsh builtin by default.
 # - If ZSH_ZSHRCD_CONCATENATE=1 =>
 #	Files are first concatenated into a "zshrc.d.cat" file,
-#	which is then sourced. If "zshrc.d.cat" already exists, and it is newer than "zshrc"
-#	and both "zshrc.d" directories, then it is sourced directly.
+#	which is then sourced. If "zshrc.d.cat" already exists, then it is sourced directly.
 #	This allows a single file to be read, which can optimize systems where the "zshrc.d" firectories
 #	are in a networked filesystem, as it reduces the number of file accesses.
 # - If ZSH_ZSHRCD_CONCATENATE=1 && ZSH_ZSHRCD_COMPILE=1 =>
@@ -69,15 +68,15 @@ fi
 #	This should (very slightly) improve the zsh startup time, and allows zsh to map the file to memory,
 #	sharing its memory page between processes.
 
-export ZSH_ZSHRCD="$ZSH_HOME/zshrc.d"
+typeset -g ZSH_ZSHRCD="$ZSH_HOME/zshrc.d"
 hash -d zshrcd="$ZSH_ZSHRCD"
-export ZSH_ZSHRCD_LOCAL="$ZSH_HOME_LOCAL/zshrc.d"
+typeset -g ZSH_ZSHRCD_LOCAL="$ZSH_HOME_LOCAL/zshrc.d"
 hash -d lzshrcd="$ZSH_ZSHRCD_LOCAL"
-export ZSH_ZSHRCD_SCRATCH="$ZSH_SCRATCH/zshrcd"
-export ZSH_ZSHRCD_CONCATENATE=1
-export ZSH_ZSHRCD_COMPILE=1
-export ZSH_ZSHRCD_FRESHNESS_CHECK=0 # Can be expensive for network filesystems
-export ZSH_ZSHRCD_DEBUG=0
+typeset -g ZSH_ZSHRCD_SCRATCH="$ZSH_SCRATCH/zshrcd"
+typeset -g ZSH_ZSHRCD_CONCATENATE=1
+typeset -g ZSH_ZSHRCD_COMPILE=1
+typeset -g ZSH_ZSHRCD_FRESHNESS_CHECK=0 # Can be expensive for network filesystems
+typeset -g ZSH_ZSHRCD_DEBUG=0
 
 # Clean zshrcd files
 function zshrcd_regen {

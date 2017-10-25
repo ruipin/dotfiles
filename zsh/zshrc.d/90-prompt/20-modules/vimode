@@ -7,12 +7,7 @@
 function mkprompt_vimode {
 	# Regenerate the vimode prompt message anytime the prompt is redrawn
 	function _prompt_vimode {
-		export _prompt_vimode_msg="${${KEYMAP/vicmd/vi}/(main|viins)/}"
-		if [[ -z "$_prompt_vimode_msg" ]]; then
-			export _prompt_vimode_delim=""
-		else
-			export _prompt_vimode_delim=" "
-		fi
+		typeset -g _prompt_vimode_msg="${${KEYMAP/vicmd/vi}/(main|viins)/}"
 	}
 	add-zsh-hook precmd _prompt_vimode
 
@@ -24,5 +19,5 @@ function mkprompt_vimode {
 	zle -N zle-keymap-select
 
 	# Add to prompt
-	mkprompt_add "$1" "\${_prompt_vimode_msg}" "\${_prompt_vimode_delim}"
+	mkprompt_add_var "$1" "_prompt_vimode_msg"
 }

@@ -10,12 +10,10 @@ function mkprompt_exec_time {
 		local stop=$EPOCHSECONDS
 		local start=${_prompt_cmd_timestamp:-$stop}
 		integer elapsed=$stop-$start
-		if (($elapsed > ${ZSH_PROMPT_MIN_EXEC_TIME})); then
-			export _prompt_exec_time_msg="$( _prompt_human_time $elapsed )"
-			export _prompt_exec_time_delim=" "
+		if (($elapsed > ${ZSH_PROMPT_MIN_EXEC_TIME:-5})); then
+			typeset -g _prompt_exec_time_msg="$( _prompt_human_time $elapsed )"
 		else
-			export _prompt_exec_time_msg=""
-			export _prompt_exec_time_delim=""
+			typeset -g _prompt_exec_time_msg=""
 		fi
 		unset _prompt_cmd_timestamp # Reset timestamp
 	}
@@ -33,12 +31,12 @@ function mkprompt_exec_time {
 	}
 
 	function _prompt_exec_time_preexec {
-		export _prompt_cmd_timestamp=$EPOCHSECONDS
+		typeset -g _prompt_cmd_timestamp=$EPOCHSECONDS
 	}
 
 	add-zsh-hook preexec _prompt_exec_time_preexec
 	add-zsh-hook precmd _prompt_exec_time_update
 
 	# Add message to the prompt
-	mkprompt_add "$1" "\${_prompt_exec_time_msg}" "\${_prompt_exec_time_delim}"
+	mkprompt_add_var "$1" "_prompt_exec_time_msg"
 }

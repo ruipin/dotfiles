@@ -20,15 +20,9 @@ function mkprompt_vcs_info {
 	# Reload VCS information before every prompt
 	function _prompt_vcs_info {
 		vcs_info
-
-		if [[ -z "$vcs_info_msg_0_" ]]; then
-			export _prompt_vcs_info_delim=""
-		else
-			export _prompt_vcs_info_delim=" "
-		fi
 	}
 	add-zsh-hook precmd _prompt_vcs_info
 
 	# Add vcs_info information to the prompt
-	mkprompt_add "$1" "\${vcs_info_msg_0_}" "\${_prompt_vcs_info_delim}"
+	mkprompt_add_var "$1" "vcs_info_msg_0_"
 }

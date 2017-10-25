@@ -6,72 +6,70 @@
 
 autoload -Uz add-zsh-hook
 
+# Prompt-related shell options
+setopt promptsubst
+setopt prompt_cr
+
+# Initialize mkprompt environment
+
+# Helper functions
 function mkprompt_start {
-	# Prompt-related shell options
-	setopt promptsubst
-	setopt prompt_cr
+	typeset -g MKPROMPT_LEFT="${1:-1}"
+	typeset -g MKPROMPT_ARR=()
+	typeset -g MKPROMPT_NEXT_DELIM=0
+	typeset -g MKPROMPT_NEXT_DELIM_CHR=""
+	typeset -g MKPROMPT_NEXT_DELIM_VAR=""
+}
 
-	# Initialize mkprompt environment
-	export MKPROMPT_VAL=""
-	export MKPROMPT_NEXT_DELIM=""
-	export MKPROMPT_LEFT=1
+function mkprompt_add {
+	local color="$1" value="$2" next_delim_chr="${3:- }"
 
-	# Helper functions
-	function mkprompt_add {
-		local color="$1"
-		local value="$2"
-		local delim="$3"
+	if [[ ! -z "$value" ]]; then
+		[[ ! -z "$color" ]] && color="%{$color%}"
+		local reset="%{$reset_color%}"
+		local add="${color}${value}${reset}"
 
-		if [[ ! -z "$value" ]]; then
-			if [[ "$#" -lt "3" ]]; then
-				delim=" "
-			fi
-
-			local add
-			if [[ ! -z "$color" ]]; then
-				add="%{${color}%}${value}%{${reset_color}%}"
-			else
-				add="${value}"
-			fi
-
-			if is_true "$MKPROMPT_LEFT" ; then
-				MKPROMPT_VAL+="${MKPROMPT_NEXT_DELIM}${add}"
-			else
-				MKPROMPT_VAL="${add}${MKPROMPT_NEXT_DELIM}${MKPROMPT_VAL}"
-			fi
-			MKPROMPT_NEXT_DELIM="$delim"
+		if is_true "$MKPROMPT_NEXT_DELIM"; then
+			local delim="$MKPROMPT_NEXT_DELIM_CHR"
+			[[ ! -z "$MKPROMPT_NEXT_DELIM_VAR" ]] && delim="\${${MKPROMPT_NEXT_DELIM_VAR}:+${delim}}"
+			MKPROMPT_ARR+=("$delim")
 		fi
-	}
 
-	function mkprompt_left {
-		MKPROMPT_LEFT=1
-	}
-	function mkprompt_right {
-		MKPROMPT_LEFT=0
-	}
+		MKPROMPT_ARR+=("${add}")
 
-	function mkprompt_text {
-		MKPROMPT_VAL+="$@"
-	}
+		MKPROMPT_NEXT_DELIM_CHR="$next_delim_chr" # default delimiter
+		MKPROMPT_NEXT_DELIM_VAR=""
+		MKPROMPT_NEXT_DELIM=1
+	fi
+}
 
-	function mkprompt_delim {
-		if is_true "$MKPROMPT_NEED_DELIM" ; then
-			MKPROMPT_VAL+="$@"
-		fi
-	}
-	function mkprompt_no_delim {
-		MKPROMPT_NEED_DELIM=0
-	}
+function mkprompt_add_var {
+	local color="$1" var="$2"
 
-	function mkprompt_save {
-		local var_name="$1"
-		export "$var_name"="$MKPROMPT_VAL"
-		MKPROMPT_VAL=""
-		MKPROMPT_NEXT_DELIM=""
-	}
+	mkprompt_add "$color" "\${${var}}"
+	MKPROMPT_NEXT_DELIM_VAR="$var"
+}
 
-	function mkprompt_finish {
-		unset -m "MKPROMPT_*"
-		unfunction -m "mkprompt_*"
-	}
+function mkprompt_text {
+	MKPROMPT_ARR+=("$@")
+}
+
+function mkprompt_delim {
+	is_true "$MKPROMPT_NEXT_DELIM" && MKPROMPT_NEXT_DELIM_CHR="$@"
+}
+
+function mkprompt_save {
+	local varname="$1"
+
+	if is_true "$MKPROMPT_LEFT"; then
+		export "$varname"="${(@aj::)MKPROMPT_ARR}"
+	else
+		local reversed=(${(@Oa)MKPROMPT_ARR})
+		export "$varname"="${(j::)reversed}"
+	fi
+}
+
+function mkprompt_finish {
+	unset -m "MKPROMPT_*"
+	unfunction -m "mkprompt_*"
 }

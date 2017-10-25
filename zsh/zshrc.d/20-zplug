@@ -6,33 +6,60 @@
 
 
 ###############
-# Initialize Zplug
+# Configuration
+
+# Zplug
 export ZPLUG_HOME="$HOME/.zplug"
-source "$ZPLUG_ROOT/init.zsh"
 
-###############
-# Plugins
-zplug "zplug/zplug"
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-zplug "zsh-users/zsh-history-substring-search", defer:2
-zplug "zsh-users/zsh-completions", defer:2
-#zplug "zsh-users/zsh-autosuggestions"
-#zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
-
-###################
-# Configuration: Auto-suggestions
+# Auto-suggestions
 #typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=10"
 #typeset -g ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 
-###############
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-	printf "Install? [y/N]: "
-	if read -q; then
-		echo; zplug install
-	fi
-fi
 
 ###############
-# Finalize plugin loading
-zplug load #--verbose
+# Plugins
+function load_plugins {
+	if is_false "$1" ; then
+		function zplug {
+			local repo="${1%,}"
+			local name=$(basename "$repo")
+
+			# Source script from repo
+			source "$ZPLUG_ROOT/repos/$repo/$name.plugin.zsh"
+		}
+	else
+		source "$ZPLUG_ROOT/init.zsh"
+		zplug "zplug/zplug"
+	fi
+
+	zplug "zsh-users/zsh-syntax-highlighting", defer:2
+	zplug "zsh-users/zsh-history-substring-search", defer:2
+	zplug "zsh-users/zsh-completions", defer:2
+	#zplug "zsh-users/zsh-autosuggestions"
+	#zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
+	
+	if is_false "$1" ; then
+		unfunction zplug
+	else
+		# Install new plugins
+		if ! zplug check --verbose; then
+			printf "Install? [y/N]: "
+			if read -q; then
+				echo; zplug install
+			fi
+		fi
+
+		# Finalize plugin loading
+		zplug load #--verbose
+	fi
+}
+load_plugins 0
+
+
+function zplug {
+	echo_info "Lazy-loading 'zplug'..."
+	unfunction zplug
+
+	load_plugins 1
+	zplug $@
+}

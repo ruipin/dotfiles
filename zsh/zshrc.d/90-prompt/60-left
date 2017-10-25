@@ -1,8 +1,8 @@
 #########################################
-# prompt/config
+# prompt/left
 # Author: Rui Pinheiro
 #
-# Configuration file for the prompt
+# Configuration file for the left prompt
 
 
 ########################
@@ -13,11 +13,11 @@ typeset -g ZSH_PROMPT_MIN_EXEC_TIME=2
 
 
 ########################
-# Make prompts
-mkprompt_start 1 # 1 = left-to-right
+# Left prompt
+mkprompt_start "PROMPT" 1 # 1 = left-to-right
+
 mkprompt_ssh_hostname "$fg[yellow]"
 mkprompt_delim ":"
 mkprompt_cwd "$fg[yellow]"
 mkprompt_prompt ""
-mkprompt_text " "
-mkprompt_save "PROMPT"
+mkprompt_apply_delim

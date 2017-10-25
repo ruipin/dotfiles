@@ -13,63 +13,119 @@ setopt prompt_cr
 # Initialize mkprompt environment
 
 # Helper functions
+function mkprompt_init {
+	typeset -g  _mkprompt_default_delim=" "
+	typeset -g  _mkprompt_init=1
+	typeset -g  _mkprompt_vars=()
+	typeset -g  _mkprompt_var
+	typeset -g  _mkprompt_arr
+	typeset -gA _mkprompt_lefts
+	typeset -g  _mkprompt_left
+	typeset -gA _mkprompt_next_delim
+	typeset -gA _mkprompt_next_delim_chr
+	typeset -gA _mkprompt_next_delim_var
+}
+
 function mkprompt_start {
-	typeset -g MKPROMPT_LEFT="${1:-1}"
-	typeset -g MKPROMPT_ARR=()
-	typeset -g MKPROMPT_NEXT_DELIM=0
-	typeset -g MKPROMPT_NEXT_DELIM_CHR=""
-	typeset -g MKPROMPT_NEXT_DELIM_VAR=""
+	is_false "$_mkprompt_init" && mkprompt_init
+	[[ ! -z "$_mkprompt_var" ]] && mkprompt_save
+
+	if (( ! ${_mkprompt_vars[(I)$1]} )); then
+		_mkprompt_vars+="$1"
+		_mkprompt_arr=()
+		_mkprompt_left="${2:-1}"
+		_mkprompt_lefts[$1]="$_mkprompt_left"
+		_mkprompt_next_delim[$1]=0
+
+		if is_true "$_mkprompt_left" ; then
+			_mkprompt_next_delim_chr[$1]=""
+			_mkprompt_next_delim_var[$1]=""
+		fi
+	else
+		_mkprompt_arr=("${(P)1}")
+		_mkprompt_left="$_mkprompt_lefts[$1]"
+	fi
+	_mkprompt_var="$1"
+}
+
+function mkprompt_apply_delim {
+	local new_delim_chr="${1:-$_mkprompt_default_delim}" new_delim_var="$2"
+
+	local next_delim="$_mkprompt_next_delim[$_mkprompt_var]"
+	if is_true "$next_delim" ; then
+		local delim_var
+		local delim_chr
+
+		if is_true "$_mkprompt_left" ; then
+			delim_var="$_mkprompt_next_delim_var[$_mkprompt_var]"
+			delim_chr="$_mkprompt_next_delim_chr[$_mkprompt_var]"
+		else
+			delim_var="$new_delim_var"
+			delim_chr="$new_delim_chr"
+		fi
+
+		if [[ ! -z "$delim_chr" ]]; then
+			local delim="$delim_chr"
+			[[ ! -z "$delim_var" ]] && delim="\${${delim_var}:+${delim_chr}}"
+			_mkprompt_arr+=("$delim")
+		fi
+	fi
+
+	_mkprompt_next_delim[$_mkprompt_var]=0
+	if is_true "$_mkprompt_left" ; then
+		_mkprompt_next_delim_chr[$_mkprompt_var]="$new_delim_chr"
+		_mkprompt_next_delim_var[$_mkprompt_var]="$new_delim_var"
+	fi
 }
 
 function mkprompt_add {
-	local color="$1" value="$2" next_delim_chr="${3:- }"
+	local color="$1" value="$2"
+	local new_delim_chr="${3:-$_mkprompt_default_delim}" new_delim_var="$4"
 
 	if [[ ! -z "$value" ]]; then
-		[[ ! -z "$color" ]] && color="%{$color%}"
-		local reset="%{$reset_color%}"
+		local reset=""
+		if [[ ! -z "$color" ]]; then
+			color="%{$color%}"
+			reset="%{$reset_color%}"
+		fi
 		local add="${color}${value}${reset}"
 
-		if is_true "$MKPROMPT_NEXT_DELIM"; then
-			local delim="$MKPROMPT_NEXT_DELIM_CHR"
-			[[ ! -z "$MKPROMPT_NEXT_DELIM_VAR" ]] && delim="\${${MKPROMPT_NEXT_DELIM_VAR}:+${delim}}"
-			MKPROMPT_ARR+=("$delim")
-		fi
+		mkprompt_apply_delim "$new_delim_chr" "$new_delim_var"
+		_mkprompt_arr+=("${add}")
 
-		MKPROMPT_ARR+=("${add}")
-
-		MKPROMPT_NEXT_DELIM_CHR="$next_delim_chr" # default delimiter
-		MKPROMPT_NEXT_DELIM_VAR=""
-		MKPROMPT_NEXT_DELIM=1
+		_mkprompt_next_delim[$_mkprompt_var]=1
 	fi
 }
 
 function mkprompt_add_var {
 	local color="$1" var="$2"
 
-	mkprompt_add "$color" "\${${var}}"
-	MKPROMPT_NEXT_DELIM_VAR="$var"
+	mkprompt_add "$color" "\${${var}}" "" "${var}"
 }
 
 function mkprompt_text {
-	MKPROMPT_ARR+=("$@")
+	mkprompt_add "$1" "${@:2}"
 }
 
 function mkprompt_delim {
-	is_true "$MKPROMPT_NEXT_DELIM" && MKPROMPT_NEXT_DELIM_CHR="$@"
+	_mkprompt_next_delim_chr[$_mkprompt_var]="$@"
+}
+function mkprompt_no_delim {
+	_mkprompt_next_delim[$_mkprompt_var]=0
 }
 
 function mkprompt_save {
-	local varname="$1"
-
-	if is_true "$MKPROMPT_LEFT"; then
-		export "$varname"="${(@aj::)MKPROMPT_ARR}"
+	local arr
+	if is_true "$_mkprompt_left"; then
+		arr=(${_mkprompt_arr})
 	else
-		local reversed=(${(@Oa)MKPROMPT_ARR})
-		export "$varname"="${(j::)reversed}"
+		arr=(${(@Oa)_mkprompt_arr})
 	fi
+	export "$_mkprompt_var"="${(j::)arr}"
 }
 
 function mkprompt_finish {
-	unset -m "MKPROMPT_*"
-	unfunction -m "mkprompt_*"
+	mkprompt_save
+	#unset -m "_mkprompt_*"
+	#unfunction -m "mkprompt_*"
 }

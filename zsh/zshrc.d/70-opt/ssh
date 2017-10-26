@@ -17,3 +17,7 @@ function is_ssh {
 	fi
 	return 0
 }
+
+# Call SSH overriding the ForwardX11/ForwardX11Trusted configuration options
+alias ssh_x="ssh -o ForwardX11=yes -o ForwardX11Trusted=yes"
+alias ssh_nox="ssh -o ForwardX11=no -o ForwardX11Trusted=no"

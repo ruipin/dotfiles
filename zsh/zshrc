@@ -189,12 +189,12 @@ function _zshrcd {
 		typeset -g _zshrcd_cat="$_zshrcd_scratch/zshrc.d.cat"
 
 		# Regenerate zshrc.d.cat if it is no longer fresh
-		if [[
-			! -f "$_zshrcd_cat" ||
-			"$_zshrcd_freshness_check" -eq "1" && (
-				! -z "$( find "$ZSH_HOME" -newer "$_zshrcd_cat" -print -quit )" ||
-				( ! -z "$LOCAL_DOTFILES" && ! -z "$( find "$ZSH_HOME_LOCAL" -newer "$_zshrcd_cat" -print -quit )" )
-			)
+		if [[ \
+			! -f "$_zshrcd_cat" || \
+			"$_zshrcd_freshness_check" -eq "1" && ( \
+				! -z "$( find "$ZSH_HOME" -newer "$_zshrcd_cat" -print -quit )" || \
+				( ! -z "$LOCAL_DOTFILES" && ! -z "$( find "$ZSH_HOME_LOCAL" -newer "$_zshrcd_cat" -print -quit )" ) \
+			) \
 		]]; then
 
 			echo "[zshrc.d] Generating 'zshrc.d.cat'..."

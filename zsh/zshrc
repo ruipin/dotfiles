@@ -143,7 +143,6 @@ function _zshrcd {
 
 	# Iterates through all files inside zshrc.d
 	# Calls "$1" for each file to be sourced
-	setopt extended_glob
 	function _zshrcd_iterate {
 		# Source zshrc.d files
 		if [[ -z "$LOCAL_DOTFILES" || ! -d "$_zshrcd_local" ]]; then
@@ -156,9 +155,8 @@ function _zshrcd {
 		else
 			# Collect files
 			# NOTE: "(.)" is a globbing qualifier to match regular files only
+			setopt extended_glob
 			local filemask='**/*(.)'
-
-			#local sourcefiles=("$_zshrcd/"**/*(.) "$_zshrcd_local/"**/*(.))
 			local sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
 
 			# Remove path prefix up to the zshrc.d folder

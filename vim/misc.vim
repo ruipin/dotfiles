@@ -36,10 +36,12 @@ set wildmode=full
 set updatetime=1000
 
 " Automatically use syntax highlighting for various files
-autocmd BufNewFile,BufRead gitconfig set filetype=gitconfig
-autocmd BufNewFile,BufRead zshrc set filetype=zsh
-autocmd BufNewFile,BufRead vimrc set filetype=vim
-autocmd BufNewFile,BufRead *.tmux set filetype=tmux
-autocmd BufNewFile,BufRead $DOTFILES/i3/config.d/*.conf set filetype=i3
-autocmd BufNewFile,BufRead $DOTFILES/zsh/* set filetype=zsh
-autocmd BufNewFile,BufRead $LOCAL_DOTFILES/zsh/* set filetype=zsh
+augroup filetype_paths
+	au!
+	au BufNewFile,BufRead gitconfig setl filetype=gitconfig
+	au BufNewFile,BufRead zshrc setl filetype=zsh
+	au BufNewFile,BufRead vimrc setl filetype=vim
+	au BufNewFile,BufRead *.tmux setl filetype=tmux
+	au BufNewFile,BufRead $DOTFILES/i3/config.d/*.conf setl filetype=i3
+	au BufNewFile,BufRead */zsh/* setl filetype=zsh
+augroup END

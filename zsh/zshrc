@@ -7,6 +7,45 @@
 
 export USE_ZSH=1
 
+
+#################
+# Startup profiling: init
+if [[ ! -z "$ZSH_ZSHRC_ZPROF" ]]; then
+	zmodload "zsh/zprof"
+fi
+if [[ ! -z "$ZSH_ZSHRC_XTRACE" ]]; then
+	# <minutes> <seconds>.<milliseconds> <command>
+	PS4=$'%D{%M %S.%.} %N:%i> '
+	exec 3>&2 2>"$ZSH_ZSHRC_XTRACE.$$"
+	setopt xtrace prompt_subst
+fi
+
+# Helpers
+function zshrc_zprof {
+	local target="$ZSH_TMP/zshrc_zprof"
+	if [[ "$1" -eq "1" ]]; then
+		(
+			setopt null_glob
+			rm -f "$target".*
+		)
+	fi
+	ZSH_ZSHRC_ZPROF="$target" zsh -l -i -c exit
+}
+function zshrc_xtrace {
+	local target="$ZSH_TMP/zshrc_xtrace"
+	if [[ "$1" -eq "1" ]]; then
+		(
+			setopt null_glob
+			rm -f "$target".*
+		)
+	fi
+	ZSH_ZSHRC_XTRACE="$target" zsh -l -i -c exit
+}
+function zshrc_time {
+	time zsh -l -i -c exit
+}
+
+
 #################
 # Obtain zsh configuration file paths
 export ZSH_ZSHRC="$(readlink -f "${(%):-%N}")"
@@ -26,15 +65,17 @@ if [[ -d "$HOME/dotfiles_local" ]]; then
 	hash -d lzsh="$ZSH_HOME_LOCAL"
 fi
 
+
+
 #################
 # Temp folder
-#export ZSH_TMP="$ZSH_SCRATCH/tmp"
-#hash -d zshtmp="$ZSH_TMP"
-#if [[ ! -d "$ZSH_TMP" ]] ; then
-#	mkdir -p "$ZSH_TMP"
-#else
-#	find "$ZSH_TMP" -mindepth 1 -mtime +1 -delete
-#fi
+export ZSH_TMP="$ZSH_SCRATCH/tmp"
+hash -d zshtmp="$ZSH_TMP"
+if [[ ! -d "$ZSH_TMP" ]] ; then
+	mkdir -p "$ZSH_TMP"
+else
+	find "$ZSH_TMP" -mindepth 1 -mtime +1 -delete
+fi
 
 
 #################
@@ -68,10 +109,10 @@ fi
 #	This should (very slightly) improve the zsh startup time, and allows zsh to map the file to memory,
 #	sharing its memory page between processes.
 
-function {
+function _zshrcd {
 	# Configuration
-	typeset -g _zshrcd_concatenate=1
-	typeset -g _zshrcd_compile=1
+	typeset -g _zshrcd_concatenate=0
+	typeset -g _zshrcd_compile=0
 	typeset -g _zshrcd_freshness_check=0 # Can be expensive for network filesystems
 	local _zshrcd_debug=0
 
@@ -190,4 +231,18 @@ function {
 	# Cleanup
 	unfunction _zshrcd_debug
 	unfunction _zshrcd_iterate
-}
+	unfunction $0
+}; _zshrcd
+
+
+################
+# Startup profiling: end
+if [[ ! -z "$ZSH_ZSHRC_ZPROF" ]]; then
+	zprof > "$ZSH_ZSHRC_ZPROF.$$"
+	zmodload -u "zsh/zprof"
+fi
+
+if [[ ! -z "$ZSH_ZSHRC_XTRACE" ]]; then
+	unsetopt xtrace
+	exec 2>&3 3>&-
+fi

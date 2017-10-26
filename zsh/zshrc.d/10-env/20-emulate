@@ -1,0 +1,9 @@
+#########################################
+# env/emulate
+# Author: Rui Pinheiro
+#
+# Sets up helper methods for emulating various shells
+
+emulate sh -c 'source_sh() { source "$@"; }'
+emulate csh -c 'source_csh() { source "$@"; }'
+emulate ksh -c 'source_ksh() { source "$@"; }'

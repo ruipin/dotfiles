@@ -1,0 +1,42 @@
+#########################################
+# env/modules
+# Author: Rui Pinheiro
+#
+# Utilities for better handling of the 'module' command
+
+#in_path "module" || return 0
+
+typeset -gA _module_autoload_names
+
+function _module_autoload_handler {
+	echo "$cmd" >> $ZSH_TMP/test
+	local cmd="$1"
+	local args=${@:2}
+	unfunction "$cmd"
+
+	local mnames="$_module_autoload_names["$cmd"]"
+	echo_info "module_autoload: Lazy-loading module(s) '$mnames'..."
+	module load "$mnames"
+
+	"$cmd" $args
+}
+
+function module_autoload {
+	local mname="$1"
+	local commands=(${@:2})
+	local cmd
+
+	for cmd in $commands ; do
+		# No need to autoload loaded modules
+		if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
+			echo "Module $mname already loaded"
+			continue
+		fi
+
+		_module_autoload_names["$cmd"]+="$mname "
+		function "$cmd" {
+			_module_autoload_handler "$0" $@
+		}
+	done
+	#rehash
+}

@@ -8,9 +8,6 @@
 ###############
 # Configuration
 
-# Zplug
-export ZPLUG_HOME="$HOME/.zplug"
-
 # Auto-suggestions
 #typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=10"
 #typeset -g ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
@@ -18,9 +15,11 @@ export ZPLUG_HOME="$HOME/.zplug"
 
 ###############
 # Plugins
+typeset -g _zplug_loaded=0
+
 function load_plugins {
 	if is_false "$1" ; then
-		function zplug {
+		function _zplug {
 			local repo="${1%,}"
 			local name=$(basename "$repo")
 
@@ -28,19 +27,22 @@ function load_plugins {
 			source "$ZPLUG_ROOT/repos/$repo/$name.plugin.zsh"
 		}
 	else
+		is_true "$_zplug_sourced" && return
 		source "$ZPLUG_ROOT/init.zsh"
-		zplug "zplug/zplug"
+		function _zplug {
+			zplug $@
+		}
+		_zplug "zplug/zplug"
 	fi
 
-	zplug "zsh-users/zsh-syntax-highlighting", defer:2
-	zplug "zsh-users/zsh-history-substring-search", defer:2
-	zplug "zsh-users/zsh-completions", defer:2
-	#zplug "zsh-users/zsh-autosuggestions"
-	#zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
+	_zplug "zsh-users/zsh-syntax-highlighting", defer:2
+	_zplug "zsh-users/zsh-history-substring-search", defer:2
+	_zplug "zsh-users/zsh-completions", defer:2
+	#_zplug "zsh-users/zsh-autosuggestions"
+	#_zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
 	
-	if is_false "$1" ; then
-		unfunction zplug
-	else
+	unfunction _zplug
+	if is_true "$1" ; then
 		# Install new plugins
 		if ! zplug check --verbose; then
 			printf "Install? [y/N]: "
@@ -49,13 +51,20 @@ function load_plugins {
 			fi
 		fi
 
+		# Update plugins
+		zplug update #--verbose
+
 		# Finalize plugin loading
 		zplug load #--verbose
+
+		_zplug_loaded=1
 	fi
 }
+
+# Load plugins at shell startup
 load_plugins 0
 
-
+# Allow easy lazy-loading of zplug
 function zplug {
 	echo_info "Lazy-loading 'zplug'..."
 	unfunction zplug

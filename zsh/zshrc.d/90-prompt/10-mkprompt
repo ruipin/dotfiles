@@ -10,15 +10,51 @@ autoload -Uz add-zsh-hook
 setopt promptsubst
 setopt prompt_cr
 
+# Global variables
+typeset -g ZSH_MKPROMPT_SCRATCH="$ZSH_SCRATCH/mkprompt"
+typeset -g _mkprompt_disable=0
+
+# Cache helper
+if is_true "$ZSH_MKPROMPT_CACHE" && [[ "$_zshrcd_concatenate" -ne "1" ]]; then
+	function regen_mkprompt {
+		[[ -f "$ZSH_MKPROMPT_SCRATCH" ]] && rm -f "$ZSH_MKPROMPT_SCRATCH"
+		exec zsh -l -i
+	}
+fi
+
+#################
+# Main code
+
+# Initializes the mkprompt mechanism
 function mkprompt_init {
+	# Configuration
 	typeset -g _mkprompt_default_delim=" "
+	typeset -g _mkprompt_use_cache
+
+	# Initialize
 	typeset -g _mkprompt_init=1
-	typeset -g _mkprompt_left=0
-	typeset -g _mkprompt_var=""
-	typeset -g _mkprompt_arr=""
+	if is_true "$ZSH_MKPROMPT_CACHE" && [[ "$_zshrcd_regen" -ne "1" && -f "$ZSH_MKPROMPT_SCRATCH" ]] ; then
+		_mkprompt_disable=1
+
+		# Load prompt from file if it exists
+		. "$ZSH_MKPROMPT_SCRATCH"
+	else
+		# Prepare mkprompt mechanism
+		_mkprompt_init=1
+		typeset -g _mkprompt_left=0
+		typeset -g _mkprompt_var=""
+		typeset -g _mkprompt_arr
+
+		if is_true "$ZSH_MKPROMPT_CACHE" ; then
+			echo "[mkprompt] Generating prompts..."
+			touch "$ZSH_MKPROMPT_SCRATCH"
+		fi
+	fi
 }
 
+# Starts a new mkprompt variable if $1 is different from the current variable
 function mkprompt_start {
+	is_true "$_mkprompt_disable" && return 0
 	is_false "$_mkprompt_init" && mkprompt_init
 
 	if [[ "$1" != "$_mkprompt_var" ]]; then
@@ -35,7 +71,10 @@ function mkprompt_start {
 	_mkprompt_var="$1"
 }
 
+# Applies the current delimiter
 function mkprompt_apply_delim {
+	is_true "$_mkprompt_disable" && return 0
+
 	local new_delim_chr="${1:-$_mkprompt_default_delim}" new_delim_var="$2"
 
 	local next_delim="$_mkprompt_next_delim"
@@ -65,7 +104,10 @@ function mkprompt_apply_delim {
 	fi
 }
 
+# Adds a new section to the prompt
 function mkprompt_add {
+	is_true "$_mkprompt_disable" && return 0
+
 	local color="$1" value="$2"
 	local new_delim_chr="${3:-$_mkprompt_default_delim}" new_delim_var="$4"
 
@@ -84,25 +126,38 @@ function mkprompt_add {
 	fi
 }
 
+# Adds a section to the prompt that consists of a global variable only
 function mkprompt_add_var {
-	local color="$1" var="$2"
+	is_true "$_mkprompt_disable" && return 0
 
+	local color="$1" var="$2"
 	mkprompt_add "$color" "\${${var}}" "" "${var}"
 }
 
+# Adds text to the prompt as a new section
 function mkprompt_text {
+	is_true "$_mkprompt_disable" && return 0
+
 	mkprompt_add "$1" "${@:2}"
 }
 
+# Changes the next delimiter character
 function mkprompt_delim {
+	is_true "$_mkprompt_disable" && return 0
+
 	_mkprompt_next_delim_chr="$@"
 }
+# Disables the next delimiter character from being output
 function mkprompt_no_delim {
+	is_true "$_mkprompt_disable" && return 0
+
 	_mkprompt_next_delim=0
 }
 
+# Saves the current prompt variable
 function mkprompt_save {
-	[[ -z "$_mkprompt_var" ]] && return
+	is_true "$_mkprompt_disable" && return 0
+	[[ -z "$_mkprompt_var" ]] && return 0
 
 	local arr
 	if is_true "$_mkprompt_left"; then
@@ -110,9 +165,14 @@ function mkprompt_save {
 	else
 		arr=(${(@Oa)_mkprompt_arr})
 	fi
-	export "$_mkprompt_var"="${(j::)arr}"
+	typeset -g "$_mkprompt_var"="${(j::)arr}"
+
+	if is_true "$ZSH_MKPROMPT_CACHE" ; then
+		echo "export ${(qqqq)_mkprompt_var}=${(qqqqP)_mkprompt_var}" >> "$ZSH_MKPROMPT_SCRATCH"
+	fi
 }
 
+# Finishes the mkprompt process, undefining all mkprompt variables and methods
 function mkprompt_finish {
 	mkprompt_save
 	unset -m "_mkprompt_*"

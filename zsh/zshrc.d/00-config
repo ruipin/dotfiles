@@ -48,5 +48,12 @@ export LOCAL_BUILD_FOLDER="$HOME/src"
 
 
 ########################
+# Prompt
+
+# Cache mkprompt results
+typeset -g ZSH_MKPROMPT_CACHE=1
+
+
+########################
 # Tmux
 typeset -g TMUX_MAIN_SESSION="main"

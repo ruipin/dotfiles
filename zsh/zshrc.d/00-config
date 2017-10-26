@@ -51,7 +51,7 @@ export LOCAL_BUILD_FOLDER="$HOME/src"
 # Prompt
 
 # Cache mkprompt results
-typeset -g ZSH_MKPROMPT_CACHE=1
+typeset -g ZSH_MKPROMPT_CACHE=0
 
 
 ########################

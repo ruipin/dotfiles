@@ -100,26 +100,28 @@ function path_in_home {
 }
 
 #################
-# Check if variable is not [unset, empty, "0"]
-function is_true {
-	local in=$(echo "$@:l" | xargs) # trim white-space
+# Trim string
+# NOTE: Slow implementation as it needs to do command substitution
+function trim {
+	echo "$@:l" | xargs # trim white-space
+}
 
+#################
+# Check if variable is not [unset, empty] or starts with "0"
+function is_true {
+	local in="${1[1]}"
 	if [[ -z "$in" ]] || # Unset or empty
-	   [[ "$in" -eq "0" ]] # "0"
+	   [[ "$in" = "0" ]] # "0"
 	then
 		return 1
 	fi
-
 	return 0
 }
 
 #################
 # Check if not is_true
 function is_false {
-	if is_true $1; then
-		return 1
-	fi
-
+	is_true "$@" && return 1
 	return 0
 }
 

@@ -6,14 +6,14 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Load plugin
-"Plug 'jiangmiao/auto-pairs'
-Plug 'vim-scripts/auto-pairs-gentle'
+Plug 'jiangmiao/auto-pairs'
+"Plug 'vim-scripts/auto-pairs-gentle'
 
 
 " Configuration
 let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"'}
 let g:AutoPairsMultilineClose = 0
-"let g:AutoPairsFlyMode = 0
+let g:AutoPairsFlyMode = 0
 "let g:AutoPairsMapBS=0
 "let g:AutoPairsMapCh=0
 "let g:AutoPairsMapCR=0
@@ -23,4 +23,6 @@ let g:AutoPairsMultilineClose = 0
 "let g:AutoPairsShortcutJump=''
 "let g:AutoPairsShortcutBackInsert=''
 
-let g:AutoPairsUseInsertedCount = 1 " auto-pairs-gentle only
+
+" Workaround auto-pairs bug with the <M-"> mapping that causes typing "<" to timeout
+autocmd VimEnter,BufWinEnter * silent! iunmap <buffer> <M-">

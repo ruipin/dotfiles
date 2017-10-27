@@ -1,0 +1,188 @@
+#########################################
+# env/modules
+# Author: Rui Pinheiro
+#
+# Utilities for better handling of the 'module' command
+
+function wrap_module {
+	in_path "module" || return 1
+	in_path "_module" || eval "function _$( typeset -f module )"
+
+	function module {
+		local res=0
+		case "$1" in
+		autoload)
+			_module_autoload ${@:2}
+			res=$?
+			;;
+		alias)
+			_module_alias ${@:2}
+			res=$?
+			;;
+		has_alias)
+			_module_has_alias ${@:2}
+			res=$?
+			;;
+		load)
+			_module_load ${@:2}
+			res=$?
+			in_path "activate_local_prefix" && activate_local_prefix 1
+			;;
+		*)
+			_module $@
+			res=$?
+			in_path "activate_local_prefix" && activate_local_prefix 1
+		esac
+
+		return $res
+	}
+
+	#####
+	# extra 'module' functionality
+	typeset -gA _module_deps
+	typeset -gA _module_cmd_deps
+	typeset -gA _module_aliases=()
+	
+	typeset -g _module_alias_symbol="%"
+	typeset -g _module_name_symbol=":"
+
+	function _module_alias {
+		local arg
+		local old_ifs="$IFS"
+		local IFS="="
+		for arg in "$@" ; do
+			local arr=(${=arg})
+			local malias=$arr[1]
+			local mname=$arr[2,-1]
+
+			_module_aliases[$malias]="$mname"
+		done
+		return 0
+	}
+
+	function _module_has_alias {
+		local mname="$1"
+		[[ ! -z "$_module_aliases[$mname]" ]] && return 0
+		return 1
+	}
+
+	function _module_load {
+		#echo_debug "Loading module(s) '$@'..."
+		local mname
+		local res=0
+
+		for mname in "$@" ; do
+			# Trigger dependencies
+			local mname_deps="${mname#($_module_name_symbol|$_module_alias_symbol)}"
+			local mdeps="${_module_deps[$mname_deps]% }"
+			if [[ ! -z "$mdeps" ]]; then
+				_module_load ${=mdeps}
+
+				# Clear dependencies
+				_module_deps[$mname]=""
+			fi
+
+			# Resolve aliases unless module name starts with ':'
+			if [[ "$mname[1]" != "$_mobule_name_symbol" ]]; then
+				local malias="${mname#$_module_alias_symbol}"
+				local mresolved=$_module_aliases[${malias}]
+				if [[ "$mname[1]" = "$_module_alias_symbol" && -z "$mresolved" ]]; then
+					echo_error "module load: alias '$malias' does not exist"
+					return 1
+				elif [[ ! -z "$mresolved" ]]; then
+					_module_load "$mresolved"
+					res=$?
+					[[ "$res" -ne "0" ]] && return $res
+					continue
+				fi
+			fi
+
+			# Non-alias modules
+			mname="${mname#$_module_name_symbol}"
+			[[ "$mname" = ".none" ]] && continue # mname=".none" means a virtual module
+			if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
+				#echo_debug "module load: '$mname' already loaded"
+			else
+				# Load module
+				_module load "$mname"
+				res=$?
+				[[ "$res" -ne "0" ]] && return $res
+			fi
+		done
+
+		return 0
+	}
+
+	function _module_autoload_handler {
+		local cmd="$1"
+		local args=${@:2}
+		local res
+
+		# Make sure this lazy-loader only runs once
+		unfunction "$cmd"
+
+		# Get list of module deps
+		local mnames="${_module_cmd_deps[$cmd]% }"
+		#echo_debug "module autoload: Lazy-loading module(s) '${mnames}'..."
+		_module_load $mnames
+		res=$?
+		[[ "$res" -ne "0" ]] && return $res
+
+		# Clear command dependencies
+		_module_cmd_deps[$cmd]=""
+
+		# Execute shadowed command
+		"$cmd" $args
+	}
+
+	function _module_autoload {
+		local mname="$1"
+		local commands=(${@:2})
+		local cmd
+
+		# Check for implicit alias
+		if [[ "$mname" = *"="* ]]; then
+			_module_alias "$mname"
+			mname="${mname##*=}"
+		# Virtual aliases
+		elif [[ "$mname[1]" = "$_module_alias_symbol" ]]; then
+			mname="${mname#$_module_alias_symbol}"
+			_module_alias "${mname}=.none"
+		fi
+
+		# No need to autoload already-loaded modules
+		if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
+			#echo_debug "module autoload: Module $mname already loaded"
+			return 0
+		fi
+
+		# Shadow commands
+		local seen_mod=1
+		local mdeps=""
+		local mcmds=""
+		for cmd in $commands ; do
+			case "$cmd" in
+			"-c"|"--cmd"|"--commands")
+				seen_mod=0
+				;;
+			"-m"|"--mod"|"--modules")
+				seen_mod=1
+				;;
+			*)
+				# Module dependencies
+				if [[ "$seen_mod" -eq 1 || "$cmd[1]" = "$_module_name_symbol" ]] ; then
+					local mdep="${cmd#$_module_name_symbol}"
+					mdeps+="$mdep "
+
+				# Commands
+				else
+					function "$cmd" { _module_autoload_handler "$0" $@ ; }
+					_module_cmd_deps[$cmd]+="$mname "
+				fi
+			esac
+		done
+		
+		_module_deps[$mname]+="$mdeps "
+		return 0
+	}
+}

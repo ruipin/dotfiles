@@ -11,7 +11,7 @@
 typeset -g ZSH_SCRIPT_DEBUG=1
 
 # Title to use in echo_* functions, i.e. "[<script title>] Message here"
-typeset -g ZSH_SCRIPT_TITLE="SCRIPT"
+typeset -g ZSH_SCRIPT_TITLE="script"
 
 
 ########################
@@ -51,7 +51,7 @@ export LOCAL_BUILD_FOLDER="$HOME/src"
 # Prompt
 
 # Cache mkprompt results
-typeset -g ZSH_MKPROMPT_CACHE=0
+typeset -g ZSH_MKPROMPT_CACHE=1
 
 
 ########################

@@ -145,3 +145,83 @@ function is_uint {	if Ma[Ma "$@" =~ ^[Ma[0-9]+$ ]]; then
 function in_path {
 	whence -w $1 >/dev/null
 }
+
+
+#################
+# Delimiter Prepend/Append/Remove
+# Allows to easily handle string-arrays (i.e. split by a delimiter)
+
+# Usage: delim_prepend <delimiter> <name> <string_to_prepend>
+function delim_prepend {
+	local delim="$1"
+	local name="$2"
+	local prepend_str="${@:3}"
+
+	# Remove duplicates
+	delim_remove "$delim" "$name" "$prepend_str"
+
+	# Prepend to variable
+	#local new_val=""
+	#local old_val="${(P)1}"
+	#if [[ ! -z "$old_val" ]]; then
+	#	new_val=":${old_val}"
+	#fi
+	#new_val="${prepend_str}${new_val}"
+
+	local old_val="${(P)name}"
+	local new_val="${prepend_str}${old_val:+${delim}}${old_val}"
+
+	# Save result
+	export "$name"="$new_val"
+}
+
+# Usage: delim_append <delimiter> <name> <string_to_prepend>
+function delim_append {
+	local delim="$1"
+	local name="$2"
+	local append_str="${@:3}"
+
+	# Remove duplicates
+	delim_remove "$delim" "$name" "$append_str"
+
+	# Prepend to variable
+	#local new_val=""
+	#local old_val="${(P)1}"
+	#if [[ ! -z "$old_val" ]]; then
+	#	new_val="${old_val}:"
+	#fi
+	#new_val="${new_val}${append_str}"
+	local old_val="${(P)name}"
+	local new_val="${old_val}${old_val:+${delim}}${prepend_str}"
+
+	# Save result
+	export "$name"="$new_val"
+}
+
+# Usage: delim_remove <delimiter> <name> <string_to_remove>
+function delim_remove {
+	local delim="$1"
+	local name="$2"
+	local search_str="${@:3}"
+
+	############
+	# Method 1: Perl regex, slow because it requires shelling out, but has regex support
+	#new_val=$( \
+	#	echo "$new_val" |                    \
+	#	\perl -p -e "s#:${search_str}:#:#g;" \
+	#	         -e "s#:${search_str}\$##g;" \
+	#	         -e "s#^${search_str}:##g;"  \
+	#	         -e "s#^${search_str}\$##g;" \
+	#)
+
+	##########
+	# Method 2: Parameter expansion
+	# Faster (no shelling out), but no regex support
+	local new_val="${(P)name}"
+	new_val=${new_val//${delim}${~search_str}${delim}/${delim}}
+	new_val=${new_val#${~search_str}${delim}}
+	new_val=${new_val%${delim}${~search_str}}
+	new_val=${new_val:/${~search_str}/}
+
+	export "$name"="$new_val"
+}

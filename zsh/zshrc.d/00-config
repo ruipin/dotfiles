@@ -10,7 +10,7 @@
 # Whether to output debug information ("echo_debug")
 typeset -g ZSH_SCRIPT_DEBUG=1
 
-# Title to use in echo_* functions, i.e. "[<script title>] Message here"
+# Default title to use in echo_* functions, i.e: "[<script title>] Message here"
 typeset -g ZSH_SCRIPT_TITLE="script"
 
 

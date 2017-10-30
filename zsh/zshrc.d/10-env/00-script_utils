@@ -53,20 +53,28 @@ zmodload "zsh/datetime"
 #################
 # Echo
 function echo_error {
-	echo "$fg_bold[red][$ZSH_SCRIPT_TITLE] ERROR: ${@}${reset_color}"
+	local text="$1"
+	local title="${2-$ZSH_SCRIPT_TITLE}"
+	echo "$fg_bold[red][$title] ERROR: ${text}${reset_color}"
 }
 
 function echo_warn {
-	echo "$fg[magenta][$ZSH_SCRIPT_TITLE] WARNING: ${@}${reset_color}"
+	local text="$1"
+	local title="${2-$ZSH_SCRIPT_TITLE}"
+	echo "$fg[magenta][$title] WARNING: ${text}${reset_color}"
 }
 
 function echo_info {
-	echo "[$ZSH_SCRIPT_TITLE] ${@}${reset_color}"
+	local text="$1"
+	local title="${2-$ZSH_SCRIPT_TITLE}"
+	echo "[$title] ${text}${reset_color}"
 }
 
 function echo_debug {
-	if is_true "$ZSH_SCRIPT_DEBUG"; then
-		echo "$fg[cyan][$ZSH_SCRIPT_TITLE] ${@}${reset_color}"
+	if is_true "$ZSH_SCRIPT_DEBUG" ; then
+		local text="$1"
+		local title="${2-$ZSH_SCRIPT_TITLE}"
+		echo "$fg[cyan][$title] ${text}${reset_color}"
 	fi
 }
 

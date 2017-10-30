@@ -15,7 +15,7 @@ typeset -g ZSH_MKPROMPT_SCRATCH="$ZSH_SCRATCH/mkprompt"
 typeset -g _mkprompt_disable=0
 
 # Cache helper
-if is_true "$ZSH_MKPROMPT_CACHE" && [[ "$_zshrcd_concatenate" -ne "1" ]]; then
+if is_true "${ZSH_MKPROMPT_CACHE-0}" && [[ "$_zshrcd_concatenate" -ne "1" ]]; then
 	function regen_mkprompt {
 		[[ -f "$ZSH_MKPROMPT_SCRATCH" ]] && rm -f "$ZSH_MKPROMPT_SCRATCH"
 		exec zsh -l -i
@@ -33,7 +33,7 @@ function mkprompt_init {
 
 	# Initialize
 	typeset -g _mkprompt_init=1
-	if is_true "$ZSH_MKPROMPT_CACHE" && [[ "$_zshrcd_regen" -ne "1" && -f "$ZSH_MKPROMPT_SCRATCH" ]] ; then
+	if is_true "${ZSH_MKPROMPT_CACHE-0}" && [[ "$_zshrcd_regen" -ne "1" && -f "$ZSH_MKPROMPT_SCRATCH" ]] ; then
 		_mkprompt_disable=1
 
 		# Load prompt from file if it exists
@@ -45,7 +45,7 @@ function mkprompt_init {
 		typeset -g _mkprompt_var=""
 		typeset -g _mkprompt_arr
 
-		if is_true "$ZSH_MKPROMPT_CACHE" ; then
+		if is_true "${ZSH_MKPROMPT_CACHE-0}" ; then
 			echo "[mkprompt] Generating prompts..."
 			touch "$ZSH_MKPROMPT_SCRATCH"
 		fi
@@ -167,7 +167,7 @@ function mkprompt_save {
 	fi
 	typeset -g "$_mkprompt_var"="${(j::)arr}"
 
-	if is_true "$ZSH_MKPROMPT_CACHE" ; then
+	if is_true "${ZSH_MKPROMPT_CACHE-0}" ; then
 		echo "export ${(qqqq)_mkprompt_var}=${(qqqqP)_mkprompt_var}" >> "$ZSH_MKPROMPT_SCRATCH"
 	fi
 }

@@ -21,12 +21,12 @@ function gateway_x {
 	gateway=$(ip route show 0.0.0.0/0 | cut -d\  -f3)
 
 	if [[ -z "$gateway" ]]; then
-		echo_error "Could not obtain gateway IP address"
+		echo_error "Could not obtain gateway IP address" "gateway_x"
 		return 1
 	fi
 
 	display="$gateway:0.0"
-	echo_info "DISPLAY=\"$display\""
+	echo_info "DISPLAY=\"$display\"" "gateway_x"
 
 	if [[ -z "$@" ]]; then
 		export DISPLAY="$display"

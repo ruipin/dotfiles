@@ -8,7 +8,7 @@
 ###############
 # Enforce UTF-8 locale if $ZSH_FORCE_UTF8 is set
 if is_true "$ZSH_FORCE_UTF8" && [[ "$LANG" != *".utf8" ]] ; then
-	#echo_debug "Enforcing UTF-8 locale"
+	#echo_debug "Enforcing UTF-8 locale" "locale"
 
 	export LANG="en_US.utf8"
 	export LC_CTYPE="en_US.utf8"

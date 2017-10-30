@@ -66,7 +66,7 @@ load_plugins 0
 
 # Allow easy lazy-loading of zplug
 function zplug {
-	echo_info "Lazy-loading 'zplug'..."
+	echo_info "Lazy-loading 'zplug'..." "zplug"
 	unfunction zplug
 
 	load_plugins 1

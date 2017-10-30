@@ -15,7 +15,7 @@ function has_custom_module {
 # Main 'module' functionality
 function init_custom_module {
 	if [[ -z "$DEPOT_SETUP_ROOT" ]]; then
-		echo_error "\$DEPOT_SETUP_ROOT undefined!"
+		echo_error "\$DEPOT_SETUP_ROOT undefined!" "module"
 		return 1
 	fi
 
@@ -109,7 +109,7 @@ function init_custom_module {
 	}
 
 	function _module_load {
-		#echo_debug "Loading module(s) '$@'..."
+		#echo_debug "Loading module(s) '$@'..." "module"
 		local mname
 		local res=0
 
@@ -129,7 +129,7 @@ function init_custom_module {
 				local malias="${mname#$_module_alias_symbol}"
 				local mresolved=$_module_aliases[${malias}]
 				if [[ "$mname[1]" = "$_module_alias_symbol" && -z "$mresolved" ]]; then
-					echo_error "module load: alias '$malias' does not exist"
+					echo_error "module load: alias '$malias' does not exist" "module"
 					return 1
 				elif [[ ! -z "$mresolved" ]]; then
 					_module_load "$mresolved"
@@ -143,7 +143,7 @@ function init_custom_module {
 			mname="${mname#$_module_name_symbol}"
 			[[ "$mname" = ".none" ]] && continue # mname=".none" means a virtual module
 			if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
-				#echo_debug "module load: '$mname' already loaded"
+				#echo_debug "module load: '$mname' already loaded" "module"
 			else
 				# Load module
 				is_false "$_module_wrapped" && _module_wrap
@@ -166,7 +166,7 @@ function init_custom_module {
 
 		# Get list of module deps
 		local mnames="${_module_cmd_deps[$cmd]% }"
-		echo_debug "module autoload: Lazy-loading module(s) '${mnames}'..."
+		echo_debug "module autoload: Lazy-loading module(s) '${mnames}'..." "module"
 		module load $mnames
 		res=$?
 		[[ "$res" -ne "0" ]] && return $res
@@ -195,7 +195,7 @@ function init_custom_module {
 
 		# No need to autoload already-loaded modules
 		if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
-			#echo_debug "module autoload: Module $mname already loaded"
+			#echo_debug "module autoload: Module $mname already loaded" "module"
 			return 0
 		fi
 

@@ -25,6 +25,8 @@ function init_custom_module {
 	#####
 	# module wrapper
 	function _module_wrap {
+		#echo_debug "$0 $*" "_module_wrap"
+
 		source_sh $DEPOT_SETUP_ROOT/init/sh.d/modules-init
 		source_sh $DEPOT_SETUP_ROOT/init/sh.d/shell-config
 
@@ -40,6 +42,8 @@ function init_custom_module {
 	}
 
 	function _module_wrapper {
+		#echo_debug "$0 $*" "module wrapper"
+
 		local res=0
 		case "$1" in
 		autoload)
@@ -77,6 +81,16 @@ function init_custom_module {
 		_module_wrapper $@
 	}
 
+	function mgrep {
+		is_false "$_module_wrapped" && _module_wrap
+		unfunction "$0"
+
+		local mgrep_cmd=$( alias mgrep )
+		mgrep_cmd="${mgrep_cmd#*=\'}"
+		mgrep_cmd="${mgrep_cmd% *}"
+		$mgrep_cmd $*
+	}
+
 	#####
 	# extra 'module' functionality
 	typeset -gA _module_deps
@@ -108,17 +122,28 @@ function init_custom_module {
 		return 1
 	}
 
+	typeset -g _module_load_params=()
 	function _module_load {
-		#echo_debug "Loading module(s) '$@'..." "module load"
+		#echo_debug "Loading module(s) '$*'..." "module load"
 		local mname
 		local res=0
 
-		for mname in "$@" ; do
+		local args
+		local add_only
+		if [[ "$1" = "-a" ]]; then
+			add_only=1
+			args=(${@:2})
+		else
+			args=($@)
+			add_only=0
+		fi
+
+		for mname in $args ; do
 			# Trigger dependencies
 			local mname_deps="${mname#($_module_name_symbol|$_module_alias_symbol)}"
 			local mdeps="${_module_deps[$mname_deps]% }"
 			if [[ ! -z "$mdeps" ]]; then
-				_module_load ${=mdeps}
+				_module_load -a ${=mdeps}
 
 				# Clear dependencies
 				_module_deps[$mname]=""
@@ -129,10 +154,10 @@ function init_custom_module {
 				local malias="${mname#$_module_alias_symbol}"
 				local mresolved=$_module_aliases[${malias}]
 				if [[ "$mname[1]" = "$_module_alias_symbol" && -z "$mresolved" ]]; then
-					echo_error "module load: alias '$malias' does not exist" "module load"
+					#echo_error "module load: alias '$malias' does not exist" "module load"
 					return 1
 				elif [[ ! -z "$mresolved" ]]; then
-					_module_load "$mresolved"
+					_module_load -a "$mresolved"
 					res=$?
 					[[ "$res" -ne "0" ]] && return $res
 					continue
@@ -143,15 +168,23 @@ function init_custom_module {
 			mname="${mname#$_module_name_symbol}"
 			[[ "$mname" = ".none" ]] && continue # mname=".none" means a virtual module
 			if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
-				#echo_debug "module load: '$mname' already loaded" "module load"
+				#echo_debug "'$mname' already loaded" "module load"
 			else
 				# Load module
-				is_false "$_module_wrapped" && _module_wrap
-				_orig_module load "$mname"
-				res=$?
-				[[ "$res" -ne "0" ]] && return $res
+				_module_load_params+=($mname)
 			fi
 		done
+
+		if is_false "$add_only" ; then
+			is_false "$_module_wrapped" && _module_wrap
+			if [[ "$#_module_load_params" -ne "0" ]]; then
+				echo_debug "Loading module(s) '$_module_load_params'..." "module load"
+				_orig_module load $_module_load_params
+				res=$?
+				_module_load_params=()
+				[[ "$res" -ne "0" ]] && return $res
+			fi
+		fi
 
 		return 0
 	}
@@ -166,7 +199,7 @@ function init_custom_module {
 
 		# Get list of module deps
 		local mnames="${_module_cmd_deps[$cmd]% }"
-		echo_debug "Lazy-loading module(s) '${mnames}'..." "module autoload"
+		#echo_debug "Lazy-loading module(s) '${mnames}'..." "module autoload"
 		module load $mnames
 		res=$?
 		[[ "$res" -ne "0" ]] && return $res
@@ -230,7 +263,7 @@ function init_custom_module {
 			esac
 		done
 		
-		_module_deps[${malias}]+="$mdeps "
+		_module_deps[${malias}]="$mdeps"
 		return 0
 	}
 

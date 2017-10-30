@@ -111,8 +111,8 @@ fi
 
 function _zshrcd {
 	# Configuration
-	typeset -g _zshrcd_concatenate=1
-	typeset -g _zshrcd_compile=1
+	typeset -g _zshrcd_concatenate=0
+	typeset -g _zshrcd_compile=0
 	typeset -g _zshrcd_freshness_check=0 # Can be expensive for network filesystems
 	local _zshrcd_debug=0
 	local _zshrcd_fallback=0

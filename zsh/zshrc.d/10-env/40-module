@@ -28,7 +28,7 @@ function init_custom_module {
 		source_sh $DEPOT_SETUP_ROOT/init/sh.d/modules-init
 		source_sh $DEPOT_SETUP_ROOT/init/sh.d/shell-config
 
-		eval "function _$( typeset -f module )"
+		eval "function _orig_$( typeset -f module )"
 
 		function module {
 			_module_wrapper $@
@@ -65,7 +65,7 @@ function init_custom_module {
 			;;
 		*)
 			is_false "$_module_wrapped" && _module_wrap
-			_module $@
+			_orig_module $@
 			res=$?
 			in_path "activate_local_prefix" && activate_local_prefix 1
 		esac
@@ -147,7 +147,7 @@ function init_custom_module {
 			else
 				# Load module
 				is_false "$_module_wrapped" && _module_wrap
-				_module load "$mname"
+				_orig_module load "$mname"
 				res=$?
 				[[ "$res" -ne "0" ]] && return $res
 			fi

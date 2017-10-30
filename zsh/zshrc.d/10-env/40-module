@@ -166,7 +166,7 @@ function init_custom_module {
 
 		# Get list of module deps
 		local mnames="${_module_cmd_deps[$cmd]% }"
-		#echo_debug "module autoload: Lazy-loading module(s) '${mnames}'..."
+		echo_debug "module autoload: Lazy-loading module(s) '${mnames}'..."
 		module load $mnames
 		res=$?
 		[[ "$res" -ne "0" ]] && return $res

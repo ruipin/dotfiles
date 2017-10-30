@@ -1,0 +1,7 @@
+#########################################
+# helpers/zmv
+# Author: Rui Pinheiro
+#
+# Enables the 'zmv' zsh extension
+
+autoload -U zmv

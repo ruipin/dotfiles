@@ -1,0 +1,11 @@
+#########################################
+# helpers/ruby
+# Author: Rui Pinheiro
+#
+# Prepare environment for ruby
+
+# rubyenv initialization
+if in_path "rbenv" && [[ -d "$HOME/.gem" ]]; then
+	eval "$(rbenv init -)"
+	env_append PATH "$HOME/.gem/ruby/2.4.0/bin"
+fi

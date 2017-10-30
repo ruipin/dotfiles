@@ -1,0 +1,13 @@
+#########################################
+# helpers/sed
+# Author: Rui Pinheiro
+#
+# sed-related helpers
+
+#############
+# Recursive sed
+function recsed {
+	find "$1" -type f -exec \
+		sed -i ${@:2} {} +
+}
+

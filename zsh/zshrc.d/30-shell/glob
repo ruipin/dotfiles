@@ -1,0 +1,10 @@
+#########################################
+# shell/glob
+# Author: Rui Pinheiro
+#
+# Glob configuration
+
+
+################
+# Enable extended glob, e.g. "rm ^*sysc" to match all files that dont end in "sysc"
+setopt extendedglob

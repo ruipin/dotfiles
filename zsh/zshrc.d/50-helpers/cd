@@ -1,0 +1,25 @@
+#########################################
+# helpers/cd
+# Author: Rui Pinheiro
+#
+# cd-related helpers
+
+#############
+# Make directory and enter it
+function mkcd {
+	mkdir -p "$*" && cd "$*"
+}
+
+#############
+# Empty (delete and recreate) a directory and enter it
+function rmcd {
+	if [[ $1 == "." ]]; then
+		dir=$PWD
+		cd ..
+	else
+		dir=$1
+	fi
+	touch $dir/.tmp
+	rm -Rf $dir/* $dir/.*
+	mkcd $dir
+}

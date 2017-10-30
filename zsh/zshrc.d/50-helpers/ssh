@@ -1,8 +1,8 @@
 #########################################
-# opt/ssh
+# helpers/ssh
 # Author: Rui Pinheiro
 #
-# SSH-related functionality
+# SSH-related helpers
 
 
 # Returns non-zero if this is an ssh session

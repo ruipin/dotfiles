@@ -1,8 +1,8 @@
 #########################################
-# opt/x11
+# helpers/x11
 # Author: Rui Pinheiro
 #
-# Useful methods/helpers for dealing with X11
+# x11-related helpers
 
 
 # Merge ~/.Xresources

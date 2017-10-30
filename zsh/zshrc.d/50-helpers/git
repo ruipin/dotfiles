@@ -1,8 +1,8 @@
 #########################################
-# opt/git
+# helpers/git
 # Author: Rui Pinheiro
 #
-# Git-related helpers and methods
+# git-related helpers
 
 function git_aliases {
 	local gitaliases

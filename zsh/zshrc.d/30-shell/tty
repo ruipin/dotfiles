@@ -1,0 +1,15 @@
+#########################################
+# shell/tty
+# Author: Rui Pinheiro
+#
+# tty-related configuration
+
+
+################
+# Do not allow terminal to be frozen with ^s/^q
+stty -ixon
+unsetopt flowcontrol
+
+################
+# Do not close bg processes when leaving
+#unsetopt hup

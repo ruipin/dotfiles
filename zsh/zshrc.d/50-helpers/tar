@@ -1,39 +1,8 @@
 #########################################
-# func
+# helpers/tar
 # Author: Rui Pinheiro
 #
-# Defines multiple useful shell functions
-
-#############
-# Enable 'zmv' extension
-autoload -U zmv
-
-#############
-# Make directory and enter it
-function mkcd {
-	mkdir -p "$*" && cd "$*"
-}
-
-#############
-# Empty (delete and recreate) a directory and enter it
-function rmcd {
-	if [[ $1 == "." ]]; then
-		dir=$PWD
-		cd ..
-	else
-		dir=$1
-	fi
-	touch $dir/.tmp
-	rm -Rf $dir/* $dir/.*
-	mkcd $dir
-}
-
-#############
-# Recursive sed
-function recsed {
-	find "$1" -type f -exec \
-		sed -i ${@:2} {} +
-}
+# tar-related helpers
 
 #############
 # Tar on multiple files

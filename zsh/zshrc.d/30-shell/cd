@@ -1,0 +1,11 @@
+#########################################
+# shell/cd
+# Author: Rui Pinheiro
+#
+# cd-related configuration
+
+# Cd to directory if command is a directory
+setopt autocd
+
+# Make cd behave like pushd
+setopt pushdtohome autopushd

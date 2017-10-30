@@ -109,7 +109,7 @@ function init_custom_module {
 	}
 
 	function _module_load {
-		#echo_debug "Loading module(s) '$@'..." "module"
+		#echo_debug "Loading module(s) '$@'..." "module load"
 		local mname
 		local res=0
 
@@ -129,7 +129,7 @@ function init_custom_module {
 				local malias="${mname#$_module_alias_symbol}"
 				local mresolved=$_module_aliases[${malias}]
 				if [[ "$mname[1]" = "$_module_alias_symbol" && -z "$mresolved" ]]; then
-					echo_error "module load: alias '$malias' does not exist" "module"
+					echo_error "module load: alias '$malias' does not exist" "module load"
 					return 1
 				elif [[ ! -z "$mresolved" ]]; then
 					_module_load "$mresolved"
@@ -143,7 +143,7 @@ function init_custom_module {
 			mname="${mname#$_module_name_symbol}"
 			[[ "$mname" = ".none" ]] && continue # mname=".none" means a virtual module
 			if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
-				#echo_debug "module load: '$mname' already loaded" "module"
+				#echo_debug "module load: '$mname' already loaded" "module load"
 			else
 				# Load module
 				is_false "$_module_wrapped" && _module_wrap
@@ -166,7 +166,7 @@ function init_custom_module {
 
 		# Get list of module deps
 		local mnames="${_module_cmd_deps[$cmd]% }"
-		echo_debug "module autoload: Lazy-loading module(s) '${mnames}'..." "module"
+		echo_debug "Lazy-loading module(s) '${mnames}'..." "module autoload"
 		module load $mnames
 		res=$?
 		[[ "$res" -ne "0" ]] && return $res
@@ -181,21 +181,22 @@ function init_custom_module {
 	function _module_autoload {
 		local mname="$1"
 		local commands=(${@:2})
-		local cmd
 
 		# Check for implicit alias
+		local malias
 		if [[ "$mname" = *"="* ]]; then
 			_module_alias "$mname"
 			mname="${mname##*=}"
+			malias="$mname"
 		# Virtual aliases
 		elif [[ "$mname[1]" = "$_module_alias_symbol" ]]; then
-			mname="%${mname#$_module_alias_symbol}"
-			_module_alias "${mname}=.none"
+			malias="${mname#$_module_alias_symbol}"
+			_module_alias "${malias}=.none"
 		fi
 
 		# No need to autoload already-loaded modules
 		if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
-			#echo_debug "module autoload: Module $mname already loaded" "module"
+			#echo_debug "Module $mname already loaded" "module autoload"
 			return 0
 		fi
 
@@ -203,6 +204,7 @@ function init_custom_module {
 		local seen_mod=1
 		local mdeps=""
 		local mcmds=""
+		local cmd
 		for cmd in $commands ; do
 			case "$cmd" in
 			"-c"|"--cmd"|"--commands")
@@ -228,7 +230,7 @@ function init_custom_module {
 			esac
 		done
 		
-		_module_deps[$mname]+="$mdeps "
+		_module_deps[${malias}]+="$mdeps "
 		return 0
 	}
 

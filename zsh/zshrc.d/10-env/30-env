@@ -11,6 +11,6 @@ function env_append { delim_append ":" $@ ; }
 function env_remove { delim_remove ":" $@ ; }
 
 # Safely append/prepend to $PATH
-function path_prepend { env_prepend $@ ; }
-function path_append { env_append $@ ; }
-function path_remove { env_remove $@ ; }
+function path_prepend { env_prepend PATH $@ ; }
+function path_append { env_append PATH $@ ; }
+function path_remove { env_remove PATH $@ ; }

@@ -5,12 +5,6 @@
 # Zsh prompt "vcs_info" module
 
 function mkprompt_vcs_info {
-	# Load modules used by vcs_info
-	if in_path "module" ; then
-		module has_alias "git" && module load git
-		module has_alias "svn" && module load svn
-	fi
-
 	# vcs_info module
 	autoload -Uz vcs_info
 	zstyle ':vcs_info:*' enable git svn

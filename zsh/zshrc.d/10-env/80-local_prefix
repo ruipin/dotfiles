@@ -34,5 +34,6 @@ function activate_local_prefix {
 	#export LUA_PREFIX="${LOCAL_PREFIX}"
 	
 	is_true "${1:-1}" && rehash
+
 }
 activate_local_prefix 1

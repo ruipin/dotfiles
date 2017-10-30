@@ -115,6 +115,7 @@ function _zshrcd {
 	typeset -g _zshrcd_compile=1
 	typeset -g _zshrcd_freshness_check=0 # Can be expensive for network filesystems
 	local _zshrcd_debug=0
+	local _zshrcd_fallback=0
 
 	# Global variables
 	typeset -g _zshrcd="$ZSH_HOME/zshrc.d"
@@ -134,6 +135,15 @@ function _zshrcd {
 			)
 			exec zsh -l -i
 		}
+	fi
+
+	# Check for zsh version
+	autoload -U is-at-least
+	if ! is-at-least "5" ; then
+		echo "[zshrc.d] WARNING: Detected old zsh version $ZSH_VERSION! Enabling fall-back mode, expect things to break."
+		_zshrcd_concatenate=0
+		_zshrcd_compile=0
+		_zshrcd_fallback=1
 	fi
 
 	# Debug helper
@@ -156,8 +166,15 @@ function _zshrcd {
 			# Collect files
 			# NOTE: "(.)" is a globbing qualifier to match regular files only
 			setopt extended_glob
-			local filemask='**/*(.)'
-			local sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
+			local filemask
+			local sourcefiles
+			if [[ "$_zshrcd_fallback" -ne "1" ]] ; then
+				filemask='**/*(.)'
+				sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
+			else
+				filemask='**/*'
+				sourcefiles=("$_zshrcd/"${~filemask})
+			fi
 
 			# Remove path prefix up to the zshrc.d folder
 			sourcefiles=(${sourcefiles#*/zshrc.d/})

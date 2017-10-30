@@ -4,11 +4,42 @@
 #
 # Utilities for better handling of the 'module' command
 
-function wrap_module {
-	in_path "module" || return 1
-	in_path "_module" || eval "function _$( typeset -f module )"
+# So that scripts can query whether we are using our custom module implementation
+typeset -g _has_custom_module=0
+function has_custom_module {
+	return $_has_custom_module
+}
 
-	function module {
+# To wrap 'module', this must be called after 'module' is loaded by the shell
+
+# Main 'module' functionality
+function init_custom_module {
+	if [[ -z "$DEPOT_SETUP_ROOT" ]]; then
+		echo_error "\$DEPOT_SETUP_ROOT undefined!"
+		return 1
+	fi
+
+	_has_custom_module=1
+	typeset -g _module_wrapped=0
+
+	#####
+	# module wrapper
+	function _module_wrap {
+		source_sh $DEPOT_SETUP_ROOT/init/sh.d/modules-init
+		source_sh $DEPOT_SETUP_ROOT/init/sh.d/shell-config
+
+		eval "function _$( typeset -f module )"
+
+		function module {
+			_module_wrapper $@
+		}
+
+		_module_wrapped=1
+
+		[[ ! -z "$_module_defaults" ]] && module load $_module_defaults
+	}
+
+	function _module_wrapper {
 		local res=0
 		case "$1" in
 		autoload)
@@ -23,12 +54,17 @@ function wrap_module {
 			_module_has_alias ${@:2}
 			res=$?
 			;;
+		add_default)
+			_module_add_default ${@:2}
+			res=$?
+			;;
 		load)
 			_module_load ${@:2}
 			res=$?
 			in_path "activate_local_prefix" && activate_local_prefix 1
 			;;
 		*)
+			is_false "$_module_wrapped" && _module_wrap
 			_module $@
 			res=$?
 			in_path "activate_local_prefix" && activate_local_prefix 1
@@ -37,11 +73,16 @@ function wrap_module {
 		return $res
 	}
 
+	function module {
+		_module_wrapper $@
+	}
+
 	#####
 	# extra 'module' functionality
 	typeset -gA _module_deps
 	typeset -gA _module_cmd_deps
-	typeset -gA _module_aliases=()
+	typeset -gA _module_aliases
+	typeset -g  _modules_defaults=()
 	
 	typeset -g _module_alias_symbol="%"
 	typeset -g _module_name_symbol=":"
@@ -57,6 +98,7 @@ function wrap_module {
 
 			_module_aliases[$malias]="$mname"
 		done
+		IFS="$old_ifs"
 		return 0
 	}
 
@@ -104,6 +146,7 @@ function wrap_module {
 				#echo_debug "module load: '$mname' already loaded"
 			else
 				# Load module
+				is_false "$_module_wrapped" && _module_wrap
 				_module load "$mname"
 				res=$?
 				[[ "$res" -ne "0" ]] && return $res
@@ -124,7 +167,7 @@ function wrap_module {
 		# Get list of module deps
 		local mnames="${_module_cmd_deps[$cmd]% }"
 		#echo_debug "module autoload: Lazy-loading module(s) '${mnames}'..."
-		_module_load $mnames
+		module load $mnames
 		res=$?
 		[[ "$res" -ne "0" ]] && return $res
 
@@ -184,5 +227,9 @@ function wrap_module {
 		
 		_module_deps[$mname]+="$mdeps "
 		return 0
+	}
+
+	function _module_add_default {
+		_module_defaults+=($@)
 	}
 }

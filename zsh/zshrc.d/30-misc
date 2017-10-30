@@ -76,7 +76,7 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 compinit #-C -i
 
-# Disable ~<user> directory autocompletion as its slow in systems with a lot of users
+# Disable ~<user> directory autocompletion as it's slow in systems with a lot of users
 function _users {  }
 
 

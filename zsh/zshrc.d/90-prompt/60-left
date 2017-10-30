@@ -8,13 +8,13 @@
 ########################
 # Configuration
 
-# The minimum number of seconds for the execution time of a command to be printed as part of the prompt
-typeset -g ZSH_PROMPT_MIN_EXEC_TIME=2
+# none
 
 
 ########################
 # Left prompt
-mkprompt_start "PROMPT" 1 # 1 = left-to-right
+# 1 = left-to-right
+mkprompt_start "PROMPT" 1
 
 mkprompt_ssh_hostname "$fg[yellow]"
 mkprompt_delim ":"

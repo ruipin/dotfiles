@@ -14,7 +14,8 @@ typeset -g ZSH_PROMPT_MIN_EXEC_TIME=2
 
 ########################
 # Right Prompt
-mkprompt_start "RPROMPT" 0 # 0 = right-to-left
+# 0 = right-to-left
+mkprompt_start "RPROMPT" 0
 
 mkprompt_clock "$fg[purple]"
 mkprompt_jobs "$fg[purple]"

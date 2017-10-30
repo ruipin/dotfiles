@@ -5,3 +5,4 @@
 
 find . -type d -exec chmod u+rwx,g-rwx,o-rwx {} \;
 find . -type f -exec chmod u+rw,g-rwx,o-rwx {} \;
+find ./zsh -type f -exec chmod u-x {} \;

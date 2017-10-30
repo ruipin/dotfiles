@@ -211,6 +211,9 @@ function init_custom_module {
 			"-m"|"--mod"|"--modules")
 				seen_mod=1
 				;;
+			"-d"|"--default")
+				module add_default "$mname"
+				;;
 			*)
 				# Module dependencies
 				if [[ "$seen_mod" -eq 1 || "$cmd[1]" = "$_module_name_symbol" ]] ; then

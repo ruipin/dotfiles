@@ -97,22 +97,26 @@ fi
 # 4. Source (in order) the files, preferring the version in the "local zshrc" if both exist
 #
 # During step 4, files can be sourced in different ways:
+#
 # - By default =>
-#	Files are sourced using the "." zsh builtin by default.
-# - If _zshrcd_concatenate=1 =>
-#	Files are first concatenated into a "zshrc.d.cat" file,
-#	which is then sourced. If "zshrc.d.cat" already exists, then it is sourced directly.
-#	This allows a single file to be read, which can optimize systems where the "zshrc.d" firectories
-#	are in a networked filesystem, as it reduces the number of file accesses.
-# - If _zshrcd_concatenate=1 && _zshrcd_compile=1 =>
-#	Concatenates the files as above, but also uses the "zcompile" builtin to pre-parse "zshrc.d.cat".
-#	This should (very slightly) improve the zsh startup time, and allows zsh to map the file to memory,
-#	sharing its memory page between processes.
+#    Files are sourced using the "." zsh builtin
+#
+# - If _zshrcd_concatenate!=0 =>
+#    Files are first concatenated into a "zshrc.d.cat" file,
+#    which is then sourced. If "zshrc.d.cat" already exists, then it is sourced directly.
+#    This allows a single file to be read, which can optimize systems where the "zshrc.d" firectories
+#    are in a networked filesystem, as it reduces the number of file accesses.
+#    For _zshrcd_concatenate=2, files are only concatenated if ZSH_HOME is a networked filesystem
+#
+# - If _zshrcd_concatenate!=0 && _zshrcd_compile=1 =>
+#    Concatenates the files as above, but also uses the "zcompile" builtin to pre-parse "zshrc.d.cat".
+#    This should (very slightly) improve the zsh startup time, and allows zsh to map the file to memory,
+#    sharing its memory page between processes.
 
 function _zshrcd {
 	# Configuration
-	typeset -g _zshrcd_concatenate=0
-	typeset -g _zshrcd_compile=0
+	typeset -g _zshrcd_concatenate=2
+	typeset -g _zshrcd_compile=1
 	typeset -g _zshrcd_freshness_check=0 # Can be expensive for network filesystems
 	local _zshrcd_debug=0
 	local _zshrcd_fallback=0
@@ -125,8 +129,19 @@ function _zshrcd {
 	typeset -g _zshrcd_scratch="$ZSH_SCRATCH/zshrcd"
 	typeset -g _zshrcd_regen=0
 
+	# Detect networked file system
+	if [[ "$_zshrcd_concatenate" -eq "2" ]]; then
+		local fstype=$( stat -f -L -c %T "$ZSH_HOME" )
+		echo "[zshrc.d] \$ZSH_HOME file system is '$fstype'"
+		if [[ "$fstype" = "nfs" ]]; then
+			_zshrcd_concatenate=1
+		else
+			_zshrcd_concatenate=0
+		fi
+	fi
+
 	# Clean _zshrcd files
-	if [[ "$_zshrcd_concatenate" -eq "1" ]]; then
+	if [[ "$_zshrcd_concatenate" -ne "0" ]]; then
 		function regen_zshrcd {
 			(
 				setopt rmstarsilent
@@ -147,9 +162,13 @@ function _zshrcd {
 	fi
 
 	# Debug helper
-	function _zshrcd_debug {
-		[[ "$_zshrcd_debug" -eq "1" ]] && echo "[zshrc.d:dbg] $@"
-	}
+	if [[ "$_zshrcd_debug" -eq "1" ]]; then
+		function _zshrcd_debug {
+			echo "[zshrc.d:dbg] $@"
+		}
+	else
+		function _zshrcd_debug {}
+	fi
 
 	# Iterates through all files inside zshrc.d
 	# Calls "$1" for each file to be sourced
@@ -198,7 +217,7 @@ function _zshrcd {
 	}
 
 	# If we want to concatenate/compile the files
-	if [[ "$_zshrcd_concatenate" -eq "1" ]]; then
+	if [[ "$_zshrcd_concatenate" -ne "0" ]]; then
 		# Initialize directory
 		[[ ! -d "$_zshrcd_scratch" ]] && mkdir -p "$_zshrcd_scratch"
 		typeset -g _zshrcd_cat="$_zshrcd_scratch/zshrc.d.cat"
@@ -229,7 +248,7 @@ function _zshrcd {
 		fi
 
 		# Re-compile zshrc.d.cat if it is no longer fresh
-		if [[ "$_zshrcd_compile" -eq "1" && ! "$_zshrcd_cat.zwc" -nt "$_zshrcd_cat" ]]; then
+		if [[ "$_zshrcd_compile" -ne "0" && ! "$_zshrcd_cat.zwc" -nt "$_zshrcd_cat" ]]; then
 			echo "[zshrc.d] Compiling 'zshrc.d.cat'..."
 			[[ -f "$_zshrcd_cat.zwc" ]] && rm -f "$_zshrcd_cat.zwc"
 			zcompile -M "$_zshrcd_cat"

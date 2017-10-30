@@ -189,7 +189,7 @@ function init_custom_module {
 			mname="${mname##*=}"
 		# Virtual aliases
 		elif [[ "$mname[1]" = "$_module_alias_symbol" ]]; then
-			mname="${mname#$_module_alias_symbol}"
+			mname="%${mname#$_module_alias_symbol}"
 			_module_alias "${mname}=.none"
 		fi
 

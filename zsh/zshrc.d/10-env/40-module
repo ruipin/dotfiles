@@ -38,11 +38,12 @@ function init_custom_module {
 
 		_module_wrapped=1
 
-		[[ ! -z "$_module_defaults" ]] && module load $_module_defaults
+		[[ ! -z "$_module_defaults" ]] && module load $@ $_module_defaults || return $?
+		return 0
 	}
 
 	function _module_wrapper {
-		#echo_debug "$0 $*" "module wrapper"
+		#echo_debug "$0 $*" "_module_wrapper"
 
 		local res=0
 		case "$1" in
@@ -122,71 +123,90 @@ function init_custom_module {
 		return 1
 	}
 
-	typeset -g _module_load_params=()
+	#typeset -g _module_load_params=()
 	function _module_load {
-		#echo_debug "Loading module(s) '$*'..." "module load"
-		local mname
+		#echo_debug "_module_load $*" "module load"
 		local res=0
+		local load_params=()
 
-		local args
-		local add_only
-		if [[ "$1" = "-a" ]]; then
-			add_only=1
-			args=(${@:2})
-		else
-			args=($@)
-			add_only=0
-		fi
-
-		for mname in $args ; do
-			# Trigger dependencies
-			local mname_deps="${mname#($_module_name_symbol|$_module_alias_symbol)}"
-			local mdeps="${_module_deps[$mname_deps]% }"
-			if [[ ! -z "$mdeps" ]]; then
-				_module_load -a ${=mdeps}
-
-				# Clear dependencies
-				_module_deps[$mname]=""
-			fi
-
-			# Resolve aliases unless module name starts with ':'
-			if [[ "$mname[1]" != "$_mobule_name_symbol" ]]; then
-				local malias="${mname#$_module_alias_symbol}"
-				local mresolved=$_module_aliases[${malias}]
-				if [[ "$mname[1]" = "$_module_alias_symbol" && -z "$mresolved" ]]; then
-					#echo_error "module load: alias '$malias' does not exist" "module load"
-					return 1
-				elif [[ ! -z "$mresolved" ]]; then
-					_module_load -a "$mresolved"
-					res=$?
-					[[ "$res" -ne "0" ]] && return $res
-					continue
+		local arg
+		local resolve_only=0
+		for arg in "$@" ; do
+			case "$arg" in
+			# Add only
+			"-ro"|"--resolve"|"--resolve-only")
+				resolve_only=1
+				;;
+			# Module name
+			*)
+				local mname="$arg"
+				# Trigger dependencies
+				local mname_deps="${mname#($_module_name_symbol|$_module_alias_symbol)}"
+				local mdeps="${_module_deps[$mname_deps]% }"
+				if [[ ! -z "$mdeps" ]]; then
+					# Resolve the dependency
+					_module_load --resolve-only ${=mdeps} || { res=$? && break }
+					load_params+=($_module_load_return)
+					unset _module_load_return
 				fi
-			fi
 
-			# Non-alias modules
-			mname="${mname#$_module_name_symbol}"
-			[[ "$mname" = ".none" ]] && continue # mname=".none" means a virtual module
-			if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
-				#echo_debug "'$mname' already loaded" "module load"
-			else
-				# Load module
-				_module_load_params+=($mname)
-			fi
+				# Resolve aliases unless module name starts with ':'
+				if [[ "$mname[1]" != "$_mobule_name_symbol" ]]; then
+					local malias="${mname#$_module_alias_symbol}"
+					local mresolved=$_module_aliases[${malias}]
+					if [[ "$mname[1]" = "$_module_alias_symbol" && -z "$mresolved" ]]; then
+						echo_error "module load: alias '$malias' does not exist" "module load"
+						return 1
+					elif [[ ! -z "$mresolved" ]]; then
+						_module_load --resolve-only $mresolved || { res=$? && break }
+						load_params+=($_module_load_return)
+						unset _module_load_return
+						continue
+					fi
+				fi
+
+				# Non-alias modules
+				mname="${mname#$_module_name_symbol}"
+				[[ "$mname" = ".none" ]] && continue # mname=".none" means a virtual module
+				if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
+					#echo_debug "'$mname' already loaded" "module load"
+				else
+					# Set module is to be loaded
+					load_params+=($mname)
+				fi
+			esac
 		done
 
-		if is_false "$add_only" ; then
-			is_false "$_module_wrapped" && _module_wrap
-			if [[ "$#_module_load_params" -ne "0" ]]; then
-				echo_debug "Loading module(s) '$_module_load_params'..." "module load"
-				_orig_module load $_module_load_params
-				res=$?
-				_module_load_params=()
-				[[ "$res" -ne "0" ]] && return $res
+		if [[ "$res" -eq "0" ]]; then
+			# Remove duplicates
+			load_params=(${(@u)load_params})
+
+			# If we are in resolve-only mode, return $load_params
+			if is_true "$resolve_only" ; then
+				typeset -g _module_load_return=($load_params)
+			else
+				# Load and wrap the real 'module' command
+				if is_false "$_module_wrapped" ; then
+					_module_wrap --resolve-only || return $?
+					if [[ "$#_module_load_return" -ne "0" ]]; then
+						load_params=($_module_load_return $load_params)
+						unset _module_load_return
+						load_params=(${(@u)load_params})
+					fi
+				fi
+
+				# If there is anything to load
+				if [[ "$#load_params" -ne "0" ]]; then
+					# Load modules and reset list of modules to be loaded
+					echo_debug "Loading module(s) '$load_params'..." "module load"
+					_orig_module load $load_params || return $res
+				fi
 			fi
+		else
+			unset _module_load_return
 		fi
 
-		return 0
+		return $res
 	}
 
 	function _module_autoload_handler {

@@ -15,6 +15,7 @@ function mkprompt_exec_time {
 		else
 			typeset -g _prompt_exec_time_msg=""
 		fi
+		unset elapsed
 		unset _prompt_cmd_timestamp # Reset timestamp
 	}
 

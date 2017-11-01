@@ -20,5 +20,5 @@ mkprompt_start "RPROMPT" 0
 mkprompt_clock "$fg[purple]"
 mkprompt_jobs "$fg[purple]"
 mkprompt_exec_time "$fg[purple]"
-mkprompt_vcs_info "$bold_color" "$fg_bold[red]"
+mkprompt_vcs_info_async "$bold_color" "$fg_bold[red]" ""
 mkprompt_vimode "$bg[red]$fg_bold[black]"

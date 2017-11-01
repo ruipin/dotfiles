@@ -21,10 +21,12 @@ function load_plugins {
 	if is_false "$1" ; then
 		function _zplug {
 			local repo="${1%,}"
-			local name=$(basename "$repo")
 
 			# Source script from repo
-			source "$ZPLUG_ROOT/repos/$repo/$name.plugin.zsh"
+			local sourcefile
+			for sourcefile in "$ZPLUG_ROOT/repos/$repo/"*".plugin.zsh" ; do
+				source $sourcefile
+			done
 		}
 	else
 		is_true "$_zplug_sourced" && return
@@ -40,6 +42,7 @@ function load_plugins {
 	_zplug "zsh-users/zsh-completions", defer:2
 	#_zplug "zsh-users/zsh-autosuggestions"
 	#_zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
+	_zplug "mafredri/zsh-async", defer:2
 	
 	unfunction _zplug
 	if is_true "$1" ; then

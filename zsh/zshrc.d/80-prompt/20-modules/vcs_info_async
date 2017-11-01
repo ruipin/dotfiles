@@ -1,0 +1,236 @@
+#########################################
+# prompt/modules/vcs_info
+# Author: Rui Pinheiro
+#
+# Zsh prompt "vcs_info" module with asynchronous capability
+# Highly influenced by https://github.com/sindresorhus/pure
+
+function mkprompt_vcs_info_async {
+	# vcs_info module
+	autoload -Uz vcs_info
+
+	# async module
+	async
+
+	# Variables
+	typeset -g _vcs_info_async_init=0
+	typeset -g _vcs_info_async_worker="vcs_info_async"
+	typeset -g vcs_info_async_pwd=""
+	typeset -gA vcs_info_async=()
+	typeset -g _vcs_info_working=0
+	typeset -g _prompt_vcs_info_working_string="…"
+	typeset -g _prompt_vcs_info_async_style="%{${reset_color}$1%}"
+	typeset -g _prompt_vcs_info_async_dirty_style="%{${reset_color}$2%}"
+	typeset -g _prompt_vcs_info_async_action_style="%{${reset_color}$3%}"
+
+	#########
+	# async handlers
+	function _vcs_info_async_handler {
+		builtin cd -q $1 2>/dev/null
+
+		# configure vcs_info inside async task, this frees up vcs_info
+		# to be used or configured as the user pleases.
+		zstyle ':vcs_info:*' enable git svn
+		zstyle ':vcs_info:*' max-exports 5
+
+		zstyle ':vcs_info:*' check-for-changes true
+		zstyle ':vcs_info:*' formats '%b' '%R' '%c%u'
+		zstyle ':vcs_info:*' actionformats '%b' '%R' '%c%u' '%a' '%m'
+
+		# formats for git
+		## Do not use %c%u for git to make vcs_info faster
+		#zstyle ':vcs_info:git:*' check-for-changes false
+		#zstyle ':vcs_info:git:*' formats '%b' '%R' '' '' ''
+		#zstyle ':vcs_info:git:*' actionformats '%b' '%R' '' '%a' '%m'
+		zstyle ':vcs_info:git:*' patch-format '%7>>%p%<< %n/%a'
+		zstyle ':vcs_info:git:*' nopatch-format '%b %n/%a'
+
+		# Symbols for when the repo is dirty
+		zstyle ':vcs_info:*' unstagedstr '!'
+		zstyle ':vcs_info:*' stagedstr '+'
+
+		vcs_info
+
+		# For some reason empty formats become 'a:', so make sure to remove that when parsing results
+		local -A info
+		info[branch]="${vcs_info_msg_0_:#a:}"
+		info[top]="${vcs_info_msg_1_:#a:}"
+		info[dirty]="${vcs_info_msg_2_:#a:}"
+		info[action]="${vcs_info_msg_3_:#a:}"
+		info[misc]="${vcs_info_msg_4_:#a:}"
+
+		print -r - ${(@kvqqqq)info}
+	}
+
+	function _vcs_info_async_git_arrows {
+		builtin cd -q $1
+
+		local code
+		local output
+		output=$( command git rev-list --left-right --count HEAD...@'{u}' )
+		code=$?
+
+		if [[ "$code" -eq "0" ]]; then
+			local arrownum=("${(@ps:\t:)output}")
+			local text=""
+
+			[[ "$arrownum[1]" -gt "0" ]] && text+="\uf062"
+			[[ "$arrownum[2]" -gt "1" ]] && text+="\uf063"
+
+			echo -n "$text"
+		fi
+	}
+
+
+	###############
+	# Async callback - called once an async worker finishes
+	function _vcs_info_async_callback {
+		local job="$1" code="$2" output="$3" exec_time="$4"
+
+		case $job in
+			# Normal 'vcs_info' asynchronous request
+			"_vcs_info_async_handler")
+				# Store necessary old values temporarily
+				local old_top=$vcs_info_async[top]
+
+				# parse output (z) and unquote as array (Q@)
+				local output_arr=("${(z)output[@]}")
+				local -A info=("${(QQQQ@)output_arr}")
+
+				vcs_info_async[branch]="$info[branch]"
+				vcs_info_async[dirty]="$info[dirty]"
+				vcs_info_async[top]="$info[top]"
+				vcs_info_async[action]="$info[action]"
+				vcs_info_async[misc]="$info[misc]"
+
+				#echo "branch=$vcs_info_async[branch]"
+				#echo "dirty=$vcs_info_async[dirty]"
+				#echo "top=$vcs_info_async[top]"
+				#echo "misc=$vcs_info_async[misc]"
+				#echo "action=$vcs_info_async[action]"
+
+				# check if git toplevel has changed
+				if [[ "$vcs_info_async[top]" = "$old_top" ]]; then
+					# if stored pwd is part of $PWD, $PWD is shorter and likelier
+					# to be toplevel, so we update pwd
+					if [[ "$vcs_info_async_pwd" = "${PWD}"* ]]; then
+						vcs_info_async_pwd="$PWD"
+					fi
+				else
+					# store $PWD to detect if we (maybe) left the git path
+					vcs_info_async_pwd="$PWD"
+					old_top=""
+				fi
+
+				# If we just entered a new git top-level, refresh async tasks
+				if [[ ! -z "$vcs_info_async[top]" && -z "$old_top" ]] ; then
+					_vcs_info_async_refresh
+				fi
+
+				_vcs_info_working=0
+				_prompt_vcs_info_render 1
+				;;
+
+			# git arrows async request
+			"_vcs_info_async_git_arrows")
+				if [[ "$code" -eq "0" ]]; then
+					vcs_info_async[arrows]="$output"
+					_prompt_vcs_info_render 1
+				fi
+				;;
+
+			# Unknown
+			*)
+				echo_error "Invalid job '$job'." "vcs_info_async:callback"
+				return 1
+		esac
+		return 0
+	}
+
+
+	###############
+	# Main code
+	function _vcs_info_async_main {
+		# initialize async worker
+		((!${_vcs_info_async_init:-0})) && {
+			async_start_worker "$_vcs_info_async_worker" -u -n
+			async_register_callback "$_vcs_info_async_worker" _vcs_info_async_callback
+			typeset -g _vcs_info_async_init=1
+		}
+
+		if [[ ! "$PWD" = "${vcs_info_async_pwd}"* ]]; then
+			# stop any running async jobs
+			#echo_debug "flushing" "vcs_info_async:main"
+			async_flush_jobs "$_vcs_info_async_worker"
+
+			# reset variables
+			vcs_info_async=()
+			vcs_info_async_pwd=""
+		fi
+
+		_vcs_info_working=1
+		async_job "$_vcs_info_async_worker" _vcs_info_async_handler "$PWD"
+
+		# only perform other refresh tasks inside git working tree
+		[[ -z "$vcs_info_async[top]" ]] && return
+
+		_vcs_info_async_refresh
+	}
+
+	function _vcs_info_async_refresh() {
+		async_job "$_vcs_info_async_worker" _vcs_info_async_git_arrows "$PWD"
+	}
+
+	################
+	# Prompt
+
+	# $1=1 -> asks zle to redraw the prompt
+	function _prompt_vcs_info_render {
+		local new_msg=""
+
+		local branch="$vcs_info_async[branch]"
+		if [[ ! -z "$branch" ]]; then
+			local dirty="$vcs_info_async[dirty]"
+			local arrows="$vcs_info_async[arrows]"
+			local action="$vcs_info_async[action]"
+			local misc="$vcs_info_async[misc]"
+
+			# (<action>: <misc>) <branch><dirty><arrows>
+			new_msg="${_prompt_vcs_info_async_style}$vcs_info_async[branch]"
+
+			if [[ ! -z "$dirty" ]]; then
+				new_msg+="${_prompt_vcs_info_async_dirty_style}$dirty"
+				[[ ! -z "$arrows" ]] && new_msg+="$arrows"
+			elif [[ ! -z "$arrows" ]]; then
+				new_msg+="${_prompt_vcs_info_async_dirty_style}$arrows"
+			fi
+
+			if [[ ! -z "$action" ]]; then
+				local action_msg="${_prompt_vcs_info_async_action_style}"
+				if [[ ! -z "$misc" ]]; then
+					action_msg+="($action: $misc)"
+				else
+					action_msg+="($action)"
+				fi
+				new_msg="$action_msg $new_msg"
+			fi
+		elif is_true "$_vcs_info_working" ; then
+			new_msg="$_prompt_vcs_info_working_string"
+		fi
+
+		# Redraw the prompt.
+		if [[ "$new_msg" != "$_prompt_vcs_info_async_msg" ]]; then
+			typeset -g _prompt_vcs_info_async_msg="$new_msg"
+			[[ "${1-0}" -eq "1" ]] && zle reset-prompt
+		fi
+	}
+
+	function _prompt_vcs_info_async {
+		_vcs_info_async_main
+		_prompt_vcs_info_render 0
+	}
+	add-zsh-hook precmd _prompt_vcs_info_async
+
+	# Add vcs_info information to the prompt
+	mkprompt_add_var "$1" "_prompt_vcs_info_async_msg"
+}

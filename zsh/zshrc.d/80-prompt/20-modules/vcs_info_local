@@ -4,7 +4,7 @@
 #
 # Zsh prompt "vcs_info" module
 
-function mkprompt_vcs_info {
+function mkprompt_vcs_info_local {
 	# vcs_info module
 	autoload -Uz vcs_info
 	zstyle ':vcs_info:*' enable git svn
@@ -17,12 +17,17 @@ function mkprompt_vcs_info {
 	zstyle ':vcs_info:git:*' nopatch-format '%b %n/%a'
 	zstyle ':vcs_info:*' check-for-changes true
 
-	# Reload VCS information before every prompt
-	function _prompt_vcs_info {
-		vcs_info
+	# Reload VCS information before every prompt for local filesystems
+	function _prompt_vcs_info_local {
+		if is_local_fs "$PWD" ; then
+			vcs_info
+			typeset -g _prompt_vcs_info_local_msg="$vcs_info_msg_0_"
+		else
+			typeset -g _prompt_vcs_info_local_msg=""
+		fi
 	}
-	add-zsh-hook precmd _prompt_vcs_info
+	add-zsh-hook precmd _prompt_vcs_info_local
 
 	# Add vcs_info information to the prompt
-	mkprompt_add_var "$1" "vcs_info_msg_0_"
+	mkprompt_add_var "$1" "_prompt_vcs_info_local_msg"
 }

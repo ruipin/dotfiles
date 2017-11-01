@@ -9,13 +9,13 @@
 # call "is_ssh 1" to get a higher accuracy result, by searching for sshd as a parent process
 function is_ssh {
 	if [[ -n "$SSH_CONNECTION" || -n "$SSH_CLIENT" || -n "$SSH_TTY" ]]; then
-		return 1
+		return 0
 	elif is_true "$1" ; then
 		case $(ps -o comm= -p $PPID) in
-			sshd|*/sshd) return 1
+			sshd|*/sshd) return 0
 		esac
 	fi
-	return 0
+	return 1
 }
 
 # Call SSH overriding the ForwardX11/ForwardX11Trusted configuration options

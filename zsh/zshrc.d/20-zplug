@@ -18,7 +18,9 @@
 typeset -g _zplug_loaded=0
 
 function load_plugins {
-	if is_false "$1" ; then
+	local type="${1:-1}"
+
+	if [[ "$type" -eq "0" ]]; then
 		function _zplug {
 			local repo="${1%,}"
 
@@ -45,7 +47,7 @@ function load_plugins {
 	_zplug "mafredri/zsh-async", defer:2
 	
 	unfunction _zplug
-	if is_true "$1" ; then
+	if [[ "$type" -ne "0" ]]; then
 		# Install new plugins
 		if ! zplug check --verbose; then
 			printf "Install? [y/N]: "
@@ -55,7 +57,7 @@ function load_plugins {
 		fi
 
 		# Update plugins
-		zplug update #--verbose
+		[[ "$type" -eq "1" ]] && zplug update #--verbose
 
 		# Finalize plugin loading
 		zplug load #--verbose
@@ -72,6 +74,6 @@ function zplug {
 	echo_info "Lazy-loading 'zplug'..." "zplug"
 	unfunction zplug
 
-	load_plugins 1
+	load_plugins 2
 	zplug $@
 }

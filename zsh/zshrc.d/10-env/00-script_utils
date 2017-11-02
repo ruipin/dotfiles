@@ -49,6 +49,45 @@ add_named_color "lime" 154
 # Datetime
 zmodload "zsh/datetime"
 
+# Returns 0 if at least $1 seconds have elapsed since $2
+function time_elapsed {
+	local res=0
+	local start=${2-0}
+	local seconds=${1-0}
+
+	[[ "$start" -eq "0" ]] && return 0
+
+	local now=$EPOCHSECONDS
+	integer elapsed=$now-$start
+	if (($elapsed < ${seconds})); then
+		res=1
+	fi
+	unset elapsed
+	return $res
+}
+
+# Returns 0 if $EPOCHSECONDS >= $1
+function time_passed {
+	local val=${1-0}
+	[[ "$val" -eq "0" ]] && return 0
+
+	(( $EPOCHSECONDS >= $val )) && return 0
+	return 1
+}
+
+# Echos $1 seconds as a human-readable "Xd Yh Wm Zs"
+function human_readable_seconds {
+	local tmp=$1
+	local days=$(( tmp / 60 / 60 / 24 ))
+	local hours=$(( tmp / 60 / 60 % 24 ))
+	local minutes=$(( tmp / 60 % 60 ))
+	local seconds=$(( tmp % 60 ))
+	(( $days > 0 )) && echo -n "${days}d"
+	(( $hours > 0 )) && echo -n "${hours}h"
+	(( $minutes > 0 )) && echo -n "${minutes}m"
+	echo -n "${seconds}s"
+}
+
 
 #################
 # Echo

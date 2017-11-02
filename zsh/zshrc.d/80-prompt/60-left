@@ -19,5 +19,5 @@ mkprompt_start "PROMPT" 1
 mkprompt_ssh_hostname "$fg[yellow]"
 mkprompt_delim ":"
 mkprompt_cwd "$fg[yellow]"
-mkprompt_prompt ""
+mkprompt_prompt
 mkprompt_apply_delim

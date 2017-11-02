@@ -1,0 +1,15 @@
+#########################################
+# prompt/modules/ssh_hostname
+# Author: Rui Pinheiro
+#
+# Zsh prompt "SSH Hostname" module
+
+function mkprompt_username {
+	local normal_color="$1"
+	local root_color="${2-$1}"
+
+	local color="$normal_color"
+	[[ "$UID" -eq "0" ]] && color="$root_color"
+
+	mkprompt_add "$color" "%n"
+}

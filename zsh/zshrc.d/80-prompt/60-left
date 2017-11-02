@@ -16,8 +16,12 @@
 # 1 = left-to-right
 mkprompt_start "PROMPT" 1
 
-mkprompt_ssh_hostname "$fg[yellow]"
-mkprompt_delim ":"
+if is_ssh ; then
+	mkprompt_username "$fg[blue]" "$bg[magenta]$fg_bold[black]"
+	mkprompt_delim "@"
+	mkprompt_hostname "$fg[yellow]"
+	mkprompt_delim ":"
+fi
 mkprompt_cwd "$fg[yellow]"
 mkprompt_prompt
 mkprompt_apply_delim

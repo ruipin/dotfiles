@@ -4,8 +4,6 @@
 #
 # Zsh prompt "SSH Hostname" module
 
-function mkprompt_ssh_hostname {
-	if is_ssh ; then
-		mkprompt_add "$fg[yellow]" "%m"
-	fi
+function mkprompt_hostname {
+	mkprompt_add "$1" "%m"
 }

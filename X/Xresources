@@ -84,9 +84,11 @@ xterm*utf8: 1
 ! Force good line-drawing characters
 XTerm.vt100.forceBoxChars: true
 
-! Hasklug (Hasklig Nerd Font)
-XTerm.vt100.faceName: xft:Hasklug Nerd Font Mono:regular:size=10:antialias=true:hinting=true
-
+!! Fonts
+! Deja Vu Sans Mono (Nerd Font)
+!XTerm.vt100.faceName: xft:DejaVuSansMono Nerd Font Mono:regular:size=10:antialias=true:hinting=true
+! Meslo (Menlo Nerd Font)
+XTerm.vt100.faceName: xft:MesloLGS Nerd Font Mono:regular:size=10:antialias=true:hinting=true
 ! Consolas (manually patched Nerd Fonts version)
 !XTerm.vt100.faceName: xft:Consolas NF:regular:size=11:antialias=true:hinting=true
 
@@ -122,11 +124,11 @@ URxvt.perl-ext-common: selection-to-clipboard
 !URxvt.letterSpace: -5
 URxvt.lineSpace: -5
 
-! Hasklug (Hasklig Nerd Font)
-URxvt.font: xft:Hasklug Nerd Font Mono:regular:size=10:antialias=true:hinting=true
-URxvt.boldFont: xft:Hasklug Nerd Font Mono:bold:size=10:antialias=true:hinting=true
-URxvt.italicFont: xft:Hasklug Nerd Font Mono:italic:size=10:antialias=true:hinting=true
-URxvt.boldItalicFont: xft:Hasklug Nerd Font Mono:bold:italic:size=10:antialias=true:hinting=true
+! MesloLGS (Menlo Nerd Font)
+URxvt.font: xft:MesloLGS Nerd Font Mono:regular:size=10:antialias=true:hinting=true
+URxvt.boldFont: xft:MesloLGS Nerd Font Mono:bold:size=10:antialias=true:hinting=true
+URxvt.italicFont: xft:MesloLGS Nerd Font Mono:italic:size=10:antialias=true:hinting=true
+URxvt.boldItalicFont: xft:MesloLGS Nerd Font Mono:bold:italic:size=10:antialias=true:hinting=true
 
 ! Consolas (manually patched Nerd Fonts version)
 !URxvt.font: xft:Consolas NF:regular:size=10:antialias=true:hinting=true

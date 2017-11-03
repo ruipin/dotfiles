@@ -1,0 +1,16 @@
+#########################################
+# shell/tetris
+# Author: Rui Pinheiro
+#
+# zsh tetris easter-egg
+
+function tetris {
+	unfunction tetris
+	autoload -Uz tetris
+	tetris
+
+	typeset -g KEYTIMEOUT=20
+	bindkey '^T' tetris
+
+	echo_info "Tetris initialized. Please press 'Ctrl+T' to start!" "tetris"
+}

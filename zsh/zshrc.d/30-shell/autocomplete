@@ -56,4 +56,6 @@ compinit #-C -i
 
 ####################
 # Disable ~<user> directory autocompletion as it's slow in systems with a lot of users
-function _users {  }
+function _users {
+	compadd -X "users" "$USER" 
+}

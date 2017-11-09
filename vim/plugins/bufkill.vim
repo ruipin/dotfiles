@@ -7,7 +7,8 @@
 
 
 " Allow to close buffers without closing split
-Plug 'qpkorr/vim-bufkill', { 'on': [ 'BUN', 'BD', 'BW', 'BB', 'BF', 'BA'] }
+" NOTE: Does not support lazy-loading
+Plug 'qpkorr/vim-bufkill' ", { 'on': [ 'BUN', 'BD', 'BW', 'BB', 'BF', 'BA'] }
 
 
 nnoremap <silent> <C-s> :BD<CR>

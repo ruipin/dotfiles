@@ -52,6 +52,9 @@ endif
 	" Rainbow Parentheses
 	call SourceDotfile('plugins/rainbow.vim')
 
+	" Matchit
+	call SourceDotfile('plugins/matchit.vim')
+
 
 	"""""""""""""""
 	" Other plugins

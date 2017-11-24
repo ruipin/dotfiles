@@ -55,6 +55,9 @@ endif
 	" Matchit
 	call SourceDotfile('plugins/matchit.vim')
 
+	" Scrolling
+	call SourceDotfile('plugins/scrolling.vim')
+
 
 	"""""""""""""""
 	" Other plugins

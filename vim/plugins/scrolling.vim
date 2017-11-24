@@ -6,20 +6,16 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Number of lines to keep at top/bottom of pane when scrolling, for context
-set scrolloff=3
+set scrolloff=2
 
-
+" Use smooth scrolling on local systems
 if (! g:isRemote )
 	let g:scroll_disable_mapping = 1
 	Plug 'cskeeters/vim-smooth-scroll'
 
-	" Scroll Wheel
-	noremap <silent> <ScrollWheelDown> :call smooth_scroll#down(3)<CR>
-	noremap <silent> <ScrollWheelUp>   :call smooth_scroll#up(3)<CR>
-
 	" Page Up/Down
-	noremap <silent> <PageDown> :call smooth_scroll#down(&scroll*2)<CR>
 	noremap <silent> <PageUp>   :call smooth_scroll#up(&scroll*2)<CR>
+	noremap <silent> <PageDown> :call smooth_scroll#down(&scroll*2)<CR>
 
 	" Misc keys
 	"nnoremap <silent> <c-u> :call smooth_scroll#up(  &scroll)<CR>
@@ -36,7 +32,7 @@ if (! g:isRemote )
 	vnoremap <silent> zb :<c-u>call smooth_scroll#bottom(1)<CR>	
 
 else
-	nnoremap <silent> K :call feedkeys(&scroll . 'k')<CR>
-	nnoremap <silent> J :call feedkeys(&scroll . 'j')<CR>
-
+	" Misc Keys
+	nnoremap <silent> K <C-U>
+	nnoremap <silent> J <C-D>
 endif

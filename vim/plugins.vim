@@ -46,8 +46,17 @@ endif
 	" Auto pairs
 	call SourceDotfile('plugins/auto-pairs.vim')
 
+	" Bufkill
+	call SourceDotfile('plugins/bufkill.vim')
+
 	" Rainbow Parentheses
 	call SourceDotfile('plugins/rainbow.vim')
+
+	" Matchit
+	call SourceDotfile('plugins/matchit.vim')
+
+	" Scrolling
+	call SourceDotfile('plugins/scrolling.vim')
 
 
 	"""""""""""""""

@@ -1,0 +1,8 @@
+#########################################
+# env/hostname
+# Author: Rui Pinheiro
+#
+# Refresh the HOST/HOSTNAME environment variables
+
+export HOST="$(hostname)"
+export HOSTNAME="$HOST"

@@ -58,6 +58,8 @@ endif
 	" Scrolling
 	call SourceDotfile('plugins/scrolling.vim')
 
+	" Undotree
+	call SourceDotfile('plugins/undotree.vim')
 
 	"""""""""""""""
 	" Other plugins

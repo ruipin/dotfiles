@@ -38,6 +38,7 @@ function init_custom_module {
 
 		_module_wrapped=1
 
+		module purge
 		[[ ! -z "$_module_defaults" ]] && module load $@ $_module_defaults || return $?
 		return 0
 	}
@@ -94,9 +95,9 @@ function init_custom_module {
 
 	#####
 	# extra 'module' functionality
-	typeset -gA _module_deps
-	typeset -gA _module_cmd_deps
-	typeset -gA _module_aliases
+	typeset -gA _module_deps=()
+	typeset -gA _module_cmd_deps=()
+	typeset -gA _module_aliases=()
 	typeset -g  _modules_defaults=()
 	
 	typeset -g _module_alias_symbol="%"
@@ -168,7 +169,7 @@ function init_custom_module {
 				# Non-alias modules
 				mname="${mname#$_module_name_symbol}"
 				[[ "$mname" = ".none" ]] && continue # mname=".none" means a virtual module
-				if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
+				if is_true "$_module_wrapped" && [[ "$LOADEDMODULES" = *"$mname"* ]]; then
 					#echo_debug "'$mname' already loaded" "module load"
 				else
 					# Set module is to be loaded
@@ -211,7 +212,7 @@ function init_custom_module {
 
 	function _module_autoload_handler {
 		local cmd="$1"
-		local args=${@:2}
+		local args=(${@:2})
 		local res
 
 		# Make sure this lazy-loader only runs once
@@ -228,6 +229,7 @@ function init_custom_module {
 		_module_cmd_deps[$cmd]=""
 
 		# Execute shadowed command
+		#echo_debug "$cmd $args" "module_autoload"
 		"$cmd" $args
 	}
 
@@ -248,7 +250,7 @@ function init_custom_module {
 		fi
 
 		# No need to autoload already-loaded modules
-		if [[ "$LOADEDMODULES" = *"$mname"* ]]; then
+		if is_true "$_module_wrapped" && [[ "$LOADEDMODULES" = *"$mname"* ]]; then
 			#echo_debug "Module $mname already loaded" "module autoload"
 			return 0
 		fi

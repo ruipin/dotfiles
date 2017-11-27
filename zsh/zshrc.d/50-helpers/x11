@@ -41,9 +41,24 @@ function gateway_x {
 }
 alias gwx="gateway_x"
 
+# X11 buffer controls
+# Param 0: Buffer to access
+#          "primary", "secondary", "clipboard"
+# Stdin: Modify buffer contents
+# Stdout (if no stdin provided): Read buffer contents
+function xbuffer {
+	if in_path "xclip" ; then
+		if [[ ! -t 0 ]]; then
+			xclip -i -selection "$1"
+		else
+			xclip -o -selection "$1"
+		fi
+	elif in_path "xsel" ; then
+		xsel "--$1"
+	else
+		echo_error "No clipboard provider found (xsel/xclip)" "$0"
+	fi
+}
 
-# Move X primary selection to clipboard
-alias xp2c="xsel -p | xsel -b"
-
-# Move X clipboard to primary
-alias xc2p="xsel -b | xsel -p"
+alias xp2c="xbuffer primary   | xbuffer clipboard"
+alias xc2p="xbuffer clipboard | xbuffer primary  "

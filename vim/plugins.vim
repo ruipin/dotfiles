@@ -31,9 +31,6 @@ endif
 	" System Verilog highligting
 	call SourceDotfile('plugins/system_verilog.vim')
 
-	" Tagbar
-	call SourceDotfile('plugins/tagbar.vim')
-
 	" indentLine
 	call SourceDotfile('plugins/indentline.vim')
 
@@ -60,6 +57,9 @@ endif
 
 	" Undotree
 	call SourceDotfile('plugins/undotree.vim')
+
+	" Ctags
+	call SourceDotfile('plugins/ctags.vim')
 
 	"""""""""""""""
 	" Other plugins

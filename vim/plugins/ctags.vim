@@ -1,11 +1,17 @@
 """""""""""""""""""""""""""""""""""""""""
-" tagbar.vim
+" ctags.vim
 " Author: Rui Pinheiro
 "
-" Tagbar plugin
+" ctags configuration
 """""""""""""""""""""""""""""""""""""""""
 
-" Load plugin
+"""""""
+" Automatic ctags
+" Requires ctags installation (e.g. universal-ctags)
+Plug 'ludovicchabant/vim-gutentags'
+
+"""""""
+" Tagbar
 Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
 " Configuration

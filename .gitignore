@@ -41,7 +41,3 @@ Thumbs.db
 ######################
 *.zwc
 *.zwc.old
-
-# Ctags file #
-##############
-/tags

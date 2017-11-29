@@ -8,6 +8,8 @@
 #	enabled = true
 [merge]
 	conflictstyle = diff3
+[core]
+	excludesfile = ~/.gitignore
 
 [alias]
 	# Simple aliases

@@ -1,0 +1,6 @@
+##########################
+#  GLOBAL GITIGNORE FILE #
+##########################
+
+# Ctags file at the root of the repository
+.tags

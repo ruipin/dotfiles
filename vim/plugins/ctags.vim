@@ -6,9 +6,20 @@
 """""""""""""""""""""""""""""""""""""""""
 
 """""""
+" Set tags search path
+" ';' means upward search (i.e. ./.tags, ../.tags, ../../.tags etc)
+set tags=.tags;
+
+"""""""
 " Automatic ctags
 " Requires ctags installation (e.g. universal-ctags)
 Plug 'ludovicchabant/vim-gutentags'
+
+" Use '.tags' to avoid polluting the directory listing
+let g:gutentags_ctags_tagfile = '.tags'
+
+" Use cache dir to avoid pollution everything with tags
+let g:gutentags_cache_dir = '~/.vim/tags'
 
 """""""
 " Tagbar

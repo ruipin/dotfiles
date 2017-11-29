@@ -9,7 +9,7 @@
 # Tmux helper: Create new session, attach to main session if it exists
 function tmux_new {
 	if [[ ! -z "$TMUX" ]]; then
-		echo_error "tmux_attach: Already inside a tmux session" "tmux"
+		echo_error "tmux_new: Already inside a tmux session" "tmux"
 		return 1
 	fi
 
@@ -31,6 +31,7 @@ function tmux_new {
 	return 0
 }
 alias tn="tmux_new"
+alias ta="tmux attach"
 
 
 # If USE_TMUX, we want to boot straight into tmux

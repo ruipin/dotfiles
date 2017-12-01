@@ -27,6 +27,7 @@ alias disk='du * -sh --total'
 alias dua='baobab'
 alias sed='sed --follow-symlinks'
 alias tmux='tmux -u -2' # Enable UTF-8, 256 color mode by default
+alias ctags='ctags -f ".tags"'
 
 
 #############

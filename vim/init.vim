@@ -20,6 +20,9 @@ call SourceDotfile('tabs.vim')
 " Input
 call SourceDotfile('input.vim')
 
+" Scrolling
+call SourceDotfile('scrolling.vim')
+
 " Miscellaneous
 call SourceDotfile('misc.vim')
 

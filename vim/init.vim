@@ -31,3 +31,6 @@ call SourceDotfile('tmux.vim')
 
 " Auto Highlight
 call SourceDotfile('auto_highlight.vim')
+
+" Large Files
+call SourceDotfile('large_files.vim')

@@ -239,7 +239,7 @@ function delim_append {
 	#fi
 	#new_val="${new_val}${append_str}"
 	local old_val="${(P)name}"
-	local new_val="${old_val}${old_val:+${delim}}${prepend_str}"
+	local new_val="${old_val}${old_val:+${delim}}${append_str}"
 
 	# Save result
 	export "$name"="$new_val"

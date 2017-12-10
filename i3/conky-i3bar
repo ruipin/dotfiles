@@ -6,4 +6,4 @@ echo '['
 
 echo '[]'
 
-exec conky -c $HOME/.config/i3/i3conky.conf
+exec conky -c $DOTFILES/i3/i3conky.conf

@@ -37,8 +37,7 @@ function init_custom_module {
 		}
 
 		_module_wrapped=1
-
-		module purge
+		module orig purge
 		[[ ! -z "$_module_defaults" ]] && module load $@ $_module_defaults || return $?
 		return 0
 	}
@@ -48,32 +47,41 @@ function init_custom_module {
 
 		local res=0
 		case "$1" in
-		autoload)
+		"autoload")
 			_module_autoload ${@:2}
 			res=$?
 			;;
-		alias)
+		"alias")
 			_module_alias ${@:2}
 			res=$?
 			;;
-		has_alias)
+		"has_alias")
 			_module_has_alias ${@:2}
 			res=$?
 			;;
-		add_default)
+		"add_default")
 			_module_add_default ${@:2}
 			res=$?
 			;;
-		load)
+		"purge"|"wrap"|"rewrap")
+			echo_debug "Purging modules..." "module purge"
+			_module_wrap
+			res=$?
+			;;
+		"load")
 			_module_load ${@:2}
+			res=$?
+			;;
+		# NOTE:
+		# Any call to modules should go through this command, to make sure the local prefix is not broken
+		"orig")
+			is_false "$_module_wrapped" && _module_wrap
+			_orig_module ${@:2}
 			res=$?
 			in_path "activate_local_prefix" && activate_local_prefix 1
 			;;
 		*)
-			is_false "$_module_wrapped" && _module_wrap
-			_orig_module $@
-			res=$?
-			in_path "activate_local_prefix" && activate_local_prefix 1
+			module orig $@
 		esac
 
 		return $res
@@ -200,7 +208,7 @@ function init_custom_module {
 				if [[ "$#load_params" -ne "0" ]]; then
 					# Load modules and reset list of modules to be loaded
 					echo_debug "Loading module(s) '$load_params'..." "module load"
-					_orig_module load $load_params || return $res
+					module orig load $load_params || return $res
 				fi
 			fi
 		else

@@ -37,6 +37,10 @@
 	cbranch = checkout -b
 	squash = merge --squash
 
+  f = fetch
+  fetch-all = fetch --all
+  fa = !git fetch-all
+
   ##############
   # Current revision
   rev = rev-parse --verify --short HEAD

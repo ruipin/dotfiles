@@ -24,6 +24,7 @@ function mkprompt_vcs_info_async {
 	typeset -g _prompt_vcs_info_async_action_style="%{${reset_color}$3%}"
 
 	# Minimum interval in seconds between repeated checks for the same repo (0 disables)
+	# NOTE: 'git' commands always trigger a check
 	# default: 5 seconds
 	typeset -g _prompt_vcs_info_minimum_interval="${PROMPT_VCS_INFO_MINIMUM_INTERVAL:-5}"
 
@@ -102,6 +103,7 @@ function mkprompt_vcs_info_async {
 	# Git arrows job: Checks how many commits the current branch is ahead and/or behind upstream
 	# Outputs a string to stdout which can be used directly by the prompt
 	function _vcs_info_async_git_arrows {
+		#echo $EPOCHSECONDS
 		builtin cd -q $1
 
 		# Run git
@@ -288,17 +290,26 @@ function mkprompt_vcs_info_async {
 	# (i.e. a folder for which the initial_check returned a valid branch)
 	# Responsible for enqueuing any new checks
 	function _vcs_info_async_update {
+		local refresh=0 # refresh=1 forces a full refresh
+
+		# Detect if the last command was git
+		if [[ "$vcs_info_async[vcs]" == "git" ]]; then
+			integer histpos=$HISTCMD-1
+			local lastcmd=$history[$histpos]
+			[[ "$lastcmd" == "git"* ]] && refresh=1
+		fi
+
 		# Check for changes (full check) if enough time has passed
-		time_passed "$vcs_info_async_wait[full]" && \
+		( is_true "$refresh" || time_passed "$vcs_info_async_wait[full]" ) && \
 			async_job "$_vcs_info_async_worker" _vcs_info_async_job_full "$PWD"
 
 		# Check for git ahead/behind
-		if [[ "$vcs_info_async[vcs]" = "git" ]]; then
+		if [[ "$vcs_info_async[vcs]" == "git" ]]; then
 			# If this is the first time we check git arrows for this repo, set the working string
 			[[ -z "$vcs_info_async_wait[arrows]" ]] && vcs_info_async[arrows]="$_prompt_vcs_info_async_unknown_string"
 
 			# If enough time has passed, do the check
-			time_passed "$vcs_info_async_wait[arrows]" && \
+			( is_true "$refresh" || time_passed "$vcs_info_async_wait[arrows]" ) && \
 				async_job "$_vcs_info_async_worker" _vcs_info_async_git_arrows "$PWD"
 		else
 			# Not git

@@ -18,6 +18,8 @@
 [alias]
 	# Simple aliases
 	a = add
+  aa = add -A
+
 	d = diff
 	cp = cherry-pick
 	cl = clone
@@ -79,6 +81,7 @@
 
 	# history / graph view
   history = log --graph --full-history --all --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"
+  h = !git history
   graph = !git history
 
 	# List branches (verbose)

@@ -89,4 +89,9 @@ endif
 	" NOTE: Requires a "Nerd Font" (i.e. patched font), from https://github.com/ryanoasis/nerd-fonts
 	Plug 'ryanoasis/vim-devicons'
 
+	" Vim-Minimap
+	" NOTE: Requires Braille glyph support
+	let g:minimap_highlight='Visual'
+	Plug 'severin-lemaignan/vim-minimap', { 'on': ['Minimap'] }
+
 call plug#end()

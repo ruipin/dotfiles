@@ -95,6 +95,8 @@ XTerm.vt100.faceName: xft:MesloLGS Nerd Font Mono:regular:size=10:antialias=true
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!! URxvt config
+!!! NOTE: Install the wideglyphs version of urxvt, e.g. https://aur.archlinux.org/packages/rxvt-unicode-cvs-patched-wideglyphs/
+
 ! Disable scrollbar
 URxvt.scrollBar: off
 
@@ -121,7 +123,7 @@ URxvt.secondaryScroll: 0
 URxvt.perl-ext-common: selection-to-clipboard
 
 !! Font
-!URxvt.letterSpace: -5
+URxvt.letterSpace: 0
 URxvt.lineSpace: -5
 
 ! MesloLGS (Menlo Nerd Font)
@@ -129,6 +131,7 @@ URxvt.font: xft:MesloLGS Nerd Font Mono:regular:size=10:antialias=true:hinting=t
 URxvt.boldFont: xft:MesloLGS Nerd Font Mono:bold:size=10:antialias=true:hinting=true
 URxvt.italicFont: xft:MesloLGS Nerd Font Mono:italic:size=10:antialias=true:hinting=true
 URxvt.boldItalicFont: xft:MesloLGS Nerd Font Mono:bold:italic:size=10:antialias=true:hinting=true
+
 
 ! Consolas (manually patched Nerd Fonts version)
 !URxvt.font: xft:Consolas NF:regular:size=10:antialias=true:hinting=true

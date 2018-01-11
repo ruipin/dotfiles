@@ -20,14 +20,15 @@
 	a = add
 	d = diff
 	cp = cherry-pick
-	s = status -s
-  st = !git s
 	cl = clone
 	ci = commit
 	co = checkout
 	b = branch
 	rst = reset
 	rb = rebase
+
+	s = status -s
+  st = !git s
 
 	sl = stash list
 	sa = stash apply
@@ -36,6 +37,10 @@
 	unstage = reset HEAD --
 	cbranch = checkout -b
 	squash = merge --squash
+  squash-merge = !git squash
+
+  ff-merge = merge --ff-only
+  ff = !git ff-merge
 
   f = fetch
   fetch-all = fetch --all

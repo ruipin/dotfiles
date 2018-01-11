@@ -17,7 +17,7 @@ function mkprompt_vcs_info_async {
 	typeset -g _vcs_info_async_init=0
 	typeset -g _vcs_info_async_worker="vcs_info_async"
 
-	# String show in the prompt while waiting for the asynchronous jobs to finish
+	# String shown in the prompt while waiting for the asynchronous jobs to finish
 	typeset -g _prompt_vcs_info_async_unknown_string="${PROMPT_VCS_INFO_WORKING-…}"
 	typeset -g _prompt_vcs_info_async_style="%{${reset_color}$1%}"
 	typeset -g _prompt_vcs_info_async_dirty_style="%{${reset_color}$2%}"
@@ -61,8 +61,8 @@ function mkprompt_vcs_info_async {
 			zstyle ':vcs_info:*' check-for-changes false
 		fi
 
-		zstyle ':vcs_info:*' formats '%s' '%b' '%R' '%c%u'
-		zstyle ':vcs_info:*' actionformats '%s' '%b' '%R' '%c%u' '%a' '%m'
+		zstyle ':vcs_info:*' formats '%s' '%b' '%R' '%u%c'
+		zstyle ':vcs_info:*' actionformats '%s' '%b' '%R' '%u%c' '%a' '%m'
 
 		# formats for git
 		zstyle ':vcs_info:git:*' patch-format '%7>>%p%<< %n/%a'

@@ -91,7 +91,6 @@ endif
 
 	" Vim-Minimap
 	" NOTE: Requires Braille glyph support
-	let g:minimap_highlight='Visual'
 	Plug 'severin-lemaignan/vim-minimap', { 'on': ['Minimap'] }
 
 call plug#end()

@@ -18,7 +18,6 @@ if has('nvim')
 	"	return deoplete#close_popup() . "\<ESC>"
 	"endfunction
 
-
 " Vim
 else
 	if has('lua')
@@ -33,3 +32,22 @@ else
 	endif
 
 endif " has('nvim')
+
+function! ExpandSnippetOrClosePumOrReturnNewline()
+	if pumvisible()
+		echo v:completed_item
+		if !empty(v:completed_item)
+			return "\<C-y>"
+		else
+			return "\<CR>"
+		endif
+	else
+		return "\<CR>"
+	endif
+endfunction
+
+" In case there are plugins that try to map <CR>, we can call this method to reset it
+function! SetupCR()
+	exe 'inoremap <expr><silent> <CR> ExpandSnippetOrClosePumOrReturnNewline()'
+endfunction
+call SetupCR()

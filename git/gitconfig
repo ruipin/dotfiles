@@ -23,7 +23,6 @@
 	d = diff
 	cp = cherry-pick
 	cl = clone
-	ci = commit
 	co = checkout
 	b = branch
 	rst = reset
@@ -35,6 +34,9 @@
 	sl = stash list
 	sa = stash apply
 	ss = stash save
+
+	ci = commit
+  ca = commit --amend
 
 	unstage = reset HEAD --
 	cbranch = checkout -b

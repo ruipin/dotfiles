@@ -25,6 +25,15 @@ fi
 #################
 # Main code
 
+# Workaround unicode character width being counted incorrectly by zsh
+# (for strings where width matters, such as prompts)
+function mkprompt_pad_unicode {
+	local chr="$1" width="${2:-1}"
+
+	echo "${(l:$width:)}%{${esc}${width}D${chr}%}"
+}
+
+
 # Initializes the mkprompt mechanism
 function mkprompt_init {
 	# Configuration

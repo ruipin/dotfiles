@@ -18,10 +18,13 @@ function mkprompt_vcs_info_async {
 	typeset -g _vcs_info_async_worker="vcs_info_async"
 
 	# String shown in the prompt while waiting for the asynchronous jobs to finish
-	typeset -g _prompt_vcs_info_async_unknown_string="${PROMPT_VCS_INFO_WORKING-…}"
+	typeset -g _prompt_vcs_info_async_unknown_string=$(mkprompt_pad_unicode "${PROMPT_VCS_INFO_WORKING-…}")
 	typeset -g _prompt_vcs_info_async_style="%{${reset_color}$1%}"
 	typeset -g _prompt_vcs_info_async_dirty_style="%{${reset_color}$2%}"
 	typeset -g _prompt_vcs_info_async_action_style="%{${reset_color}$3%}"
+
+	typeset -g _prompt_vcs_info_async_uparrow=$(mkprompt_pad_unicode "${PROMPT_VCS_INFO_UP-}")
+	typeset -g _prompt_vcs_info_async_downarrow=$(mkprompt_pad_unicode "${PROMPT_VCS_INFO_DOWN-}")
 
 	# Minimum interval in seconds between repeated checks for the same repo (0 disables)
 	# NOTE: 'git' commands always trigger a check
@@ -113,8 +116,8 @@ function mkprompt_vcs_info_async {
 
 		# If successful, we should parse the results
 		if [[ "$code" -eq "0" ]]; then
-			local uparrow="${PROMPT_VCS_INFO_UP-}"
-			local downarrow="${PROMPT_VCS_INFO_DOWN-}"
+			local uparrow="${_prompt_vcs_info_async_uparrow}"
+			local downarrow="${_prompt_vcs_info_async_downarrow}"
 
 			local arrownum=("${(@ps:\t:)output}")
 			local text=""

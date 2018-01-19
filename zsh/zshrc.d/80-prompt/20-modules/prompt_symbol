@@ -5,5 +5,5 @@
 # Zsh prompt "prompt" module
 
 function mkprompt_prompt_symbol {
-	mkprompt_add "" "${1-❯}"
+	mkprompt_add "" $(mkprompt_pad_unicode "${1-❯}")
 }

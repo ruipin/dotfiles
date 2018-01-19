@@ -11,6 +11,7 @@ let g:large_file_size = 1024 * 1024 * g:large_file_size_mb
 
 " DetectLarge Files
 augroup LargeFile 
+	autocmd!
 	autocmd BufReadPre * call LargeFile()
 augroup END
 

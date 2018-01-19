@@ -20,10 +20,13 @@ endif
 " We need to override them individually here
 " Parameters: file_type, [tab_width, [expand_tabs]]
 function! AutoFileTypeSetl(ftype,...)
-  let tab_width = (a:0 >= 1) ? a:1 : g:tab_width
-  let expand_tabs = (a:0 >= 2) ? a:2 : g:expand_tabs
+	let tab_width = (a:0 >= 1) ? a:1 : g:tab_width
+	let expand_tabs = (a:0 >= 2) ? a:2 : g:expand_tabs
 
-	execute 'au FileType ' . a:ftype . ' setl shiftwidth=' . tab_width . ' softtabstop=' . tab_width . ' tabstop=' . tab_width . ' expandtab' ( expand_tabs ? '' : '!' )
+	exe 'augroup AutoFileType' . a:ftype
+		autocmd!
+		exe 'autocmd FileType ' . a:ftype . ' setl shiftwidth=' . tab_width . ' softtabstop=' . tab_width . ' tabstop=' . tab_width . ' expandtab' . ( expand_tabs ? '' : '!' )
+augroup END
 endfunction
 
 call AutoFileTypeSetl('python')

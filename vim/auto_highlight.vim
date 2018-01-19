@@ -19,8 +19,8 @@ function! AutoHighlightToggle()
 		return 0
 	else
 		augroup auto_highlight
-		au!
-		au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
+			au!
+			au CursorHold * let @/ = '\V\<'.escape(expand('<cword>'), '\').'\>'
 		augroup end
 		setl updatetime=500
 		echo 'Highlight current word: ON'

@@ -399,5 +399,6 @@ function mkprompt_vcs_info_async {
 	add-zsh-hook precmd _prompt_vcs_info_async
 
 	# Register module with the mkprompt mechanism
+	typeset -g _prompt_vcs_info_async_msg=""
 	mkprompt_add_var "$1" "_prompt_vcs_info_async_msg"
 }

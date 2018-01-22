@@ -4,6 +4,27 @@
 #
 # x11-related helpers
 
+# Test if $DISPLAY is valid
+function display_valid {
+	xset q &> /dev/null
+	return $?
+}
+
+# Change display safely
+function set_display {
+	local old_display="$DISPLAY"
+
+	export DISPLAY="$@"
+
+	if ! display_valid ; then
+		echo_error "Display '$DISPLAY' is not connectable." "set_display"
+		export DISPLAY="$old_display"
+		return 1
+	fi
+
+	echo_info "Set display '$DISPLAY'." "set_display"
+	return 0
+}
 
 # Merge ~/.Xresources
 function xrdb_merge {
@@ -29,11 +50,11 @@ function gateway_x {
 	echo_info "DISPLAY=\"$display\"" "gateway_x"
 
 	if [[ -z "$@" ]]; then
-		export DISPLAY="$display"
+		set_display "$display" || return $?
 		xrdb_merge
 	else
 		(
-			export DISPLAY="$display"
+			set_display "$display" || return $?
 			xrdb_merge
 			$@ 2&>1 > /dev/null &
 		)

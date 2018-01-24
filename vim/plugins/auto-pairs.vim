@@ -25,7 +25,10 @@ endfunction
 
 autocmd VimEnter * call SetupLexima()
 function SetupLexima()
-	" SystemVerilog
+	" SystemVerilog: Disable tick autocomplete for macros
+	call lexima#add_rule({ 'char': '`', 'filetype': ['verilog', 'systemverilog', 'verilog_systemverilog'] })
+
+	" SystemVerilog: Endwise rules
 	call Lexima_endwise_SV_rule('begin','end')
 	call Lexima_endwise_SV_rule('case\|casex\|casez','endcase')
 	call Lexima_endwise_SV_rule('module','endmodule')

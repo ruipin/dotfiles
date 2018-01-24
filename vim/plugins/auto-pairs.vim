@@ -51,5 +51,5 @@ function SetupLexima()
 	call Lexima_endwise_SV_rule('sequence','endsequence')
 
 	" Setup <CR> again
-	call SetupCR()
+	call SetupAutoCompleteCRandTAB()
 endfunction

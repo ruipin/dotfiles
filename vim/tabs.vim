@@ -48,7 +48,7 @@ endfunction
 " Custom insert-mode tab behaviour
 
 " Returns output for pressing Tab in Insert Mode
-function! InsertModeTab()
+function! InsertModeTAB()
 	" If auto-complete is visible
 	" insert current choice
 	if pumvisible()
@@ -88,13 +88,16 @@ function! InsertModeTab()
 endfunction
 
 " Insert-Tab Keybindings
-inoremap <expr><TAB> InsertModeTab()
-nnoremap <expr><TAB> "i" . InsertModeTab()
+inoremap <expr><TAB> InsertModeTAB()
+nnoremap <expr><TAB> "i" . InsertModeTAB()
 
 
 """""""""""""""""""
 " Use Tab/Shift-Tab to indent/unindent multiple lines at once in visual mode
-vnoremap <expr><TAB>  ">gv"
+function! VisualModeTAB()
+	return ">gv"
+endfunction
+vnoremap <expr><TAB>   VisualModeTAB()
 vnoremap <expr><S-TAB> "<gv"
 
 

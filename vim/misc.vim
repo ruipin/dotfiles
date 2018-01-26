@@ -35,6 +35,9 @@ set wildmode=full
 " Update more often
 set updatetime=1000
 
+" When moving up/down, always keep the same column if possible
+set nostartofline
+
 " Automatically use syntax highlighting for various files
 augroup filetype_paths
 	au!

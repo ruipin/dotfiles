@@ -11,6 +11,9 @@ call SourceDotfile('config.vim')
 " Vimscript utilities
 call SourceDotfile('script_utils.vim')
 
+" Python
+call SourceDotfile('python.vim')
+
 " Plugins
 call SourceDotfile('plugins.vim')
 

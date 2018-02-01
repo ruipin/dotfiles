@@ -1,0 +1,16 @@
+#########################################
+# misc/pyenv
+# Author: Rui Pinheiro
+#
+# pyenv configuration
+
+if ! in_path "pyenv" ; then
+	[[ -z "$PYENV_ROOT" && -d "$HOME/.pyenv" ]] && export PYENV_ROOT="$HOME/.pyenv"
+	[[ ! -z "$PYENV_ROOT" && -d "$PYENV_ROOT" ]] && path_prepend "$PYENV_ROOT/bin"
+fi
+
+if in_path "pyenv" ; then
+	eval "$(pyenv init -)"
+
+	[[ -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ]] && eval "$(pyenv virtualenv-init -)"
+fi

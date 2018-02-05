@@ -1,4 +1,11 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!
+! Xcursor
+
+! Set a hardcoded cursor size so that it does not get automatically resized with resolution
+Xcursor.size: 32
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Solarized (Dark) theme
 #define S_base03        #002b36
 #define S_base02        #073642

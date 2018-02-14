@@ -88,8 +88,6 @@ fi
 # NOTE: If a file in "local zshrc.d" has the same name as a file in "primary zshrc.d",
 #		only the local version is loaded
 #
-# If configured to do so, in order to avoid sourcing dozens of files everytime zsh
-#
 # For this, the following steps are executed:
 # 1. Find all files inside both zshrc.d folders, as well as sub-folders,
 # 2. Obtaining their paths relative to the corresponding zshrc.d directory

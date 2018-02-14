@@ -26,6 +26,11 @@ function SetColorScheme()
 
 	" Refresh vim-airline to fix colors
 	AirlineRefresh
+
+	" Refresh Rainbow to fix colors
+	if exists('g:rainbow_active') && g:rainbow_active
+		RainbowToggleOn
+	endif
 endfunction
 
 " Split separator glyphs:

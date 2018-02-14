@@ -93,4 +93,7 @@ endif
 	" NOTE: Requires Braille glyph support
 	Plug 'severin-lemaignan/vim-minimap', { 'on': ['Minimap'] }
 
+	" HiLinkTrace - debug highlight groups using :HLT
+	Plug 'gerw/vim-HiLinkTrace', { 'on': ['HLT', 'HLT!'] }
+
 call plug#end()

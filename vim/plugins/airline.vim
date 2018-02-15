@@ -22,10 +22,13 @@ let g:airline#extensions#tabline#left_alt_sep = "\ue0b9"
 let g:airline#extensions#tabline#formatter = 'default'
 
 let g:airline#extensions#tabline#show_tab_type = 0
-let g:airline#extensions#tabline#buf_label_first = 1
-let g:airline#extensions#tabline#buffers_label = 'buf'
-let g:airline#extensions#tabline#tabs_label = 'tab'
+let g:airline#extensions#tabline#buf_label_first = 0
+"let g:airline#extensions#tabline#buffers_label = 'buf'
+"let g:airline#extensions#tabline#tabs_label = 'tab'
 "let g:airline#extensions#tabline#fnametruncate = 5
+
+let g:airline#extensions#tabline#ellipsis = "\u22ef"
+let g:airline#extensions#tabline#pad_with_spaces = 1
 
 " Add the window number in front of the mode
 function! WindowNumber(...)

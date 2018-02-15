@@ -83,8 +83,13 @@
 
 	# history / graph view
   history = log --graph --full-history --all --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"
+  hist = !git history
   h = !git history
   graph = !git history
+
+  localHistory =  !sh -c 'git log --glob="*`git rev-parse --abbrev-ref HEAD`" --graph --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"'
+  lhist = !git localHistory
+  lh = !git localHistory
 
 	# List branches (verbose)
 	lb = branch -vv
@@ -112,6 +117,11 @@
 	##################
 	# Search
 	grep = grep -Ii
+
+  ##################
+  # Gerrit
+  publish = !sh -c 'git push origin HEAD:refs/for/${1-$(git rev-parse --abbrev-ref HEAD)} ' -
+  draft   = !sh -c 'git push origin HEAD:refs/drafts/${1-$(git rev-parse --abbrev-ref HEAD)} ' -
 
 	##################
 	# Aliases

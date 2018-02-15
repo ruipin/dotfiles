@@ -10,8 +10,11 @@ Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' } "More efficient undo tree
 
 
 " Persistent History
-set undofile
-set undodir=$HOME/.vimundo/
+if has('nvim') || v:version >= 704
+	set undofile
+	set undodir=$HOME/.vimundo/
+endif
+
 set undolevels=200 " not too big
 
 " Key binding

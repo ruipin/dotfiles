@@ -23,7 +23,9 @@ endif
 	call SourceDotfile('plugins/autocomplete.vim')
 
 	" NERDTree
-	call SourceDotfile('plugins/nerdtree.vim')
+	if has('nvim') || v:version >= 704
+		call SourceDotfile('plugins/nerdtree.vim')
+	endif
 
 	" FastFold
 	call SourceDotfile('plugins/fastfold.vim')
@@ -56,7 +58,9 @@ endif
 	call SourceDotfile('plugins/undotree.vim')
 
 	" Ctags
-	call SourceDotfile('plugins/ctags.vim')
+	if has('nvim') || v:version >= 704
+		call SourceDotfile('plugins/ctags.vim')
+	endif
 
 	"""""""""""""""
 	" Other plugins
@@ -71,7 +75,9 @@ endif
 	Plug 'djoshea/vim-autoread'
 
 	" Bufexplorer: Easily navigate buffers using \be, \bv, \bs
-	Plug 'jlanzarotta/bufexplorer'
+	if has('nvim') || v:version >= 703
+		Plug 'jlanzarotta/bufexplorer'
+	endif
 
 	" Adds XtermColorTable command to list all available terminal colors
 	"Plug 'guns/xterm-color-table.vim'

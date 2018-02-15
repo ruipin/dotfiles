@@ -34,7 +34,9 @@ function SetColorScheme()
 endfunction
 
 " Split separator glyphs:
-set fillchars=vert:│
+if has('nvim')
+	set fillchars=vert:│
+endif
 
 
 " Line numbering
@@ -48,7 +50,7 @@ set cursorline
 set t_Co=256
 
 " Color column
-if g:color_column >= 0
+if g:color_column >= 0 && (has('nvim') || v:version >= 703)
 	execute 'set colorcolumn=' . g:color_column
 endif
 

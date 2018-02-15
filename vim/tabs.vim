@@ -112,9 +112,13 @@ function! ShowBlanks()
 	hi SpecialKey ctermfg=240 ctermbg=NONE
 	hi Conceal    ctermfg=240 ctermbg=NONE
 	hi NonText    ctermfg=240 ctermbg=NONE
-	set conceallevel=2
-	set concealcursor=nvic
-	set listchars=nbsp:·,tab:>·,trail:~,extends:>,precedes:<,space:·
+	if has('nvim')
+		set conceallevel=2
+		set concealcursor=nvic
+		set listchars=nbsp:·,tab:>·,trail:~,extends:>,precedes:<,space:·
+	else
+		set listchars=nbsp:·,extends:>,precedes:<,space:·
+	endif
 	set list
 
 	if exists(":IndentLinesEnable") && g:indentLine_enabled
@@ -128,9 +132,13 @@ function! HideBlanks()
 	hi SpecialKey ctermfg=238 ctermbg=NONE
 	hi Conceal    ctermfg=238 ctermbg=NONE
 	hi NonText    ctermfg=238 ctermbg=NONE
-	set conceallevel=2
-	set concealcursor=nvic
-	set listchars=tab:>\ ,trail:·
+	if has('nvim')
+		set conceallevel=2
+		set concealcursor=nvic
+		set listchars=tab:>\ ,trail:·
+	else
+		set listchars=
+	endif
 	set list
 	call clearmatches()
 

@@ -18,13 +18,14 @@ function mkprompt_vcs_info_async {
 	typeset -g _vcs_info_async_worker="vcs_info_async"
 
 	# String shown in the prompt while waiting for the asynchronous jobs to finish
-	typeset -g _prompt_vcs_info_async_unknown_string=$(mkprompt_pad_unicode "${PROMPT_VCS_INFO_WORKING-…}")
+	typeset -g _prompt_vcs_info_async_unknown_string=$(mkprompt_pad_unicode "${PROMPT_VCS_INFO_WORKING-?}")
 	typeset -g _prompt_vcs_info_async_style="%{${reset_color}$1%}"
 	typeset -g _prompt_vcs_info_async_dirty_style="%{${reset_color}$2%}"
 	typeset -g _prompt_vcs_info_async_action_style="%{${reset_color}$3%}"
 
 	typeset -g _prompt_vcs_info_async_uparrow=$(mkprompt_pad_unicode "${PROMPT_VCS_INFO_UP-}")
 	typeset -g _prompt_vcs_info_async_downarrow=$(mkprompt_pad_unicode "${PROMPT_VCS_INFO_DOWN-}")
+	typeset -g _prompt_vcs_info_async_ellipsis=$(mkprompt_pad_unicode "${PROMPT_VCS_INFO_ELLIPSIS-⋯}")
 
 	# Minimum interval in seconds between repeated checks for the same repo (0 disables)
 	# NOTE: 'git' commands always trigger a check
@@ -54,8 +55,8 @@ function mkprompt_vcs_info_async {
 		local check_for_changes="${2-0}"
 
 		# configure vcs_info inside async task, this frees up vcs_info
-		# to be used or configured as the user pleases.
-		zstyle ':vcs_info:*' enable git svn
+		# to be used or configured as the user pleases without affecting the prompt
+		zstyle ':vcs_info:*' enable svn git
 		zstyle ':vcs_info:*' max-exports 6
 
 		if is_true "$check_for_changes" ; then
@@ -92,7 +93,7 @@ function mkprompt_vcs_info_async {
 			info[dirty]="$_prompt_vcs_info_async_unknown_string"
 		fi
 
-		print -r - ${(@kvqqqq)info}
+		print -r - ${(@kvqqqq)info/.../${_prompt_vcs_info_async_ellipsis}}
 
 		return 0
 	}
@@ -235,9 +236,15 @@ function mkprompt_vcs_info_async {
 				_prompt_vcs_info_render 1
 				;;
 
+			# zsh-async sometimes calls the handler for job 'async', no idea why; we simply ignore it
+			"async")
+				;;
+
 			# Unknown
 			*)
+				echo -n "\n" # Make sure to print in a separate line from the prompt
 				echo_error "Invalid job '$job'." "vcs_info_async:callback"
+				vcs_info_async_error=1
 				return 1
 		esac
 		return 0
@@ -295,11 +302,25 @@ function mkprompt_vcs_info_async {
 	function _vcs_info_async_update {
 		local refresh=0 # refresh=1 forces a full refresh
 
-		# Detect if the last command was git
-		if [[ "$vcs_info_async[vcs]" == "git" ]]; then
+		# Detect if the last command was current VCS
+		if [[ ! -z "$vcs_info_async[vcs]" ]]; then
 			integer histpos=$HISTCMD-1
 			local lastcmd=$history[$histpos]
-			[[ "$lastcmd" == "git"* ]] && refresh=1
+			[[ "$lastcmd" == "$vcs_info_async[vcs]"* ]] && refresh=1
+		fi
+
+		# Detect if current folder contains a ".git" folder/file and is not the current repo root
+		if [[ -e ".git" ]]; then
+			if [[ ! -z "$vcs_info_async[top]" && ( "$vcs_info_async[vcs]" != "git" || "$vcs_info_async[top]" != "$PWD" ) ]]; then
+				refresh=1
+			fi
+		fi
+
+		# Detect if current folder contains a ".svn" folder/file and is not the current repo root
+		if [[ -e ".svn" ]]; then
+			if [[ ! -z "$vcs_info_async[top]" && ( "$vcs_info_async[vcs]" != "svn" || "$vcs_info_async[top]" != "$PWD" ) ]]; then
+				refresh=1
+			fi
 		fi
 
 		# Check for changes (full check) if enough time has passed

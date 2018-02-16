@@ -86,8 +86,8 @@ endfunction!
 
 " In case there are plugins that try to map <CR>/<TAB>, we can call this method to reset them
 function! SetupAutoCompleteCRandTAB()
-	exe 'imap <expr><silent> <CR> AutoCompleteInsertModeCR()'
-	exe 'imap <expr><silent> <TAB> AutoCompleteInsertModeTAB()'
-	exe 'vmap <expr><silent> <TAB> AutoCompleteVisualModeTAB()'
+	exe 'inoremap <expr><silent> <CR> AutoCompleteInsertModeCR()'
+	exe 'inoremap <expr><silent> <TAB> AutoCompleteInsertModeTAB()'
+	exe 'vnoremap <expr><silent> <TAB> AutoCompleteVisualModeTAB()'
 endfunction
 autocmd VimEnter * call SetupAutoCompleteCRandTAB()

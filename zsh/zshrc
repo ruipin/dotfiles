@@ -174,19 +174,19 @@ function _zshrcd {
 		# Source zshrc.d files
 		if [[ -z "$LOCAL_DOTFILES" || ! -d "$_zshrcd_local" ]]; then
 			# If no local dotfiles exist, use shell globbing directly (faster)
-			# NOTE: "(.)" is a globbing qualifier to match regular files only
-			for f in "$_zshrcd/"**/*(.) ; do
+			# NOTE: "(-.)" is a globbing qualifier to match regular files (and symlinks to regular files) only
+			for f in "$_zshrcd/"**/*(-.) ; do
 				_zshrcd_debug "Including file '$f'."
 				$1 "$f"
 			done; unset f
 		else
 			# Collect files
-			# NOTE: "(.)" is a globbing qualifier to match regular files only
+			# NOTE: "(-.)" is a globbing qualifier to match regular files (and symlinks to regular files) only
 			setopt extended_glob
 			local filemask
 			local sourcefiles
 			if [[ "$_zshrcd_fallback" -ne "1" ]] ; then
-				filemask='**/*(.)'
+				filemask='**/*(-.)'
 				sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
 			else
 				filemask='**/*'

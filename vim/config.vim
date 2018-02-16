@@ -19,4 +19,4 @@ let g:tab_width=4
 " Theme
 
 " Colored column (-1 disables)
-let g:color_column=132
+let g:color_column=133

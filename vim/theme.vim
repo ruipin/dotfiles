@@ -50,8 +50,17 @@ set cursorline
 set t_Co=256
 
 " Color column
-if g:color_column >= 0 && (has('nvim') || v:version >= 703)
-	execute 'set colorcolumn=' . g:color_column
+if (has('nvim') || v:version >= 703)
+	if g:color_column >= 0
+		execute 'set colorcolumn=' . g:color_column
+	endif
+
+	" Override color column for specific file types
+	augroup colorcolumn
+		au!
+		" Gitcommit 50/72 rule - we should wrap after the 72nd column
+		au FileType gitcommit set colorcolumn=73
+	augroup END
 endif
 
 " Show status line always

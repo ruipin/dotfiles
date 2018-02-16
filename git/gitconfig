@@ -1,46 +1,50 @@
 [user]
-	name = Rui Pinheiro
+  name = Rui Pinheiro
 [diff]
-	tool = vimdiff
+  tool = vimdiff
 [difftool]
-	prompt = false
+  prompt = false
 #[rerere]
-#	enabled = true
+#  enabled = true
 [merge]
-	conflictstyle = diff3
+  conflictstyle = diff3
 [core]
-	excludesfile = ~/.gitignore
+  excludesfile = ~/.gitignore
   preloadindex = true
   autocrlf = input
+[push]
+  recurseSubmodules = check
 [pull]
   ff = only
+[status]
+  submodulesummary = 1
 
 [alias]
-	# Simple aliases
-	a = add
+  # Simple aliases
+  a = add
   aa = add -A
 
-	d = diff
-	cp = cherry-pick
-	cl = clone
-	co = checkout
-	b = branch
-	rst = reset
-	rb = rebase
+  d = diff
+  cp = cherry-pick
+  cl = clone
+  co = checkout
+  b = branch
+  rst = reset
+  rb = rebase
 
-	s = status -s
+  s = status -s
   st = !git s
 
-	sl = stash list
-	sa = stash apply
-	ss = stash save
+  sl = stash list
+  sa = stash apply
+  ss = stash save
 
-	ci = commit
+  ci = commit
   ca = commit --amend
 
-	unstage = reset HEAD --
-	cbranch = checkout -b
-	squash = merge --squash
+  unstage = reset HEAD --
+  cbranch = checkout -b
+  squash = merge --squash
   squash-merge = !git squash
 
   ff-merge = merge --ff-only
@@ -54,34 +58,34 @@
   # Current revision
   rev = rev-parse --verify --short HEAD
 
-	##############
-	# Last commit shortcuts
-	last = log -1 HEAD --decorate
-	l = !git last
+  ##############
+  # Last commit shortcuts
+  last = log -1 HEAD --decorate
+  l = !git last
 
-	dlast = diff --cached HEAD^
-	dl = !git dlast
+  dlast = diff --cached HEAD^
+  dl = !git dlast
 
-	###################
-	# Listing
+  ###################
+  # Listing
 
-	# List commits showing changed files
-	list = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --stat
-	ll = !git list
+  # List commits showing changed files
+  list = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --stat
+  ll = !git list
 
-	# Short list
-	le = log --oneline --decorate
+  # Short list
+  le = log --oneline --decorate
 
-	# List commits in short form, with colors and branch/tag annotations
-	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+  # List commits in short form, with colors and branch/tag annotations
+  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
 
-	# List one-line commits with dates
-	lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+  # List one-line commits with dates
+  lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
 
-	# List one-line commits with relative dates
-	ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+  # List one-line commits with relative dates
+  ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
 
-	# history / graph view
+  # history / graph view
   history = log --graph --full-history --all --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"
   hist = !git history
   h = !git history
@@ -91,39 +95,50 @@
   lhist = !git localHistory
   lh = !git localHistory
 
-	# List branches (verbose)
-	lb = branch -vv
+  # List branches (verbose)
+  lb = branch -vv
 
-	# List commits not in upstream
-	lpush = !git graph @{upstream}..HEAD
-	lp = !git lpush
+  # List commits not in upstream
+  lpush = !git graph @{upstream}..HEAD
+  lp = !git lpush
 
-	# Diff against upstream
-	dpush = diff @{upstream}..HEAD
-	dp = !git dpush
+  # Diff against upstream
+  dpush = diff @{upstream}..HEAD
+  dp = !git dpush
 
-	# List all changes to a file
-	file = log -u
-	f = !git file
+  # List all changes to a file
+  file = log -u
+  f = !git file
 
-	###################
-	# Specific commit shortcuts
-	diffc  = "!f() { git diff "$1"^.."$1"; }; f"
-	dc = !git diffc
+  ###################
+  # Specific commit shortcuts
+  diffc  = "!f() { git diff "$1"^.."$1"; }; f"
+  dc = !git diffc
 
-	listc  = "!f() { git ll "$1"^.."$1"; }; f"
-	lc  = !git listc
+  listc  = "!f() { git ll "$1"^.."$1"; }; f"
+  lc  = !git listc
 
-	##################
-	# Search
-	grep = grep -Ii
+  ##################
+  # Search
+  grep = grep -Ii
 
   ##################
   # Gerrit
   publish = !sh -c 'git push origin HEAD:refs/for/${1-$(git rev-parse --abbrev-ref HEAD)} ' -
   draft   = !sh -c 'git push origin HEAD:refs/drafts/${1-$(git rev-parse --abbrev-ref HEAD)} ' -
 
-	##################
-	# Aliases
-	# Better: zsh "git_aliases" helper
-	alias = "!git config -l | grep alias | cut -c 7-"
+  ##################
+  # Aliases
+  # Better: zsh "git_aliases" helper
+  alias = "!git config -l | grep alias | cut -c 7-"
+
+  ##################
+  # Branches
+
+  # Delete a branch and recreate it from master — useful if you have, say,
+  # a development branch and a master branch and they could conceivably go
+  # out of sync
+  recreate = "!f() { [[ -n $@ ]] && git checkout \"$@\" && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\" }; f"
+
+  # Delete any branches that have been merged into master
+  delete-merged-branches = "!git checkout master && git branch --no-color --merged | grep -v '\\*' | xargs -n 1 git branch -d"

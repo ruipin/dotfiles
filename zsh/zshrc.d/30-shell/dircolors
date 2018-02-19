@@ -1,8 +1,0 @@
-#########################################
-# shell/dircolors
-# Author: Rui Pinheiro
-#
-# Zsh dircolors
-
-# LS_COLORS
-eval `dircolors --sh $ZSH_DIRCOLORS_PATH`

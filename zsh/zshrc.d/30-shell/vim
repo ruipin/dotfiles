@@ -1,0 +1,21 @@
+#########################################
+# shell/vim
+# Author: Rui Pinheiro
+#
+# Vim-specific shell configuration and aliases
+
+######
+# Set vim as default editor
+if whence -p nvim > /dev/null ; then
+	export EDITOR="nvim"
+	alias vim='nvim' 
+elif whence -p vim > /dev/null ; then
+	export EDITOR="vim"
+fi
+
+######
+# Other aliases
+if [[ "$EDITOR" == *"vim" ]]; then
+	alias vi='vim'
+	alias vimdiff='vim -d'
+fi

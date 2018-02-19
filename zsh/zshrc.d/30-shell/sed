@@ -1,8 +1,12 @@
 #########################################
-# helpers/sed
+# aliases/sed
 # Author: Rui Pinheiro
 #
-# sed-related helpers
+# sed-related aliases and helpers
+
+#############
+# Aliases
+alias sed='sed --follow-symlinks'
 
 #############
 # Recursive sed

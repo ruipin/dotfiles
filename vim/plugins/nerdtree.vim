@@ -14,7 +14,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': g:scrooloose_nerdtree_oncmd }
 map <C-n> :NERDTreeToggle<CR>
 
 " Extensions to ignore
-let NERDTreeIgnore = ['\.pyc$']
+let NERDTreeIgnore = ['\.pyc$', '^__pycache__$']
 
 " Start automatically if no files specified
 autocmd StdinReadPre * let s:std_in=1

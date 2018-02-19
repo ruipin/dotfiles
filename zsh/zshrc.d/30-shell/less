@@ -1,10 +1,9 @@
 #########################################
-# shell/defaults
+# shell/less
 # Author: Rui Pinheiro
 #
-# Default applications
+# less-related configuration
 
-export EDITOR="nvim"
+# Environment variables
 export PAGER="less"
 export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS"
-

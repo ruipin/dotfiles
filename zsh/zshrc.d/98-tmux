@@ -4,6 +4,9 @@
 #
 # Tmux-related functionality
 
+##########
+# Always enable UTF-8, 256 color mode
+alias tmux='tmux -u -2'
 
 ##########
 # Tmux helper: Create new session, attach to main session if it exists

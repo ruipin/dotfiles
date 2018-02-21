@@ -14,6 +14,7 @@
   autocrlf = input
 [push]
   recurseSubmodules = check
+  default = upstream # 'git push' by default to tracking branch
 [pull]
   ff = only
 [status]

@@ -63,6 +63,13 @@ function init_custom_module {
 			_module_add_default ${@:2}
 			res=$?
 			;;
+		"purge-if-loaded")
+			res=0
+			if [[ ! -z "$LOADEDMODULES" ]]; then
+				module purge
+				res=$?
+			fi
+			;;
 		"purge"|"wrap"|"rewrap")
 			echo_debug "Purging modules..." "module purge"
 			_module_wrap

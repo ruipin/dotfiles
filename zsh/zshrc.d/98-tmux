@@ -33,8 +33,10 @@ function tmux_new {
 	echo_info "Done." "tmux"
 	return 0
 }
+
 alias tn="tmux_new"
 alias ta="tmux attach"
+alias tl="tmux list-sessions"
 
 
 # If USE_TMUX, we want to boot straight into tmux

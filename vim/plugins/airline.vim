@@ -34,10 +34,10 @@ let g:airline#extensions#tabline#pad_with_spaces = 1
 
 " Add the window number in front of the mode
 function! WindowNumber(...)
-    let builder = a:1
-    let context = a:2
-    call builder.add_section('airline_b', '%{tabpagewinnr(tabpagenr())}')
-    return 0
+	let builder = a:1
+	let context = a:2
+	call builder.add_section('airline_b', '%{tabpagewinnr(tabpagenr())}')
+	return 0
 endfunction
 
 autocmd VimEnter * call SetupAirline()

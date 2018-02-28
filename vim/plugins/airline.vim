@@ -21,6 +21,8 @@ let g:airline#extensions#tabline#left_sep = "\ue0b8"
 let g:airline#extensions#tabline#left_alt_sep = "\ue0b9"
 let g:airline#extensions#tabline#formatter = 'default'
 
+let g:airline#extensions#tabline#middle_click_preserves_windows = 1
+
 let g:airline#extensions#tabline#show_tab_type = 0
 let g:airline#extensions#tabline#buf_label_first = 0
 "let g:airline#extensions#tabline#buffers_label = 'buf'

@@ -4,8 +4,17 @@
 #
 # Prepare environment for ruby
 
-# rubyenv initialization
-if in_path "rbenv" && [[ -d "$HOME/.gem" ]]; then
-	eval "$(rbenv init -)"
-	env_append PATH "$HOME/.gem/ruby/2.4.0/bin"
-fi
+# Disabled: Not needed
+
+
+# initialization
+#if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+#	source "$HOME/.rvm/scripts/rvm"
+#elif in_path "rbenv" && [[ -d "$HOME/.gem" ]]; then
+#	eval "$(rbenv init -)"
+#fi
+
+# Add gems to path
+#if [[ -d "$HOME/.gem/ruby/2.4.0/bin" ]]; then
+#	env_append PATH "$HOME/.gem/ruby/2.4.0/bin"
+#fi

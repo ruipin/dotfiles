@@ -236,8 +236,11 @@ function mkprompt_vcs_info_async {
 				_prompt_vcs_info_render 1
 				;;
 
-			# zsh-async sometimes calls the handler for job 'async', no idea why; we simply ignore it
+			# zsh-async sometimes calls the handler for job 'async', no idea why
+			# This breaks the prompt, for some reason
 			"async")
+				vcs_info_async_error=1
+				return 1
 				;;
 
 			# Unknown

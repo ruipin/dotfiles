@@ -12,6 +12,7 @@
   excludesfile = ~/.gitignore
   preloadindex = true
   autocrlf = input
+  whitespace = blank-at-eol,space-before-tab,-blank-at-eof
 [push]
   recurseSubmodules = check
   default = upstream # 'git push' by default to tracking branch

@@ -26,7 +26,7 @@ function! AutoFileTypeSetl(ftype,...)
 	exe 'augroup AutoFileType' . a:ftype
 		autocmd!
 		exe 'autocmd FileType ' . a:ftype . ' setl shiftwidth=' . tab_width . ' softtabstop=' . tab_width . ' tabstop=' . tab_width . ' expandtab' . ( expand_tabs ? '' : '!' )
-augroup END
+	augroup END
 endfunction
 
 call AutoFileTypeSetl('python')

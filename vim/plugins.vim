@@ -69,7 +69,7 @@ endif
 	Plug 'kshenoy/vim-signature' "Show marks
 
 	" Vim-Easymotion: Faster motions
-	Plug 'easymotion/vim-easymotion'
+	"Plug 'easymotion/vim-easymotion'
 
 	" Vim-autoread: Reload files when they change on disk
 	Plug 'djoshea/vim-autoread'

@@ -46,3 +46,22 @@ let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
 let g:WebDevIconsNerdTreeGitPluginForceVAlign = 0
 let g:webdevicons_conceal_nerdtree_brackets = 1
 let g:WebDevIconsUnicodeGlyphDoubleWidth = 0
+
+" NERDTree Helper functions
+function! IsNERDTree()
+	return exists("b:NERDTree") && b:NERDTree.isTabTree()
+endfunction
+
+function! NERDTreeCurrentPath()
+	let curDirNode = g:NERDTreeDirNode.GetSelected()
+	return curDirNode.path.str()
+endfunction
+
+" Command-line mapping: If NERDTree, insert current node path
+cnoremap <expr> <Leader>. IsNERDTree() ? NERDTreeCurrentPath() : expand("%:p:h")
+
+" Wrap commands so that they switch to a different buffer other than nerdtree
+function! WrapNERDTreeCommand(cmd)
+	exe "cnoreabbrev <expr> ".a:cmd.' (IsNERDTree() ? "wincmd p \<Bar> '.a:cmd.'" : "'.a:cmd.'")'
+endfunction
+call WrapNERDTreeCommand('Ag')

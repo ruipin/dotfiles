@@ -7,9 +7,8 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Load plugin
-let g:junegunn_fzf_oncmd = [ 'Buffers', 'GitFiles', 'Files' ]
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin', 'on': g:junegunn_fzf_oncmd }
-Plug 'junegunn/fzf.vim', { 'on': g:junegunn_fzf_oncmd }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
 
 " Key bindings
 nnoremap <leader>b :Buffers<CR>

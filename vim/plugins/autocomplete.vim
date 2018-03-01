@@ -48,13 +48,19 @@ endif " has('nvim')
 " Otherwise, we add a line-break.
 function! AutoCompleteInsertModeCR()
 	if pumvisible()
-		if neosnippet#expandable_or_jumpable() 
-			return "\<Plug>(neosnippet_expand_or_jump)"
-		elseif !empty(v:completed_item)
-			return "\<C-y>"
+		if !empty(v:completed_item)
+			if neosnippet#expandable() 
+				call feedkeys("\<Plug>(neosnippet_expand)", 'm')
+				return ""
+			else
+				return "\<C-y>"
+			endif
 		else
-			return "\<CR>"
+			return "\<C-E>\<CR>"
 		endif
+	elseif neosnippet#jumpable()
+		call feedkeys("\<Plug>(neosnippet_jump)", 'm')
+		return ""
 	else
 		return "\<CR>"
 	endif
@@ -69,7 +75,8 @@ function! AutoCompleteInsertModeTAB()
 		return "\<C-n>"
 	else
 		if neosnippet#expandable_or_jumpable() 
-			return "\<Plug>(neosnippet_expand_or_jump)"
+			call feedkeys("\<Plug>(neosnippet_expand_or_jump)", 'm')
+			return ""
 		else
 			return InsertModeTAB()
 		endif
@@ -77,8 +84,9 @@ function! AutoCompleteInsertModeTAB()
 endfunction
 
 function! AutoCompleteVisualModeTAB()
-	if neosnippet#expandable_or_jumpable()
-		return "\<Plug>(neosnippet_expand_or_jump)"
+	if neosnippet#expandable()
+		call feedkeys("\<Plug>(neosnippet_expand_or_jump)", 'm')
+		return ""
 	else
 		return VisualModeTAB()
 	endif

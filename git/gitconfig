@@ -13,6 +13,13 @@
   preloadindex = true
   autocrlf = input
   whitespace = blank-at-eol,space-before-tab,-blank-at-eof
+  splitIndex = true # Helps with large indexes by splitting the index file
+
+  # The untracked cache makes git status operations on large repos much faster
+  # Some file systems do not support it (it relies on directory mtime) so we should not enable it by default
+  # Test support by using "git update-index --test-untracked-cache"
+  # If the test passes, enable it for the current repo with "git update-index --untracked-cache"
+  untrackedCache = keep
 [push]
   recurseSubmodules = check
   default = upstream # 'git push' by default to tracking branch
@@ -35,7 +42,8 @@
   rb = rebase
 
   s = status -s
-  st = !git s
+  statustr = status --untracked-files=no
+  str = !git s --untracked-files no
 
   sl = stash list
   sa = stash apply

@@ -12,18 +12,73 @@ if [[ -z "$LOCAL_BUILD_FOLDER" ]]; then
 	exit -1
 fi
 
-# First parameter: Application name
-#   - Used to generate build folder name
-export UPD_APP="$1"
-if [[ -z "$UPD_APP" ]]; then
-  echo "No application name provided."
-  exit -1
-fi
-export UPD_BUILD="$LOCAL_BUILD_FOLDER/$UPD_APP"
-mkdir -p "$UPD_BUILD"
-
 # Save current PWD
 export OLD_PWD="$PWD"
+
+function clone {
+  # First parameter: Application name
+  #   - Used to generate build folder name
+  export UPD_APP="$1"
+  if [[ -z "$UPD_APP" ]]; then
+    echo "No application name provided."
+    exit -1
+  fi
+  export UPD_BUILD="$LOCAL_BUILD_FOLDER/$UPD_APP"
+  mkdir -p "$UPD_BUILD"
+  shift 1
+
+  ###########################
+  # Parse remaining params
+  local has_func=0
+  local func=""
+  local repo=""
+  local url=""
+  local ver="master"
+  local -a params
+  while [[ "$#" -gt "0" ]]; do
+    case "$1" in
+    # Automatic blkval sourcing
+    "-gh" | "--github")
+      func="github"
+      repo="$2"
+      shift 2
+      ;;
+    "-v" | "--ver" | "--version")
+      ver="$2"
+      shift 2
+      ;;
+    "-t" | "--targz")
+      func="targz"
+      url="$2"
+      shift 2
+      ;;
+    # Directory path
+    *)
+      echo "Unknown parameter '$1', aborting."
+      exit 1
+    esac
+  done
+
+  # Do clone
+  if [[ "$func" == "github" ]]; then
+    if [[ -z "$repo" || -z "$ver" ]]; then
+      echo "Invalid parameter combination."
+      exit
+    fi
+
+    github_clone "$repo" "$ver"
+  elif [[ "$func" == "targz" ]]; then
+    if [[ -z "$url" ]]; then
+      echo "Invalid parameter combination."
+      exit
+    fi
+
+    targz_clone "$url"
+  else
+    echo "Invalid \$func, aborting."
+    exit
+  fi
+}
 
 # Clone from github repo and CD to repo root
 # Usage: github_clone <repo> <ver>
@@ -34,6 +89,7 @@ function github_clone {
 
   if [[ -z "$ver" ]]; then
     echo "No branch/version provided."
+    exit
   fi
 
   local is_targz=0
@@ -51,7 +107,7 @@ function github_clone {
   mkdir "$dest"
 
   # Clone
-  git clone -b "$ver" "$repo" -O "$dest"
+  git clone -b "$ver" "ssh://git@github.com/$repo" "$dest"
   echo "Clone finished."
 
   # CD to repo (hack: assume its the only folder)

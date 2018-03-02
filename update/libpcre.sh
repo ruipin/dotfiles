@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Init
-source lib_update.bash "libpcre"
-github_clone "vmg/libpcre" "pcre-8.36.tar.gz"
+source "$(dirname $(readlink -f $0))/lib_update.bash"
+clone "libpcre" --github "vmg/libpcre" --ver "pcre-8.36.tar.gz" $@
 
 # Build
 ./autogen.sh

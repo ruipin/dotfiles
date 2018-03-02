@@ -1,26 +1,8 @@
 #!/bin/bash
 
 # Init
-if [[ -z "$LOCAL_BUILD_FOLDER" ]]; then
-	echo "Please define \$LOCAL_BUILD_FOLDER"
-	return
-fi
-
-export app="vim"
-
-set -e
-mkdir -p "$LOCAL_BUILD_FOLDER/$app"
-cd "$LOCAL_BUILD_FOLDER/$app"
-
-
-# Download + extract
-set -e
-mkdir -p vim
-cd vim
-rm -Rf github
-mkdir github
-cd github
-git clone https://github.com/vim/vim .
+source "$(dirname $(readlink -f $0))/lib_update.bash"
+clone "vim" --github "vim/vim" --ver "master" $@
 
 
 # Build

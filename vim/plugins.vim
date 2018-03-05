@@ -102,4 +102,8 @@ endif
 	" HiLinkTrace - debug highlight groups using :HLT
 	Plug 'gerw/vim-HiLinkTrace', { 'on': ['HLT', 'HLT!'] }
 
+	" Abolish.vim: working with variants of a word
+	" See github for examples, but I use it for %S (case-aware substitution)
+	Plug 'tpope/vim-abolish'
+
 call plug#end()

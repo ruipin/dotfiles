@@ -49,6 +49,7 @@
   sa = stash apply
   ss = stash save
 
+  cm = commit -m
   ci = commit
   ca = commit --amend
 

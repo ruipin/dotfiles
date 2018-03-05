@@ -16,4 +16,4 @@ nnoremap <leader>g :GitFiles<CR>
 nnoremap <C-P> :Files<CR>
 
 " Remap bindings
-let $FZF_DEFAULT_OPTS = "--bind shift-tab:select-all"
+let $FZF_DEFAULT_OPTS = "--bind shift-tab:toggle-all"

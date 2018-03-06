@@ -38,6 +38,11 @@ set updatetime=1000
 " When moving up/down, always keep the same column if possible
 set nostartofline
 
+" When wrapping long lines, try to keep indent
+if has("patch-7.4.354")
+	set breakindent
+endif
+
 " Automatically use syntax highlighting for various files
 augroup filetype_paths
 	au!

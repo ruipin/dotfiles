@@ -102,9 +102,9 @@
   h = !git history
   graph = !git history
 
-  localHistory =  !sh -c 'git log --glob="*`git rev-parse --abbrev-ref HEAD`" --graph --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"'
-  lhist = !git localHistory
-  lh = !git localHistory
+  lhistory =  "!f() { git log --glob=\"*"${1-$(git rev-parse --abbrev-ref HEAD)}"\" --graph --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"; }; f"
+  lhist = !git lhistory
+  lh = !git lhistory
 
   # List branches (verbose)
   lb = branch -vv

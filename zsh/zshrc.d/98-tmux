@@ -33,44 +33,57 @@ function tmux_new {
 
 	# Attach to the main session
 	echo_info "Attaching to tmux session \"$TMUX_MAIN_SESSION\"..." "tmux_new"
+	tmux_set_env
 	tmux new -t "$TMUX_MAIN_SESSION"
 
 	echo_info "Done." "tmux_new"
 	return 0
 }
 
-function tmux_env {
+
+typeset -g _tmux_env_variables=("SSH_AUTH_SOCK" "DISPLAY" "SSH_CONNECTION")
+
+function tmux_set_env {
+	for var in $_tmux_env_variables ; do
+		echo_info "\"$var\"=\"${(P)var}\"" "tmux_set_env"
+		tmux set-environment -g "$var" "${(P)var}"
+	done
+}
+
+function tmux_load_env {
 	if [[ -z "$TMUX" ]]; then
-		echo_error "Not inside a tmux session" "tmux_env"
+		echo_error "Not inside a tmux session" "tmux_load_env"
 		return 1
 	fi
 
-	echo_info "Updating environment using 'tmux show-environment'..." "tmux_env"
-
-	# Loop through all tmux environment variables
-	local var
-	while read var; do
-		[[ -z "$var" ]] && continue
+	# Loop through all desired tmux environment variables
+	for var in $_tmux_env_variables ; do
+		local tmux_var=""
+		tmux_var="$( tmux show-environment -g "$var" )"
+		[[ "$?" -ne 0 ]] && continue
 
 		# '-' prefix means the variable should be deleted
-		if [[ $var[0] == "-" ]]; then
-			unset "${var:2}"
+		if [[ $tmux_var[0] == "-" ]]; then
+			local name="${tmux_var:2}"
+			echo_info "${name}=" "tmux_load_env"
+			unset "${name}"
 		else
 			# Split variable name and value
-			local name="${var%%=*}"
-			local val="${var##*=}"
+			local name="${tmux_var%%=*}"
+			local val="${tmux_var##*=}"
 
 			# Export it
-			echo_debug "$name=\"$val\"" "tmux_env"
+			echo_info "$name=\"$val\"" "tmux_load_env"
 			export "$name"="$val"
 		fi
-	done < <(tmux show-environment)
+	done
 }
 
 alias tn="tmux_new"
 alias ta="tmux attach"
 alias tl="tmux list-sessions"
-alias te="tmux_env"
+alias tse="tmux_set_env"
+alias tle="tmux_load_env"
 
 
 # If USE_TMUX, we want to boot straight into tmux

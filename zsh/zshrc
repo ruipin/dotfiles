@@ -102,7 +102,7 @@ fi
 # - If _zshrcd_concatenate!=0 =>
 #    Files are first concatenated into a "zshrc.d.cat" file,
 #    which is then sourced. If "zshrc.d.cat" already exists, then it is sourced directly.
-#    This allows a single file to be read, which can optimize systems where the "zshrc.d" firectories
+#    This allows a single file to be read, which can optimize systems where the "zshrc.d" directories
 #    are in a network filesystem, as it reduces the number of file accesses.
 #    For _zshrcd_concatenate=2, files are only concatenated if ZSH_HOME is inside a "nfs" mount point
 #
@@ -115,8 +115,8 @@ function _zshrcd {
 	# Configuration
 	typeset -g _zshrcd_concatenate=2
 	typeset -g _zshrcd_compile=1
-	typeset -g _zshrcd_freshness_check=0 # Can be expensive for network filesystems
 	local _zshrcd_debug=0
+
 
 	# Other variables (do not modify)
 	typeset -g _zshrcd="$ZSH_HOME/zshrc.d"
@@ -220,15 +220,8 @@ function _zshrcd {
 		[[ ! -d "$_zshrcd_scratch" ]] && mkdir -p "$_zshrcd_scratch"
 		typeset -g _zshrcd_cat="$_zshrcd_scratch/zshrc.d.cat"
 
-		# Regenerate zshrc.d.cat if it is no longer fresh
-		if [[ \
-			! -f "$_zshrcd_cat" || \
-			"$_zshrcd_freshness_check" -eq "1" && ( \
-				! -z "$( find "$ZSH_HOME" -newer "$_zshrcd_cat" -print -quit )" || \
-				( ! -z "$LOCAL_DOTFILES" && ! -z "$( find "$ZSH_HOME_LOCAL" -newer "$_zshrcd_cat" -print -quit )" ) \
-			) \
-		]]; then
-
+		# Regenerate zshrc.d.cat if it doesn't exist
+		if [[ ! -f "$_zshrcd_cat" ]]; then
 			echo "[zshrc.d] Generating 'zshrc.d.cat'..."
 			_zshrcd_regen=1
 
@@ -236,6 +229,7 @@ function _zshrcd {
 			[[ ! -f "$_zshrcd_cat" ]] && touch "$_zshrcd_cat"
 
 			function do_zshrcd_cat {
+				# Wrap concatenate files in functions, to better pretend they are files
 				echo "\n\n#****************************************\n#** $1\n(){\nlocal 0=${(qqqq)1}\n" >> "$_zshrcd_cat"
 				cat "$1" >> "$_zshrcd_cat"
 				echo "\n} #** end of $1\n#****************************************\n\n" >> "$_zshrcd_cat"
@@ -245,7 +239,7 @@ function _zshrcd {
 			unfunction do_zshrcd_cat
 		fi
 
-		# Re-compile zshrc.d.cat if it is no longer fresh
+		# Compile zshrc.d.cat if it hasn't been compiled yet
 		if [[ "$_zshrcd_compile" -ne "0" && ! "$_zshrcd_cat.zwc" -nt "$_zshrcd_cat" ]]; then
 			echo "[zshrc.d] Compiling 'zshrc.d.cat'..."
 			[[ -f "$_zshrcd_cat.zwc" ]] && rm -f "$_zshrcd_cat.zwc"

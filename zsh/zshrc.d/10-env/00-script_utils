@@ -181,7 +181,8 @@ function is_int {
 	return 1
 }
 
-function is_uint {	if Ma[Ma "$@" =~ ^[Ma[0-9]+$ ]]; then
+function is_uint {
+	if [[ "$@" =~ ^[Ma[0-9]+$ ]]; then
 		return 0
 	fi
 	return 1

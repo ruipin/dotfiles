@@ -65,6 +65,3 @@ nnoremap <silent> <C-d> :bn<CR>
 " Re-yank text pasted in selection mode (so that we don't lose the contents of "1)
 " In summary, pastes (supports "xp and p), re-selects the last selection, and yanks it back into the register
 xnoremap <expr> p 'pgv"'.v:register.'y`>'
-
-
-" Re-yank text pasted in selection mode (so that we don't lose the contents of "1)

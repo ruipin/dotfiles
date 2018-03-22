@@ -58,7 +58,7 @@ function! NERDTreeCurrentPath()
 endfunction
 
 " Command-line mapping: If NERDTree, insert current node path
-cnoremap <expr> <Leader>. IsNERDTree() ? NERDTreeCurrentPath() : expand("%:p:h")
+"cnoremap <expr> <Leader>. IsNERDTree() ? NERDTreeCurrentPath() : expand("%:p:h")
 
 " Wrap commands so that they switch to a different buffer other than nerdtree
 function! WrapNERDTreeCommand(cmd)

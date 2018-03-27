@@ -43,6 +43,9 @@ if has("patch-7.4.354")
 	set breakindent
 endif
 
+" Disable modelines
+set nomodeline
+
 " Automatically use syntax highlighting for various files
 augroup filetype_paths
 	au!

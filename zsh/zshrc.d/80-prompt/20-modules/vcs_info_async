@@ -6,6 +6,9 @@
 # Highly influenced by https://github.com/sindresorhus/pure
 
 function mkprompt_vcs_info_async {
+	# Load required module zsh/datetime
+	zmodload "zsh/datetime"
+
 	# vcs_info module
 	autoload -Uz vcs_info
 
@@ -46,11 +49,11 @@ function mkprompt_vcs_info_async {
 
 	#########
 	# Async job handlers
-	
+
 	# Main job, responsible for calling and parsing vcs_info
 	# $1=1 -> Checks for dirty repos as well (slower)
 	function _vcs_info_async_job {
-		builtin cd -q $1 2>/dev/null
+		builtin cd -qL $1 2>/dev/null
 
 		local check_for_changes="${2-0}"
 
@@ -167,6 +170,7 @@ function mkprompt_vcs_info_async {
 					vcs_info_async_error=1
 					return 1
 				fi
+				vcs_info_async_error=0
 
 				# parse output (z) and unquote as array (Q@)
 				local output_arr=("${(z)output[@]}")
@@ -219,7 +223,6 @@ function mkprompt_vcs_info_async {
 				# Success
 				if [[ "$code" -eq "0" ]]; then
 					vcs_info_async[arrows]="$output"
-					_prompt_vcs_info_render 1
 
 				# No upstream
 				elif [[ "$code" -eq "128" ]]; then
@@ -256,22 +259,16 @@ function mkprompt_vcs_info_async {
 
 	###############
 	# Main code
-	
+
 	# Called before every prompt is rendered the first time
 	function _vcs_info_async_main {
-		# initialize async worker
-		((!${_vcs_info_async_init:-0})) && {
-			async_start_worker "$_vcs_info_async_worker" -u -n
-			async_register_callback "$_vcs_info_async_worker" _vcs_info_async_callback
-			typeset -g _vcs_info_async_init=1
-		}
 
 		# If we are not in a known repo, we do a quick initial check
-		if [[ -z "$vcs_info_async[top]" || ! "$PWD" = "$vcs_info_async[top]"* ]]; then
+		if [[ -z "$vcs_info_async[top]" || ! "`pwd -P`" = "$vcs_info_async[top]"* ]]; then
 			_vcs_info_async_initial_check
 
 		# Otherwise, we do a full update
-	else
+		else
 			_vcs_info_async_update
 		fi
 	}
@@ -283,13 +280,27 @@ function mkprompt_vcs_info_async {
 		_vcs_info_async_reset
 
 		# Check current PWD for repo (fast check)
-		async_job "$_vcs_info_async_worker" _vcs_info_async_job_initial "$PWD"
+		async_job "$_vcs_info_async_worker" _vcs_info_async_job_initial "`pwd -P`"
 	}
 
 	# Resets the current state of the vcs_info_async module
 	function _vcs_info_async_reset {
-		# Stop any running async jobs
-		async_flush_jobs "$_vcs_info_async_worker"
+		# Workaround: async_flush_jobs has a race condition
+		# If a job is already running (and only unique jobs are allowed), then flushing and immediately restarting the job might
+		# not work. As such, we kill the worker and restart it!
+
+		# stop async worker
+		((${_vcs_info_async_init:-0})) && {
+			async_stop_worker "$_vcs_info_async_worker"
+			typeset -g _vcs_info_async_init=0
+		}
+
+		# initialize async worker
+		((!${_vcs_info_async_init:-0})) && {
+			async_start_worker "$_vcs_info_async_worker" -u
+			async_register_callback "$_vcs_info_async_worker" _vcs_info_async_callback
+			typeset -g _vcs_info_async_init=1
+		}
 
 		# Reset variables
 		typeset -g vcs_info_async_unknown=1
@@ -304,6 +315,7 @@ function mkprompt_vcs_info_async {
 	# Responsible for enqueuing any new checks
 	function _vcs_info_async_update {
 		local refresh=0 # refresh=1 forces a full refresh
+		local real_pwd=`pwd -P` # follow symlinks
 
 		# Detect if the last command was current VCS
 		if [[ ! -z "$vcs_info_async[vcs]" ]]; then
@@ -314,21 +326,21 @@ function mkprompt_vcs_info_async {
 
 		# Detect if current folder contains a ".git" folder/file and is not the current repo root
 		if [[ -e ".git" ]]; then
-			if [[ ! -z "$vcs_info_async[top]" && ( "$vcs_info_async[vcs]" != "git" || "$vcs_info_async[top]" != "$PWD" ) ]]; then
+			if [[ ! -z "$vcs_info_async[top]" && ( "$vcs_info_async[vcs]" != "git" || "$vcs_info_async[top]" != "$real_pwd" ) ]]; then
 				refresh=1
 			fi
 		fi
 
 		# Detect if current folder contains a ".svn" folder/file and is not the current repo root
 		if [[ -e ".svn" ]]; then
-			if [[ ! -z "$vcs_info_async[top]" && ( "$vcs_info_async[vcs]" != "svn" || "$vcs_info_async[top]" != "$PWD" ) ]]; then
+			if [[ ! -z "$vcs_info_async[top]" && ( "$vcs_info_async[vcs]" != "svn" || "$vcs_info_async[top]" != "$real_pwd" ) ]]; then
 				refresh=1
 			fi
 		fi
 
 		# Check for changes (full check) if enough time has passed
 		( is_true "$refresh" || time_passed "$vcs_info_async_wait[full]" ) && \
-			async_job "$_vcs_info_async_worker" _vcs_info_async_job_full "$PWD"
+			async_job "$_vcs_info_async_worker" _vcs_info_async_job_full "$real_pwd"
 
 		# Check for git ahead/behind
 		if [[ "$vcs_info_async[vcs]" == "git" ]]; then
@@ -337,7 +349,7 @@ function mkprompt_vcs_info_async {
 
 			# If enough time has passed, do the check
 			( is_true "$refresh" || time_passed "$vcs_info_async_wait[arrows]" ) && \
-				async_job "$_vcs_info_async_worker" _vcs_info_async_git_arrows "$PWD"
+				async_job "$_vcs_info_async_worker" _vcs_info_async_git_arrows "$real_pwd"
 		else
 			# Not git
 			vcs_info_async[arrows]=""

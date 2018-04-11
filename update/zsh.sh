@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "vim" --github "zsh-users/zsh" --ver "zsh-5.4.2.tar.gz" $@
+clone "zsh" --github "zsh-users/zsh" --ver "zsh-5.5.tar.gz" $@
 
 
 # Build
@@ -15,9 +15,9 @@ clone "vim" --github "zsh-users/zsh" --ver "zsh-5.4.2.tar.gz" $@
    --enable-largefile \
    --enable-cap \
    --with-tcsetpgrp \
-   --enable-pcre \
    --enable-readnullcmd=pager \
    --enable-multibyte
+   #--enable-pcre
 make
 #make check
 make install

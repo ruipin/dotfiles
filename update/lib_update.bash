@@ -37,7 +37,6 @@ function clone {
   local -a params
   while [[ "$#" -gt "0" ]]; do
     case "$1" in
-    # Automatic blkval sourcing
     "-gh" | "--github")
       func="github"
       repo="$2"

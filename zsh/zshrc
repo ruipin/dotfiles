@@ -186,10 +186,10 @@ function _zshrcd {
 			local filemask
 			local sourcefiles
 			if [[ "$_zshrcd_fallback" -ne "1" ]] ; then
-				filemask='**/*(-.)'
+				filemask='***/*(-.)'
 				sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
 			else
-				filemask='**/*'
+				filemask='***/*'
 				sourcefiles=("$_zshrcd/"${~filemask})
 			fi
 

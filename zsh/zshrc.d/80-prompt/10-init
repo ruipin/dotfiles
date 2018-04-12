@@ -1,0 +1,9 @@
+#########################################
+# prompt/init
+# Author: Rui Pinheiro
+#
+# Initializes mkprompt mechanism
+
+# "ruipgpinheiro/zsh-mkprompt" plugin must be loaded by zplug
+#source ~/zsh-mkprompt/mkprompt.zsh
+mkprompt_init

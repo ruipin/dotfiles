@@ -1,9 +1,0 @@
-#########################################
-# prompt/modules/clock
-# Author: Rui Pinheiro
-#
-# Zsh prompt "clock" module
-
-function mkprompt_clock {
-	mkprompt_add "$1" "%T"
-}

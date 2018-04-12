@@ -8,9 +8,10 @@
 # Returns non-zero if this is an ssh session
 # call "is_ssh 1" to get a higher accuracy result, by searching for sshd as a parent process
 function is_ssh {
+	local detailed="${1:-0}"
 	if [[ -n "$SSH_CONNECTION" || -n "$SSH_CLIENT" || -n "$SSH_TTY" ]]; then
 		return 0
-	elif is_true "$1" ; then
+	elif [[ "$detailed" -ne "0" ]]; then
 		case $(ps -o comm= -p $PPID) in
 			sshd|*/sshd) return 0
 		esac

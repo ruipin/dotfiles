@@ -1,9 +1,0 @@
-#########################################
-# prompt/modules/prompt
-# Author: Rui Pinheiro
-#
-# Zsh prompt "prompt" module
-
-function mkprompt_prompt_symbol {
-	mkprompt_add "" $(mkprompt_pad_unicode "${1-❯}")
-}

@@ -30,7 +30,7 @@ function is_remote_fs {
 	esac
 }
 
-# Is a local file-system
+# Returns 0 if $1 is a local file-system
 # NOTE (1): Requires shelling out, so shouldn't be abused during shell init
 # NOTE (2): The list of local file systems is not exhaustive
 # NOTE (3): Does not necessarily return the opposite of is_remote_fs

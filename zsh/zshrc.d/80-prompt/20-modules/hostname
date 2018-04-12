@@ -1,9 +1,0 @@
-#########################################
-# prompt/modules/ssh_hostname
-# Author: Rui Pinheiro
-#
-# Zsh prompt "SSH Hostname" module
-
-function mkprompt_hostname {
-	mkprompt_add "$1" "%m"
-}

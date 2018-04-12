@@ -1,9 +1,0 @@
-#########################################
-# prompt/modules/prompt
-# Author: Rui Pinheiro
-#
-# Zsh prompt "prompt" module
-
-function mkprompt_prompt {
-	mkprompt_add "" "%#"
-}

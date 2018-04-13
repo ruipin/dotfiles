@@ -5,5 +5,5 @@
 # Initializes mkprompt mechanism
 
 # "ruipgpinheiro/zsh-mkprompt" plugin must be loaded by zplug
-#source ~/zsh-mkprompt/mkprompt.zsh
+type -f mkprompt_init > /dev/null || source ~/zsh-mkprompt/mkprompt.zsh
 mkprompt_init

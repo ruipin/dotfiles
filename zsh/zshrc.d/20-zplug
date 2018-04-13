@@ -31,7 +31,7 @@ function load_plugins {
 			done
 		}
 	else
-		is_true "$_zplug_sourced" && return
+		is_true "$_zplug_loaded" && return
 		source "$ZPLUG_ROOT/init.zsh"
 		function _zplug {
 			zplug $@

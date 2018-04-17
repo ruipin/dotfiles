@@ -25,7 +25,7 @@ function zshrc_zprof {
 	local target="$ZSH_TMP/zshrc_zprof"
 	if [[ "$1" -eq "1" ]]; then
 		(
-			setopt null_glob
+			setopt local_options null_glob
 			rm -f "$target".*
 		)
 	fi
@@ -35,7 +35,7 @@ function zshrc_xtrace {
 	local target="$ZSH_TMP/zshrc_xtrace"
 	if [[ "$1" -eq "1" ]]; then
 		(
-			setopt null_glob
+			setopt local_options null_glob
 			rm -f "$target".*
 		)
 	fi
@@ -123,9 +123,10 @@ function _zshrcd {
 	hash -d zshrcd="$_zshrcd"
 	typeset -g _zshrcd_local="$ZSH_HOME_LOCAL/zshrc.d"
 	hash -d lzshrcd="$_zshrcd_local"
-	typeset -g _zshrcd_scratch="$ZSH_SCRATCH/zshrcd"
+	typeset -g zshrcd_scratch="$ZSH_SCRATCH/zshrcd"
 	typeset -g _zshrcd_regen=0
 	local _zshrcd_fallback=0
+
 
 	# Debug helper
 	if [[ "$_zshrcd_debug" -eq "1" ]]; then
@@ -150,11 +151,8 @@ function _zshrcd {
 	# Clean _zshrcd files
 	if [[ "$_zshrcd_concatenate" -ne "0" ]]; then
 		function regen_zshrcd {
-			(
-				setopt rmstarsilent
-				[[ -d "$_zshrcd_scratch" ]] && \rm -f "$_zshrcd_scratch/"*
-				#unsetopt rmstarsilent
-			)
+			setopt local_options rmstarsilent
+			[[ -d "$zshrcd_scratch" ]] && \rm -f "$zshrcd_scratch/"*
 			exec zsh -l -i
 		}
 	fi
@@ -171,54 +169,44 @@ function _zshrcd {
 	# Iterates through all files inside zshrc.d
 	# Calls "$1" for each file to be sourced
 	function _zshrcd_iterate {
-		# Source zshrc.d files
-		if [[ -z "$LOCAL_DOTFILES" || ! -d "$_zshrcd_local" ]]; then
-			# If no local dotfiles exist, use shell globbing directly (faster)
-			# NOTE: "(-.)" is a globbing qualifier to match regular files (and symlinks to regular files) only
-			for f in "$_zshrcd/"**/*(-.) ; do
-				_zshrcd_debug "Including file '$f'."
-				$1 "$f"
-			done; unset f
+		# Collect files
+		# NOTE: "(-.)" is a globbing qualifier to match regular files (and symlinks to regular files) only
+		setopt local_options extended_glob
+		local filemask
+		local sourcefiles
+		if [[ "$_zshrcd_fallback" -ne "1" ]] ; then
+			filemask='***/*(-.)'
+			sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
 		else
-			# Collect files
-			# NOTE: "(-.)" is a globbing qualifier to match regular files (and symlinks to regular files) only
-			setopt extended_glob
-			local filemask
-			local sourcefiles
-			if [[ "$_zshrcd_fallback" -ne "1" ]] ; then
-				filemask='***/*(-.)'
-				sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
-			else
-				filemask='***/*'
-				sourcefiles=("$_zshrcd/"${~filemask})
-			fi
-
-			# Remove path prefix up to the zshrc.d folder
-			sourcefiles=(${sourcefiles#*/zshrc.d/})
-
-			# Sort and remove duplicates
-			sourcefiles=(${(@ui)sourcefiles})
-
-			# Remove ".ignore"/".bak" files and folders
-			sourcefiles=(${(@)sourcefiles:#*.(ignore|bak)(/*|)})
-
-			# Source files
-			for f in $sourcefiles ; do
-				if [[ -f "$_zshrcd_local/$f" ]]; then
-					$1 "$_zshrcd_local/$f"
-				else
-					$1 "$_zshrcd/$f"
-				fi
-				_zshrcd_debug "Including file '$f'."
-			done; unset f
+			filemask='***/*'
+			sourcefiles=("$_zshrcd/"${~filemask})
 		fi
+
+		# Remove path prefix up to the zshrc.d folder
+		sourcefiles=(${sourcefiles#*/zshrc.d/})
+
+		# Sort and remove duplicates
+		sourcefiles=(${(@ui)sourcefiles})
+
+		# Remove ".ignore"/".bak" files and folders
+		sourcefiles=(${(@)sourcefiles:#*.(ignore|bak)(/*|)})
+
+		# Source files
+		for f in $sourcefiles ; do
+			if [[ -f "$_zshrcd_local/$f" ]]; then
+				$1 "$_zshrcd_local/$f"
+			else
+				$1 "$_zshrcd/$f"
+			fi
+			_zshrcd_debug "Including file '$f'."
+		done; unset f
 	}
 
 	# If we want to concatenate/compile the files
 	if [[ "$_zshrcd_concatenate" -ne "0" ]]; then
 		# Initialize directory
-		[[ ! -d "$_zshrcd_scratch" ]] && mkdir -p "$_zshrcd_scratch"
-		typeset -g _zshrcd_cat="$_zshrcd_scratch/zshrc.d.cat"
+		[[ ! -d "$zshrcd_scratch" ]] && mkdir -p "$zshrcd_scratch"
+		typeset -g _zshrcd_cat="$zshrcd_scratch/zshrc.d.cat"
 
 		# Regenerate zshrc.d.cat if it doesn't exist
 		if [[ ! -f "$_zshrcd_cat" ]]; then
@@ -229,7 +217,7 @@ function _zshrcd {
 			[[ ! -f "$_zshrcd_cat" ]] && touch "$_zshrcd_cat"
 
 			function do_zshrcd_cat {
-				# Wrap concatenate files in functions, to better pretend they are files
+				# Wrap concatenated files in functions, to better pretend they are files
 				echo "\n\n#****************************************\n#** $1\n(){\nlocal 0=${(qqqq)1}\n" >> "$_zshrcd_cat"
 				cat "$1" >> "$_zshrcd_cat"
 				echo "\n} #** end of $1\n#****************************************\n\n" >> "$_zshrcd_cat"
@@ -255,9 +243,8 @@ function _zshrcd {
 	fi
 
 	# Cleanup
-	unfunction _zshrcd_debug
-	unfunction _zshrcd_iterate
-	unfunction $0
+	unfunction -m "_zshrcd*"
+	unset -m "_zshrcd*"
 }; _zshrcd
 
 

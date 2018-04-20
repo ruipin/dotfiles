@@ -17,3 +17,6 @@ nnoremap <C-P> :Files<CR>
 
 " Remap bindings
 let $FZF_DEFAULT_OPTS = "--bind shift-tab:toggle-all"
+
+" Append '-U' to ag calls : search .gitignored files as well
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, '-U', <bang>0)

@@ -67,5 +67,5 @@ endif
 set laststatus=2
 
 " Only redraw modified parts of the screen
-"set lazyredraw
-"set ttyfast
+set lazyredraw
+set ttyfast

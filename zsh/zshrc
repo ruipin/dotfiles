@@ -171,25 +171,28 @@ function _zshrcd {
 	function _zshrcd_iterate {
 		# Collect files
 		# NOTE: "(-.)" is a globbing qualifier to match regular files (and symlinks to regular files) only
-		setopt local_options extended_glob
-		local filemask
 		local sourcefiles
-		if [[ "$_zshrcd_fallback" -ne "1" ]] ; then
-			filemask='***/*(-.)'
-			sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
-		else
-			filemask='***/*'
-			sourcefiles=("$_zshrcd/"${~filemask})
-		fi
 
-		# Remove path prefix up to the zshrc.d folder
-		sourcefiles=(${sourcefiles#*/zshrc.d/})
+		(){ # anonymous function to avoid setting extended_glob permanently
+			local filemask
+			setopt local_options extended_glob
+			if [[ "$_zshrcd_fallback" -ne "1" ]] ; then
+				filemask='***/*(-.)'
+				sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
+			else
+				filemask='***/*'
+				sourcefiles=("$_zshrcd/"${~filemask})
+			fi
 
-		# Sort and remove duplicates
-		sourcefiles=(${(@ui)sourcefiles})
+			# Remove path prefix up to the zshrc.d folder
+			sourcefiles=(${sourcefiles#*/zshrc.d/})
 
-		# Remove ".ignore"/".bak" files and folders
-		sourcefiles=(${(@)sourcefiles:#*.(ignore|bak)(/*|)})
+			# Sort and remove duplicates
+			sourcefiles=(${(@ui)sourcefiles})
+
+			# Remove ".ignore"/".bak" files and folders
+			sourcefiles=(${(@)sourcefiles:#*.(ignore|bak)(/*|)})
+		}
 
 		# Source files
 		for f in $sourcefiles ; do

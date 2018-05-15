@@ -106,4 +106,7 @@ endif
 	" See github for examples, but I use it for %S (case-aware substitution)
 	Plug 'tpope/vim-abolish'
 
+	" commentary.vim: Adds the 'gc' mappings to comment/uncomment code automatically
+	Plug 'tpope/vim-commentary'
+
 call plug#end()

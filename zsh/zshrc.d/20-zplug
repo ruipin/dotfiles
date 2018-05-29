@@ -45,7 +45,7 @@ function load_plugins {
 	#_zplug "zsh-users/zsh-autosuggestions"
 	#_zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
 	_zplug "mafredri/zsh-async", defer:2
-	_zplug "ruipgpinheiro/zsh-mkprompt", defer:2
+	_zplug "ruipin/zsh-mkprompt", defer:2
 	
 	unfunction _zplug
 	if [[ "$type" -ne "0" ]]; then

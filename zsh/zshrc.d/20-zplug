@@ -23,12 +23,17 @@ function load_plugins {
 	if [[ "$type" -eq "0" ]]; then
 		function _zplug {
 			local repo="${1%,}"
+			local repo_path="$ZPLUG_ROOT/repos/$repo"
 
 			# Source script from repo
-			local sourcefile
-			for sourcefile in "$ZPLUG_ROOT/repos/$repo/"*".plugin.zsh" ; do
-				source $sourcefile
-			done
+			if [[ -d "$repo_path" ]]; then
+				local sourcefile
+				for sourcefile in "$repo_path/"*".plugin.zsh" ; do
+					source $sourcefile
+				done
+			else
+				echo_error "Could not execute plugin '$repo'. Try calling 'zplug install' to re-instal it."
+			fi
 		}
 	else
 		is_true "$_zplug_loaded" && return

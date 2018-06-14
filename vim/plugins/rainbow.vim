@@ -42,8 +42,8 @@ let g:rainbow_conf = {
 \     'vim':
 \        { 'parentheses': ['start=/(/ end=/)/', 'start=/(/ end=/)/ containedin=vimFuncBody'] },
 \     'verilog_systemverilog':
-\        { 'parentheses': ['start=/(/ skip=/\(\/\/.*$\)\|\(".*"\)/ end=/)/ fold extend keepend',
-\                          'start=/(/ skip=/\(\/\/.*$\)\|\(".*"\)/ end=/)/ fold extend keepend containedin=verilogAssign'] },
+\        { 'parentheses': ['start=/(/ skip=/\(\/\/.*$\)\|\(".\{-}"\)/ end=/)/ fold extend keepend',
+\                          'start=/(/ skip=/\(\/\/.*$\)\|\(".\{-}"\)/ end=/)/ fold extend keepend containedin=verilogAssign'] },
 \     'css': 0,
 \  },
 \}

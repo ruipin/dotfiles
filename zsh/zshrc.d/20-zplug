@@ -32,7 +32,7 @@ function load_plugins {
 					source $sourcefile
 				done
 			else
-				echo_error "Could not execute plugin '$repo'. Try calling 'zplug install' to re-instal it."
+				echo_error "Could not execute plugin '$repo'. Try calling 'zplug install' to re-install it."
 			fi
 		}
 	else

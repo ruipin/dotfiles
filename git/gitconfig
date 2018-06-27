@@ -27,6 +27,8 @@
   ff = only
 [status]
   submodulesummary = 1
+[fetch]
+  prune = 1
 
 [alias]
   # Simple aliases

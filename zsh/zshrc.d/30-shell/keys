@@ -20,7 +20,9 @@ bindkey -M viins '^H' backward-delete-char
 bindkey "^?" backward-delete-char
 
 bindkey '^[[A'  history-substring-search-up
+bindkey '^[OA'  history-substring-search-up
 bindkey '^[[B'  history-substring-search-down
+bindkey '^[OB'  history-substring-search-down
 
 bindkey "^i"    complete-word # Tab
 bindkey "^[[Z"  expand-word   # Shift-Tab

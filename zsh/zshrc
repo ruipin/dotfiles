@@ -177,7 +177,7 @@ function _zshrcd {
 			local filemask
 			setopt local_options extended_glob
 			if [[ "$_zshrcd_fallback" -ne "1" ]] ; then
-				filemask='***/*(-.)'
+				filemask='***/*(-.N)'
 				sourcefiles=("$_zshrcd/"${~filemask} "$_zshrcd_local/"${~filemask})
 			else
 				filemask='***/*'

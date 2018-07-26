@@ -107,6 +107,9 @@ vnoremap <expr><S-TAB> "<gv"
 " 'ToggleShowBlanks' can be used to also show other blank characters (such as normal spaces)
 let g:blanks_shown=0
 
+" enable conceal only on normal and command mode
+let g:default_concealcursor = "nc"
+
 function! ShowBlanks()
 	let g:blanks_shown=1
 	hi SpecialKey ctermfg=240 ctermbg=NONE
@@ -134,7 +137,7 @@ function! HideBlanks()
 	hi NonText    ctermfg=238 ctermbg=NONE
 	if has('nvim')
 		set conceallevel=2
-		set concealcursor=nvic
+		exe "set concealcursor=".g:default_concealcursor
 		set listchars=tab:>\ ,trail:·
 	else
 		set listchars=

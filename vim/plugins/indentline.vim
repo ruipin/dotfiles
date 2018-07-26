@@ -16,3 +16,4 @@ let g:indentLine_setColors = 0
 
 " Keep conceal value
 let g:indentLine_setConceal = 0
+let g:indentLine_concealcursor = ""

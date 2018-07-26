@@ -62,6 +62,9 @@ endif
 		call SourceDotfile('plugins/ctags.vim')
 	endif
 
+	" vim-json: Better JSON formatting
+	call SourceDotfile('plugins/json.vim')
+
 	"""""""""""""""
 	" Other plugins
 
@@ -108,5 +111,6 @@ endif
 
 	" commentary.vim: Adds the 'gc' mappings to comment/uncomment code automatically
 	Plug 'tpope/vim-commentary'
+
 
 call plug#end()

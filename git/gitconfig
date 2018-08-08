@@ -138,7 +138,8 @@
   ##################
   # Gerrit
   publish = !sh -c 'git push origin HEAD:refs/for/${1-$(git rev-parse --abbrev-ref HEAD)} ' -
-  draft   = !sh -c 'git push origin HEAD:refs/drafts/${1-$(git rev-parse --abbrev-ref HEAD)} ' -
+  draft   = !sh -c 'git push origin HEAD:refs/for/${1-$(git rev-parse --abbrev-ref HEAD)}%wip ' -
+  wip     = !git draft
 
   ##################
   # Aliases
@@ -155,3 +156,9 @@
 
   # Delete any branches that have been merged into master
   delete-merged-branches = "!git checkout master && git branch --no-color --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+
+  ##################
+  # Directory traversal
+
+  # Go to git root
+  root = rev-parse --show-toplevel

@@ -5,7 +5,7 @@
 # git-related helpers
 
 # shell aliases for git
-alias git-root="cd $(git rev-parse --show-toplevel)"
+alias git-root="cd \$(git rev-parse --show-toplevel)"
 
 # Print list of git aliases
 function git_aliases {

@@ -112,5 +112,8 @@ endif
 	" commentary.vim: Adds the 'gc' mappings to comment/uncomment code automatically
 	Plug 'tpope/vim-commentary'
 
+	" vc.vim: VCS commands
+	Plug 'juneedahamed/vc.vim' 
+
 
 call plug#end()

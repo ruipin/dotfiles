@@ -25,7 +25,9 @@ function SetColorScheme()
 	endif
 
 	" Refresh vim-airline to fix colors
-	AirlineRefresh
+	if exists("*AirlineRefresh")
+		AirlineRefresh
+	endif
 
 	" Refresh Rainbow to fix colors
 	if exists('g:rainbow_active') && g:rainbow_active

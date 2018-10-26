@@ -62,7 +62,7 @@ function SmoothScroll(cmd, lines, speed)
 endfunction
 
 " Bindings
-if (! g:isRemote )
+if ( !g:isRemote )
 	" Page Up/Down
 	nnoremap <silent> <PageUp>   :call SmoothScroll(0, &scroll*2, 3)<CR>
 	nnoremap <silent> <PageDown> :call SmoothScroll(1, &scroll*2, 3)<CR>

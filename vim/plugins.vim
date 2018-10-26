@@ -23,7 +23,7 @@ endif
 	call SourceDotfile('plugins/autocomplete.vim')
 
 	" NERDTree
-	if has('nvim') || v:version >= 704
+	if !exists("g:gui_oni") && (has('nvim') || v:version >= 704)
 		call SourceDotfile('plugins/nerdtree.vim')
 	endif
 
@@ -113,7 +113,7 @@ endif
 	Plug 'tpope/vim-commentary'
 
 	" vc.vim: VCS commands
-	Plug 'juneedahamed/vc.vim' 
+	Plug 'juneedahamed/vc.vim'
 
 
 call plug#end()

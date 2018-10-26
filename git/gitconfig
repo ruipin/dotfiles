@@ -83,28 +83,28 @@
   # Listing
 
   # List commits showing changed files
-  list = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --stat
+  list = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --stat
   ll = !git list
 
   # Short list
-  le = log --oneline --decorate
+  le = log --first-parent --oneline --decorate
 
   # List commits in short form, with colors and branch/tag annotations
-  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate
 
   # List one-line commits with dates
-  lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+  lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --date=short
 
   # List one-line commits with relative dates
-  ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+  ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --date=relative
 
   # history / graph view
-  history = log --graph --full-history --all --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"
+  history = log --graph --full-history --topo-order --all --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"
   hist = !git history
   h = !git history
   graph = !git history
 
-  lhistory =  "!f() { git log --glob=\"*"${1-$(git rev-parse --abbrev-ref HEAD)}"\" --graph --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"; }; f"
+  lhistory =  "!f() { git log --glob=\"*"${1-$(git rev-parse --abbrev-ref HEAD)}"\" --topo-order --graph --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"; }; f"
   lhist = !git lhistory
   lh = !git lhistory
 

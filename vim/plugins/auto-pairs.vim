@@ -51,5 +51,7 @@ function SetupLexima()
 	call Lexima_endwise_SV_rule('sequence','endsequence')
 
 	" Setup <CR> again
-	call SetupAutoCompleteCRandTAB()
+	if exists("*SetupAutoCompleteCRandTAB")
+		call SetupAutoCompleteCRandTAB()
+	endif
 endfunction

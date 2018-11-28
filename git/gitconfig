@@ -1,5 +1,5 @@
 [user]
-  name = Rui Pinheiro
+	name = Rui Pinheiro
 [diff]
   tool = vimdiff
 [difftool]
@@ -104,7 +104,7 @@
   h = !git history
   graph = !git history
 
-  lhistory =  "!f() { git log --glob=\"*"${1-$(git rev-parse --abbrev-ref HEAD)}"\" --topo-order --graph --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"; }; f"
+  lhistory =  "!f() { git log --glob=\"*"${1-$(git rev-parse --abbrev-ref HEAD)}"\" --topo-order --graph --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\" "${@:2}"; }; f"
   lhist = !git lhistory
   lh = !git lhistory
 

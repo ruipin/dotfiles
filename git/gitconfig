@@ -40,8 +40,11 @@
   cl = clone
   co = checkout
   b = branch
-  rst = reset
   rb = rebase
+
+  reseth = reset --hard
+  rst = reset
+  rsth = reset --hard
 
   s = status -s
   statustr = status --untracked-files=no

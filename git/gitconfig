@@ -42,9 +42,13 @@
   b = branch
   rb = rebase
 
-  reseth = reset --hard
-  rst = reset
-  rsth = reset --hard
+  rst     = reset
+  reseth  = reset --hard
+  rsth    = reset --hard
+  resetu  = reset @{u}
+  rstu    = reset @{u}
+  resethu = reset --hard @{u}
+  rsthu   = reset --hard @{u}
 
   s = status -s
   statustr = status --untracked-files=no

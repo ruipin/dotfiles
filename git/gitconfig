@@ -40,7 +40,10 @@
   cl = clone
   co = checkout
   b = branch
+
   rb = rebase
+  rebaseu = rebase @{u}
+  rbu = rebase @{u}
 
   rst     = reset
   reseth  = reset --hard

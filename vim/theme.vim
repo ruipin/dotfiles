@@ -24,6 +24,14 @@ function SetColorScheme()
 		colorscheme solarized
 	endif
 
+	" Plugins
+	if exists("*SetFoldColorScheme")
+		call SetFoldColorScheme()
+	endif
+	if exists("*SetGitGutterColorScheme")
+		call SetGitGutterColorScheme()
+	endif
+
 	" Refresh vim-airline to fix colors
 	if exists("*AirlineRefresh")
 		AirlineRefresh

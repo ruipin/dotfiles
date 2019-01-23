@@ -27,8 +27,8 @@ endif
 		call SourceDotfile('plugins/nerdtree.vim')
 	endif
 
-	" FastFold
-	call SourceDotfile('plugins/fastfold.vim')
+	" Fold
+	call SourceDotfile('plugins/fold.vim')
 
 	" System Verilog highligting
 	call SourceDotfile('plugins/system_verilog.vim')
@@ -65,6 +65,9 @@ endif
 	" vim-json: Better JSON formatting
 	call SourceDotfile('plugins/json.vim')
 
+	" Gitgutter: Shows signs for added, modifed, removed lines in current git repo
+	call SourceDotfile('plugins/gitgutter.vim')
+
 	"""""""""""""""
 	" Other plugins
 
@@ -83,16 +86,13 @@ endif
 	endif
 
 	" Adds XtermColorTable command to list all available terminal colors
-	"Plug 'guns/xterm-color-table.vim'
+	Plug 'guns/xterm-color-table.vim'
 
 	" i3 status syntax
 	Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'vim' }
 
 	" Tmux syntax highlighting
 	Plug 'tmux-plugins/vim-tmux', { 'for': 'tmux' }
-
-	" Gitgutter: Shows signs for added, modifed, removed lines in current git repo
-	Plug 'airblade/vim-gitgutter'
 
 	" Vim-DevIcons: Adds a lot more icons to vim (e.g. NerdTree file types)
 	" NOTE: Requires a "Nerd Font" (i.e. patched font), from https://github.com/ryanoasis/nerd-fonts

@@ -23,11 +23,6 @@ if has('nvim')
 	" Enable deoplete.
 	let g:deoplete#enable_at_startup = 1"
 
-	"inoremap <silent> <ESC> <C-r>=<SID>my_esc_function()<ESC>
-	"function! s:my_esc_function() abort
-	"	return deoplete#close_popup() . "\<ESC>"
-	"endfunction
-
 " Vim
 else
 	if has('lua')

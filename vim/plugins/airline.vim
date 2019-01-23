@@ -44,4 +44,5 @@ autocmd VimEnter * call SetupAirline()
 function SetupAirline()
 	call airline#add_statusline_func('WindowNumber')
 	call airline#add_inactive_statusline_func('WindowNumber')
+	AirlineRefresh
 endfunction

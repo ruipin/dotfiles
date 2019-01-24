@@ -44,6 +44,14 @@
   rb = rebase
   rebaseu = rebase @{u}
   rbu = rebase @{u}
+  rebasea = rebase --abort
+  rba = rebase --abort
+  rebasec = rebase --continue
+  rbc = rebase --continue
+  rebasei = rebase -i
+  rbi = rebase -i
+  rebaseiu = rebase -i @{u}
+  rbiu = rebase -i @{u}
 
   rst     = reset
   reseth  = reset --hard

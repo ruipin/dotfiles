@@ -139,7 +139,7 @@
 
   # List all changes to a file
   file = log -u
-  f = !git file
+  fdiff = !git file
 
   ###################
   # Specific commit shortcuts

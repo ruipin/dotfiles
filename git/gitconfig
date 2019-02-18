@@ -155,8 +155,19 @@
 
   ##################
   # Gerrit
-  publish = !sh -c 'git push origin HEAD:refs/for/${1-$(git rev-parse --abbrev-ref HEAD)} ' -
-  draft   = !sh -c 'git push origin HEAD:refs/for/${1-$(git rev-parse --abbrev-ref HEAD)}%wip ' -
+  get-upstream-branch = "!/bin/bash -c 'f(){                                        \
+      BRANCH=\"$(git rev-parse --verify --abbrev-ref @{upstream} 2> /dev/null )\" ; \
+      ORIGIN_BRANCH=\"${BRANCH#origin\\/}\" ;                                       \
+      if [[ -z \"$BRANCH\" || \"$BRANCH\" == \"$ORIGIN_BRACH\" ]]; then             \
+        echo \"$(git rev-parse --verify --abbrev-ref HEAD)\" ;                      \
+        return 0 ;                                                                  \
+      fi ;                                                                          \
+      echo \"${ORIGIN_BRANCH}\" ;                                                   \
+      return 0 ;                                                                    \
+    };                                                                              \
+    f'"
+  publish = !sh -c 'git push origin HEAD:refs/for/${1-$(git get-upstream-branch)} ' -
+  draft   = !sh -c 'git push origin HEAD:refs/for/${1-$(git get-upstream-branch)}%wip ' -
   wip     = !git draft
 
   ##################

@@ -1,33 +1,58 @@
 [user]
-	name = Rui Pinheiro
-[diff]
-  tool = vimdiff
-[difftool]
-  prompt = false
-#[rerere]
-#  enabled = true
-[merge]
-  conflictstyle = diff3
-[core]
-  excludesfile = ~/.gitignore
-  preloadindex = true
-  autocrlf = input
-  whitespace = blank-at-eol,space-before-tab,-blank-at-eof
-  splitIndex = true # Helps with large indexes by splitting the index file
+  # Default author name
+  name = Rui Pinheiro
 
+[core]
+  # Set a local excludes file
+  excludesfile = ~/.gitignore
+  # Preload the index in parallel
+  preloadindex = true
+  # Helps with large indexes by splitting the index file
+  splitIndex = true
+  # Don't perform any output conversion with regards to CR/LF
+  autocrlf = input
+  # Warn on specific whitespace issues
+  whitespace = blank-at-eol,space-before-tab,-blank-at-eof
   # The untracked cache makes git status operations on large repos much faster
   # Some file systems do not support it (it relies on directory mtime) so we should not enable it by default
   # Test support by using "git update-index --test-untracked-cache"
   # If the test passes, enable it for the current repo with "git update-index --untracked-cache"
   untrackedCache = keep
+
+[diff]
+  # Use vimdiff for diffs
+  tool = vimdiff
+  # Use a better diff algorithm
+  algorithm = histogram
+
+[difftool]
+  # Do not ask which difftoll to use
+  prompt = false
+
+[rerere]
+  # Do not enable rerere (Reuse Recorded Resolution)
+  enabled = false
+
+[merge]
+  # Set default conflict style
+  conflictstyle = diff3
+
 [push]
+  # Block pushes if submodules are not present on the remote
   recurseSubmodules = check
-  default = upstream # 'git push' by default to tracking branch
+  # 'git push' by default to tracking branch
+  default = upstream
+
 [pull]
+  # Do not automatically rebase when doing 'git pull', only allow fast-forward rebases
   ff = only
+
 [status]
+  # Submarize the submodule status when doing 'git status'
   submodulesummary = 1
+
 [fetch]
+  # Automatically prune stale remote branches on fetch
   prune = 1
 
 [alias]
@@ -173,7 +198,7 @@
   ##################
   # Aliases
   # Better: zsh "git_aliases" helper
-  alias = "!git config -l | grep alias | cut -c 7-"
+  alias = "!git config -l | grep alias | cut -c 7- | sort -u -k1 -t= | sed \"s/ \\+/ /g\""
 
   ##################
   # Branches

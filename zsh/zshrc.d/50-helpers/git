@@ -16,7 +16,9 @@ function git_aliases {
 	# Collect aliases line-by-line
 	gitaliases=$( \
 		git config --get-regexp "^alias\." | \
-		cut -c 7- \
+		cut -c 7- | \
+		sort -u -k1 -t= | \
+		sed 's/ \+/ /g'
 	)
 
 	# Convert alias names to an array

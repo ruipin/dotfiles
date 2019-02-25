@@ -13,6 +13,7 @@ alias lsof='/usr/sbin/lsof'
 alias disk='du * -sh --total'
 alias dua='baobab'
 alias ctags='ctags -f ".tags"'
+alias g='git'
 
 
 #############

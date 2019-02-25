@@ -39,7 +39,7 @@
 
 [push]
   # Block pushes if submodules are not present on the remote
-  recurseSubmodules = check
+  #recurseSubmodules = check
   # 'git push' by default to tracking branch
   default = upstream
 

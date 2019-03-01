@@ -94,9 +94,11 @@
   sa = stash apply
   ss = stash save
 
-  cm = commit -m
   ci = commit
+  cm = commit -m
   ca = commit --amend
+  can = commit --amend --no-edit
+  cam = commit --amend -m
 
   unstage = reset HEAD --
   cbranch = checkout -b

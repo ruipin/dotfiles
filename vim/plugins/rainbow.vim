@@ -6,7 +6,8 @@
 """""""""""""""""""""""""""""""""""""""""
 
 " Load plugin
-Plug 'luochen1990/rainbow'
+" NOTE: Newer commits seem to be broken
+Plug 'luochen1990/rainbow', { 'commit': 'd7bb89e6a6fae25765ee16020ea7a85d43bd6e41' }
 
 " Configuration
 let g:rainbow_active = 1

@@ -21,6 +21,9 @@ let g:gutentags_ctags_tagfile = '.tags'
 " Use cache dir to avoid pollution everything with tags
 let g:gutentags_cache_dir = '~/.vim/tags'
 
+" Don't start gutentags on a gitcommit
+let g:gutentags_exclude_filetypes = ['gitcommit']
+
 """""""
 " Tagbar
 Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }

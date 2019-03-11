@@ -112,9 +112,12 @@
   fetch-all = fetch --all
   fa = !git fetch-all
 
+
   ##############
   # Current revision
-  rev = rev-parse --verify --short HEAD
+  rev    = !bash -c 'git rev-parse --verify --short ${@:-HEAD}' bash
+  abbrev = rev-parse --verify --abbrev-ref
+
 
   ##############
   # Last commit shortcuts
@@ -124,34 +127,24 @@
   dlast = diff --cached HEAD^
   dl = !git dlast
 
+
   ###################
   # Listing
 
   # List commits showing changed files
-  list = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --stat
-  ll = !git list
+  list-changes = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --stat
+  lc           = !git list
 
   # Short list
   le = log --first-parent --oneline --decorate
 
   # List commits in short form, with colors and branch/tag annotations
-  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate
+  ls  = log           --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate
+  lsu = !git ls --graph HEAD @{u}
 
   # List one-line commits with dates
-  lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --date=short
-
-  # List one-line commits with relative dates
-  ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --date=relative
-
-  # history / graph view
-  history = log --graph --full-history --topo-order --all --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\"
-  hist = !git history
-  h = !git history
-  graph = !git history
-
-  lhistory =  "!f() { git log --glob=\"*"${1-$(git rev-parse --abbrev-ref HEAD)}"\" --topo-order --graph --color --date=short --pretty=format:\"%Cred%h %Creset%ad%C(cyan)%d %Creset %s %C(bold)(%an)%Creset\" "${@:2}"; }; f"
-  lhist = !git lhistory
-  lh = !git lhistory
+  ld  = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --date=short
+  ldu = !git ld HEAD @{u}
 
   # List branches (verbose)
   lb = branch -vv
@@ -168,53 +161,94 @@
   file = log -u
   fdiff = !git file
 
-  ###################
-  # Specific commit shortcuts
-  diffc  = "!f() { git diff "$1"^.."$1"; }; f"
-  dc = !git diffc
 
-  listc  = "!f() { git ll "$1"^.."$1"; }; f"
-  lc  = !git listc
+  ###################
+  # Graphing
+
+  # short-hand
+  graph = log --graph --oneline --date=short --pretty=format:\"%Cred%h %C(yellow)%ad%C(cyan)%d%Creset %s %C(bold)(%an)%Creset\"
+  gr  = !git graph
+
+  # graph all branches
+  history = !git graph --full-history --topo-order --all
+  hist = !git history
+  h = !git history
+
+  # graph branches, highlighting their tip
+  graph-branches = "!bash -c 'f(){ \
+      local args=() branches=() less=\"HEAD\" cur_args=0 ; \
+      while [[ \"$#\" -gt 0 ]]; do \
+        if [[ ! -z "$1" ]]; then \
+          case \"$1\" in \
+          \"-a\"|\"--args\") cur_args=1 ; ;; \
+          \"-b\"|\"--branches\") cur_args=0 ; ;; \
+          \"--\") cur_args=\"$((! cur_args))\" ; ;; \
+          *) \
+            if [[ \"$cur_args\" -eq 1 ]]; then \
+              args+=(\"$1\") ; \
+            else \
+              local br=\"$(git rev-parse --verify -q --abbrev-ref \"$1\")\" ; \
+              if [[ ! -z \"$br\" ]]; then \
+                branches+=(\"$br\") ; \
+                less=\"${less}|$br\" ; \
+              fi ; \
+            fi ; \
+          esac ; \
+        fi ; \
+        shift 1 ; \
+      done ; \
+      \
+      [[ \"${#branches[@]}\" -eq 0 ]] && echo \"ERROR: Need to specify at least one valid branch\" && exit 1 ; \
+      \
+      git graph --color \"${args[@]}\" \"${branches[@]}\" \
+       | GREP_COLOR=\"01;7\" grep --color=always -E \"[0-9a-f]{9}.*\\(.*(${less}).*\\)|$\" \
+       | less ; \
+    }; \
+    f \"${@}\"' bash"
+  grb = !git graph-branches
+
+  # graph a current branch, together with its upstream
+  graph-upstream = !bash -c 'echo \"$@\" && git graph-branches -a --first-parent \"${@:2}\" -b \"$(git abbrev -q ${1:-HEAD})\" \"$(git abbrev -q ${1:-HEAD}@{u})\"' bash
+  gru = !git graph-upstream
+
+  # graph current branch
+  lhistory = !git graph-upstream
+  lhist = !git lhistory
+  lh = !git lhistory
+
 
   ##################
   # Search
   grep = grep -Ii
 
+
   ##################
   # Gerrit
-  get-upstream-branch = "!/bin/bash -c 'f(){                                        \
-      BRANCH=\"$(git rev-parse --verify --abbrev-ref @{upstream} 2> /dev/null )\" ; \
-      ORIGIN_BRANCH=\"${BRANCH#origin\\/}\" ;                                       \
-      if [[ -z \"$BRANCH\" || \"$BRANCH\" == \"$ORIGIN_BRACH\" ]]; then             \
-        echo \"$(git rev-parse --verify --abbrev-ref HEAD)\" ;                      \
-        return 0 ;                                                                  \
-      fi ;                                                                          \
-      echo \"${ORIGIN_BRANCH}\" ;                                                   \
-      return 0 ;                                                                    \
-    };                                                                              \
-    f'"
-  publish = !sh -c 'git push origin HEAD:refs/for/${1-$(git get-upstream-branch)} ' -
-  draft   = !sh -c 'git push origin HEAD:refs/for/${1-$(git get-upstream-branch)}%wip ' -
+  get-publish-branch = "!bash -c 'f(){ \
+      BRANCH=\"$(git rev-parse --verify --abbrev-ref ${1}@{upstream} 2> /dev/null )\" ; \
+      ORIGIN_BRANCH=\"${BRANCH#origin\\/}\" ; \
+      if [[ -z \"$BRANCH\" || \"$BRANCH\" == \"$ORIGIN_BRACH\" ]]; then \
+        echo \"$(git rev-parse --verify --abbrev-ref HEAD)\" ; \
+        return 0 ; \
+      fi ; \
+      echo \"${ORIGIN_BRANCH}\" ; \
+      return 0 ; \
+    }; \
+    f \"${@}\"' bash"
+  publish = !sh -c 'git push origin HEAD:refs/for/${1-$(git get-publish-branch)} ' -
+  draft   = !sh -c 'git push origin HEAD:refs/for/${1-$(git get-publish-branch)}%wip ' -
   wip     = !git draft
+
 
   ##################
   # Aliases
   # Better: zsh "git_aliases" helper
   alias = "!git config -l | grep alias | cut -c 7- | sort -u -k1 -t= | sed \"s/ \\+/ /g\""
 
-  ##################
-  # Branches
-
-  # Delete a branch and recreate it from master — useful if you have, say,
-  # a development branch and a master branch and they could conceivably go
-  # out of sync
-  recreate = "!f() { [[ -n $@ ]] && git checkout \"$@\" && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\" }; f"
-
-  # Delete any branches that have been merged into master
-  delete-merged-branches = "!git checkout master && git branch --no-color --merged | grep -v '\\*' | xargs -n 1 git branch -d"
 
   ##################
   # Directory traversal
 
   # Go to git root
   root = rev-parse --show-toplevel
+  dir  = rev-parse --absolute-git-dir

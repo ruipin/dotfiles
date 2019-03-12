@@ -167,48 +167,19 @@
 
   # short-hand
   graph = log --graph --oneline --date=short --pretty=format:\"%Cred%h %C(yellow)%ad%C(cyan)%d%Creset %s %C(bold)(%an)%Creset\"
-  gr  = !git graph
+  gr = !git graph
+
+  # shorthand for 'graph --first-parent'
+  graph-first = graph --first-parent
+  grf = !git graph-first
 
   # graph all branches
   history = !git graph --full-history --topo-order --all
   hist = !git history
   h = !git history
 
-  # graph branches, highlighting their tip
-  graph-branches = "!bash -c 'f(){ \
-      local args=() branches=() less=\"HEAD\" cur_args=0 ; \
-      while [[ \"$#\" -gt 0 ]]; do \
-        if [[ ! -z "$1" ]]; then \
-          case \"$1\" in \
-          \"-a\"|\"--args\") cur_args=1 ; ;; \
-          \"-b\"|\"--branches\") cur_args=0 ; ;; \
-          \"--\") cur_args=\"$((! cur_args))\" ; ;; \
-          *) \
-            if [[ \"$cur_args\" -eq 1 ]]; then \
-              args+=(\"$1\") ; \
-            else \
-              local br=\"$(git rev-parse --verify -q --abbrev-ref \"$1\")\" ; \
-              if [[ ! -z \"$br\" ]]; then \
-                branches+=(\"$br\") ; \
-                less=\"${less}|$br\" ; \
-              fi ; \
-            fi ; \
-          esac ; \
-        fi ; \
-        shift 1 ; \
-      done ; \
-      \
-      [[ \"${#branches[@]}\" -eq 0 ]] && echo \"ERROR: Need to specify at least one valid branch\" && exit 1 ; \
-      \
-      git graph --color \"${args[@]}\" \"${branches[@]}\" \
-       | GREP_COLOR=\"01;7\" grep --color=always -E \"[0-9a-f]{9}.*\\(.*(${less}).*\\)|$\" \
-       | less ; \
-    }; \
-    f \"${@}\"' bash"
-  grb = !git graph-branches
-
   # graph a current branch, together with its upstream
-  graph-upstream = !bash -c 'echo \"$@\" && git graph-branches -a --first-parent \"${@:2}\" -b \"$(git abbrev -q ${1:-HEAD})\" \"$(git abbrev -q ${1:-HEAD}@{u})\"' bash
+  graph-upstream = !bash -c 'git graph --first-parent $(git abbrev -q ${1:-HEAD}) $(git abbrev -q ${1:-HEAD}@{u}) \"${@:2}\"' bash
   gru = !git graph-upstream
 
   # graph current branch

@@ -4,6 +4,9 @@
 #
 # git-related helpers
 
+# Custom git shell commands
+path_append "$DOTFILES/git/commands"
+
 # shell aliases for git
 alias git-root="cd \$(git rev-parse --show-toplevel)"
 

@@ -48,6 +48,11 @@ function _parse_args {
       "--no-alias")
         use_alias=0
         ;;
+      # Special git-log arguments that have a second parameter, e.g. '-n <number>'
+      "-n")
+        git_args+=("$1" "$2")
+        shift 1
+        ;;
       # used to distinguish refs from files
       "--")
         saw_files=1

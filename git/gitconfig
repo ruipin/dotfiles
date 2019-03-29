@@ -88,7 +88,7 @@
 
   s = status -s
   statustr = status --untracked-files=no
-  str = !git s --untracked-files no
+  str = !git s --untracked-files=no
 
   sl = stash list
   sa = stash apply
@@ -115,8 +115,11 @@
 
   ##############
   # Current revision
-  rev    = !sh -c 'git rev-parse --verify --short ${@-HEAD}' -
-  abbrev = !sh -c 'git rev-parse --verify --abbrev-ref ${@-HEAD}' -
+  # NOTE: Separate quiet versions are necessary to guarantee the output is really silent ('-q' is not enough)
+  rev      = !sh -c 'git rev-parse --verify --short    \"${@-HEAD}\"' -
+  rev-q    = !sh -c 'git rev-parse --verify --short -q \"${@-HEAD}\" 2> /dev/null' -
+  abbrev   = !sh -c 'git rev-parse --verify --abbrev-ref    \"${@-HEAD}\"' -
+  abbrev-q = !sh -c 'git rev-parse --verify --abbrev-ref -q \"${@-HEAD}\" 2> /dev/null' -
 
 
   ##############
@@ -132,22 +135,12 @@
   # Listing
 
   # List commits showing changed files
-  list-changes = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --stat
+  list-changes = log --pretty=format:\"%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]\" --first-parent --decorate --stat
   lc           = !git list
-
-  # Short list
-  le = log --first-parent --oneline --decorate
-
-  # List commits in short form, with colors and branch/tag annotations
-  ls  = log           --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate
-  lsu = !git ls --graph HEAD @{u}
-
-  # List one-line commits with dates
-  ld  = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --first-parent --decorate --date=short
-  ldu = !git ld HEAD @{u}
 
   # List branches (verbose)
   lb = branch -vv
+  bv = branch -vv
 
   # List commits not in upstream
   lpush = !git graph @{upstream}..HEAD
@@ -169,17 +162,13 @@
   graph = log --graph --oneline --date=short --pretty=format:\"%Cred%h %C(yellow)%ad%C(cyan)%d%Creset %s %C(bold)(%an)%Creset\"
   gr = !git graph
 
-  # shorthand for 'graph --first-parent'
-  graph-first = graph --first-parent
-  grf = !git graph-first
-
   # graph all branches
-  history = !git graph --full-history --topo-order
+  history = !sh -c 'git graph --full-history \"${1-HEAD}\" $(git abbrev-q \"${1-HEAD}@{u}\") \"${@:2}\"' -
   hist = !git history
   h = !git history
 
   # graph a current branch, together with its upstream
-  graph-upstream = !sh -c 'git graph --first-parent $(git abbrev -q ${1-HEAD}) $(git abbrev -q ${1-HEAD}@{u}) \"${@:2}\"' -
+  graph-upstream = !sh -c 'git graph --first-parent \"${1-HEAD}\" $(git abbrev-q \"${1-HEAD}@{u}\") \"${@:2}\"' -
   gru = !git graph-upstream
 
   # graph current branch
@@ -197,10 +186,10 @@
   # Gerrit
   get-publish-branch = "!bash -c 'f(){ \
       BRANCH_IN=\"${1:-HEAD}\" ; \
-      BRANCH=\"$(git rev-parse --verify --abbrev-ref -q ${BRANCH_IN}@{u} 2> /dev/null )\" ; \
+      BRANCH=\"$(git abbrev-q \"${BRANCH_IN}@{u}\")\" ; \
       ORIGIN_BRANCH=\"${BRANCH#origin\\/}\" ; \
       if [[ -z \"$ORIGIN_BRANCH\" || \"$BRANCH\" == \"$ORIGIN_BRACH\" ]]; then \
-        BRANCH=\"$(git rev-parse --verify --abbrev-ref -q ${BRANCH_IN} 2> /dev/null )\" ; \
+        BRANCH=\"$(git abbrev-q \"${BRANCH_IN}\")\" ; \
         if [[ -z \"$BRANCH\" ]]; then \
           echo \"$BRANCH_IN\" ; \
         else \
@@ -212,9 +201,10 @@
       return 0 ; \
     }; \
     f \"$@\" ' -"
-  publish = !sh -c 'git push origin ${2-HEAD}:refs/for/${1-$(git get-publish-branch)} ' -
-  draft   = !sh -c 'git push origin ${2-HEAD}:refs/for/${1-$(git get-publish-branch)%wip} ' -
+  publish = !sh -c 'git push origin \"${2-HEAD}:refs/for/${1-$(git get-publish-branch)}\" ' -
+  draft   = !sh -c 'git push origin \"${2-HEAD}:refs/for/${1-$(git get-publish-branch)}%wip\" ' -
   wip     = !git draft
+  private = !sh -c 'git push origin \"${2-HEAD}:refs/for/${1-$(git get-publish-branch)}%private\" ' -
 
 
   ##################

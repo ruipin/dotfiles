@@ -4,5 +4,5 @@
 #
 # Refresh the HOST/HOSTNAME environment variables
 
-export HOST="$(hostname)"
+export HOST="$(hostname -f)"
 export HOSTNAME="$HOST"

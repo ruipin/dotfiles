@@ -12,6 +12,11 @@ if [[ -z "$LOCAL_BUILD_FOLDER" ]]; then
 	exit -1
 fi
 
+if [[ -z "$LOCAL_PREFIX" ]]; then
+	echo "Please define \$LOCAL_PREFIX"
+	exit -2
+fi
+
 # Save current PWD
 export OLD_PWD="$PWD"
 

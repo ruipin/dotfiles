@@ -104,18 +104,19 @@ function _parse_cfg {
 
     # Correct shell expansion to fix quotes in the middle of strings
     local saw_quotes=""
+    local ca_len=0
     while [[ "${#tmp_cfg_args[@]}" -gt "0" ]]; do
       local x="${tmp_cfg_args[0]}"
 
       # Find unterminated quotes inside parameters
       if [[ ! -z "$saw_quotes" ]]; then
         [[ "$x" == !(*\\)"$saw_quotes" ]] && saw_quotes=""
-        cfg_args[-1]="${cfg_args[-1]} $x"
-
+        cfg_args[${ca_len}-1]="${cfg_args[${ca_len}-1]} $x"
       else
         [[ "$x" == !(*\'*)'"'* ]] && saw_quotes='"'
         [[ "$x" == !(*\"*)"'"* ]] && saw_quotes="'"
         cfg_args+=("$x")
+        ca_len="${#cfg_args[@]}"
       fi
 
       tmp_cfg_args=("${tmp_cfg_args[@]:1}")
@@ -217,12 +218,12 @@ if [[ "$LANG" != *'utf8'* ]]; then
 
 else
   # make the graph prettier
-  commit_sym=$'\u25cf'
-  merge_sym=$'\u25d0'
+  commit_sym=$'●'
+  merge_sym=$'◐'
 
-  sed_exprs+=(-e '~s~\|~'$'\u2502''~g') # |
-  sed_exprs+=(-e '~s~/~'$'\u2571''~g' ) # /
-  sed_exprs+=(-e '~s~\\~'$'\u2572''~g') # \
+  sed_exprs+=(-e '~s~\|~│~g') # |
+  sed_exprs+=(-e '~s~/~╱~g' ) # /
+  sed_exprs+=(-e '~s~\\~╲~g') # \
 fi
 
 

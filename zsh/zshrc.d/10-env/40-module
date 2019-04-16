@@ -27,9 +27,14 @@ function init_custom_module {
 	function _module_wrap {
 		#echo_debug "$0 $*" "_module_wrap"
 
+		# Store variables that are discarded by modules-init
+		local tz="$TZ"
+
+		# Initialize module subsystem
 		source_sh $DEPOT_SETUP_ROOT/init/sh.d/modules-init
 		source_sh $DEPOT_SETUP_ROOT/init/sh.d/shell-config
 
+		# Wrap module subsystem
 		eval "function _orig_$( typeset -f module )"
 
 		function module {
@@ -37,8 +42,14 @@ function init_custom_module {
 		}
 
 		_module_wrapped=1
+
+		# Purge existing modules and load defaults
 		module orig purge
 		[[ ! -z "$_module_defaults" ]] && module load $@ $_module_defaults || return $?
+
+		# Restore variables
+		[[ ! -z "$tz" ]] && export TZ="$tz"
+
 		return 0
 	}
 

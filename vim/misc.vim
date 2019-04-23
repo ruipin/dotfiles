@@ -38,6 +38,14 @@ set updatetime=1000
 " When moving up/down, always keep the same column if possible
 set nostartofline
 
+" Back up files
+let g:backupdir = $HOME . "/.vim/backup"
+if !isdirectory(g:backupdir)
+    call mkdir(g:backupdir, "p")
+endif
+exe 'set backupdir=' . g:backupdir . '//'
+set backup
+
 " When wrapping long lines, try to keep indent
 if has("patch-7.4.354")
 	set breakindent

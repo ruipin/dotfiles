@@ -4,58 +4,98 @@
 #
 # zsh auto-completion configuration
 
-####################
-# Completion style
-zstyle ':completion:*' use-cache on
+function init_completion {
+	####################
+	# Completion style
+	# See manpage at http://zsh.sourceforge.net/Doc/Release/Completion-System.html for documentation
 
-zstyle ':completion:*' completer _complete _match _approximate:-one #_approximate:-two
-zstyle ':completion:*:approximate-one:*' max-errors 1
-zstyle ':completion:*:approximate-two:*' max-errors 2
+	# Enable cache to speed up completion
+	zstyle ':completion:*' use-cache on
 
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*:descriptions' format '%B%d%b'
-zstyle ':completion:*:messages' format '%d'
-zstyle ':completion:*:warnings' format 'No matches for: %d'
+	# Matchers (for '_complete'/'_match')
+	# See http://zsh.sourceforge.net/Doc/Release/Completion-Widgets.html#Completion-Matching-Control for documentation
+	local matchers=(
+		''                     # default completion (case-sensitive match)
+		'+m:{a-zA-Z}={A-Za-z}' # case-insensitive match
+		'r:|=*'                # right-anchored completion
+		'r:|[._-/]=* r:|=*'    # ._-/ delimited right-anchored completion + right-anchored completion
+	)
+	zstyle ':completion:*' matcher-list ${matchers}
 
-zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-zstyle ':completion:*' special-dirs true #completion for cd ..
-zstyle ':completion:*:sudo::' environ PATH="$PATH:/sbin:/usr/sbin" #Update autocompletion path for sudo
-# Completion for cd ..
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+	local matchers_left=(
+		'l:|=*'                # left-anchored completion
+		'+r:|=*'               # + right-anchored completion
+	)
+	zstyle ':completion:*:left:*' matcher-list ${matchers_left}
 
-####################
-# Shell options
+	# Completers
+	zstyle ':completion:*:approximate-one:*' max-errors 1
+	zstyle ':completion:*:approximate-two:*' max-errors 2
 
-# For ambiguous completion, show completion menu on succesive tab press
-setopt auto_menu
+	local completers=(
+		'_complete'        # completion
+		'_match'           # completion with glob patterns as well
+		'_complete:left'   # completion, left-anchored
+		'_approximate:one' # approximate/fuzzy completion, up to one correction allowed
+		#'_approximate:two' # approximate/fuzzy completion, up to two corrections allowed
+	)
+	zstyle ':completion:*' completer ${completers}
 
-# For ambiguous completion, only start menu-completion after pressing tab again
-unsetopt menu_complete
+	# Autocompletion formatting
+	zstyle ':completion:*' verbose yes
+	zstyle ':completion:*:descriptions' format '%B%d%b'
+	zstyle ':completion:*:messages' format '%d'
+	zstyle ':completion:*:warnings' format 'No matches for: %d'
 
-# Show list of ambiguous matches immediately, without needing to press tab again
-unsetopt list_ambiguous
+	# Unconditionally use menu selection autocompletion but only start it with the second TAB press
+	zstyle ':completion:*' menu select
+	# Start selection immediately with the left-anchored completer
+	zstyle ':completion:*:left:*' menu true select
 
-# Complete at cursor position (ie: "M[CURSOR]file" to "Makefile")
-setopt complete_in_word
+	# Add '.' and '..' as possible autocompletion results
+	zstyle ':completion:*' special-dirs true
+	# Autocompletion dircolors support
+	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-# Show list of completions per row, instead of per column
-setopt list_rows_first
+	# Override auto-completion path for 'sudo'
+	zstyle ':completion:*:sudo::' environ PATH="$PATH:/sbin:/usr/sbin" #Update autocompletion path for sudo
 
-# Try to make the completion lists as small as possible
-setopt list_packed
+	####################
+	# Shell options
 
-# Cursor is moved to end of word after completion
-setopt always_to_end
+	# Show list of ambiguous matches immediately, without needing to press tab again
+	unsetopt list_ambiguous
 
-####################
-# Initialize completion
-fpath=(~zsh/completion $fpath)
-autoload -U compinit
-compinit #-C -i
+	# For ambiguous completion, start a menu completion on a successive tab press
+	setopt auto_menu
+	unsetopt menu_complete
 
-####################
-# Disable ~<user> directory autocompletion as it's slow in systems with a lot of users
-function _users {
-	compadd -X "users" "$USER" 
+	# Complete at cursor position (ie: "M[CURSOR]file" to "Makefile")
+	setopt complete_in_word
+
+	# Show list of completions per row, instead of per column
+	setopt list_rows_first
+
+	# Try to make the completion lists as small as possible
+	setopt list_packed
+
+	# Cursor is moved to end of word after completion
+	setopt always_to_end
+
+	####################
+	# Initialize completion
+	fpath=(~zsh/completion $fpath)
+	autoload -U compinit
+	compinit #-C -i
+
+	####################
+	# Disable ~<user> directory autocompletion as it's slow in systems with a lot of users
+	function _users {
+		compadd -X "users" "$USER" 
+	}
+
+	####################
+	# Unset function to avoid accidental calls
+	unfunction "$0"
 }
+init_completion

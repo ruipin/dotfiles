@@ -22,7 +22,7 @@ let g:gutentags_ctags_tagfile = '.tags'
 let g:gutentags_cache_dir = '~/.vim/tags'
 
 " Don't start gutentags on a gitcommit
-let g:gutentags_exclude_filetypes = ['gitcommit']
+let g:gutentags_exclude_filetypes = ['gitcommit','gitrebase']
 
 """""""
 " Tagbar

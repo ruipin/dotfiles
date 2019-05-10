@@ -112,6 +112,8 @@
   fetch-all = fetch --all
   fa = !git fetch-all
 
+  praise = blame
+
 
   ##############
   # Current revision

@@ -64,6 +64,7 @@
   cp = cherry-pick
   cl = clone
   co = checkout
+  cou = !sh -c 'git checkout -B \"${1}\" \"${1}@{u}\"' -
   b = branch
 
   rb = rebase

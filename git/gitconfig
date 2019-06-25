@@ -26,7 +26,7 @@
   algorithm = histogram
 
 [difftool]
-  # Do not ask which difftoll to use
+  # Do not ask which difftool to use
   prompt = false
 
 [rerere]

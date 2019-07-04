@@ -87,17 +87,19 @@
   resethu = reset --hard @{u}
   rsthu   = reset --hard @{u}
 
-  s = status -s
-  statustr = status --untracked-files=no
-  str = !git s --untracked-files=no
+  st       = status
+  s        = status -s
+  statustr = status  --untracked-files=no
+  sttr     = !git st --untracked-files=no
+  str      = !git s  --untracked-files=no
 
   sl = stash list
   sa = stash apply
   ss = stash save
 
-  ci = commit
-  cm = commit -m
-  ca = commit --amend
+  ci  = commit
+  cm  = commit -m
+  ca  = commit --amend
   can = commit --amend --no-edit
   cam = commit --amend -m
 
@@ -114,6 +116,11 @@
   fa = !git fetch-all
 
   praise = blame
+
+  # Status
+  slow-status = status --untracked-files=normal --ignore-submodules=none
+  slow-st     = !git slow-status
+  slow-s      = !git slow-status -s
 
 
   ##############

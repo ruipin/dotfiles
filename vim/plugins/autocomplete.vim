@@ -23,6 +23,11 @@ if has('nvim')
 	" Enable deoplete.
 	let g:deoplete#enable_at_startup = 1"
 
+	autocmd VimEnter * call deoplete#custom#option({
+	\ 'auto_complete_delay': 500,
+	\ 'max_list': 10
+	\})
+
 " Vim
 else
 	if has('lua')

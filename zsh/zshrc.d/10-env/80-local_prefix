@@ -4,6 +4,14 @@
 #
 # Sets up a local prefix folder
 
+# Use a OS-specific local prefix if it is present
+if [[ ! -z "${ZSH_OS}" && ! "${LOCAL_PREFIX}" == *"_${ZSH_OS}" && -d "${LOCAL_PREFIX}_${ZSH_OS}" ]]; then
+	LOCAL_PREFIX="${LOCAL_PREFIX}_${ZSH_OS}"
+fi
+# Use a arch-specific local prefix if it is present
+if [[ ! -z "${ZSH_ARCH}" && ! "${LOCAL_PREFIX}" == *"_${ZSH_ARCH}" && -d "${LOCAL_PREFIX}_${ZSH_ARCH}" ]]; then
+	LOCAL_PREFIX="${LOCAL_PREFIX}_${ZSH_ARCH}"
+fi
 
 function activate_local_prefix {
 	# Do nothing is no local prefix is defined

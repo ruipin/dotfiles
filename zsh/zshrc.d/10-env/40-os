@@ -1,0 +1,152 @@
+#########################################
+# env/os
+# Author: Rui Pinheiro
+#
+# Set of methods, functions to detect the current OS
+
+function _reset_os_info {
+	typeset -g ZSH_OS=""
+	typeset -g ZSH_OSNAME=""
+	typeset -g ZSH_OSVER=""
+	typeset -g ZSH_ARCH=""
+	typeset -g ZSH_BITS=""
+}
+
+function has_os_info {
+	[[ -z "$ZSH_OS"     ]] && return 1
+	[[ -z "$ZSH_OSNAME" ]] && return 2
+	[[ -z "$ZSH_ARCH"   ]] && return 3
+	return 0
+}
+
+function _parse_arch_string {
+	local mach_type="${1:l}" use_default="${2-0}"
+	local arch="" bits=0
+
+	case "${mach_type}" in
+		*"x86_64"*)
+			arch="x86_64"
+			bits=64
+			;;
+		*"x86"*)
+			arch="x86"
+			bits=32
+			;;
+	esac
+
+	if is_true "$use_default" ; then
+		arch="${mach_type}"
+
+		case "$mach_type" in
+			*"64"*)
+				bits=64
+				;;
+			*"32"*)
+				bits=32
+				;;
+		esac
+	fi
+
+	# Apply changes
+	ZSH_ARCH="$arch"
+	ZSH_BITS="$bits"
+}
+
+function _parse_lsf_host_type {
+	# Arch Info
+	[[ ! -z "$MACHTYPE" ]] && _parse_arch_string "$MACHTYPE"
+	[[ -z "$ZSH_ARCH" ]] && _parse_arch_string "$HOSTTYPE"
+
+	# OS Info
+	case "${HOSTTYPE:l}" in
+		*rhel#7*)
+			ZSH_OS="rhe7"
+			ZSH_OSNAME="rhe"
+			ZSH_OSVER=7
+			;;
+		*rhel#6*)
+			ZSH_OS="rhe6"
+			ZSH_OSNAME="rhe"
+			ZSH_OSVER=6
+			;;
+	esac
+}
+
+function refresh_os_info {
+	_reset_os_info
+
+	[[ ! -z "$HOSTTYPE" ]] && _parse_lsf_host_type
+	has_os_info && return 0
+
+	# Architecture
+	if [[ -z "$ZSH_ARCH" || -z "$ZSH_BITS" ]]; then
+		local uname_m="$(uname -m)"
+		_parse_arch_string "$uname_m" 1
+	fi
+	has_os_info && return 0
+
+	# OS
+	local osname="" osver=""
+
+	# freedesktop.org and systemd
+	if [[ -f /etc/os-release ]]; then
+		local arr=($(
+			source /etc/os-release
+			echo "$ID"
+			echo "$VERSION_ID"
+		))
+		osname="${arr[1]}"
+		osver="${arr[2]}"
+
+	# linuxbase.org
+	elif in_path "lsb_release"; then
+		osname="$(lsb_release -si)"
+		osver="$(lsb_release -sr)"
+
+	# For some versions of Debian/Ubuntu without lsb_release command
+	elif [[ -f "/etc/lsb-release" ]]; then
+		local arr=($(
+			source /etc/lsb-release
+			echo "$DISTRIB_ID"
+			echo "$DISTRIB_RELEASE"
+		))
+		osname="${arr[1]}"
+		osver="${arr[2]}"
+
+	# Older Debian/Ubuntu/etc.
+	elif [[ -f "/etc/debian_version" ]]; then
+		osname="debian"
+
+	# Older SuSE
+	elif [[ -f "/etc/SuSe-release" ]]; then
+		osname="suse"
+
+	# Older Red Hat, CentOS, etc
+	elif [[ -f "/etc/redhat-release" ]]; then
+		osname="rhe"
+
+	else
+		# Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+		OS="$(uname -s)"
+		VER="$(uname -r)"
+	fi
+
+	# Post-process OSNAME / OSVER
+	osname="${osname:l}"
+	osver="${osver:l}"
+
+	if [[ "$osname" == "redhatenterpriseserver" || "$osname" == "rhel" ]]; then
+		osname="rhe"
+		osver="${osver%%.*}"
+	fi
+
+	# Apply results
+	ZSH_OSNAME="$osname"
+	ZSH_OSVER="$osver"
+	ZSH_OS="${osname}${osver}"
+
+	return 0
+}
+
+# Refresh OS info once at shell startup
+refresh_os_info

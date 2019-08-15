@@ -32,6 +32,8 @@ let g:airline#extensions#tabline#buf_label_first = 0
 let g:airline#extensions#tabline#ellipsis = "\u22ef"
 let g:airline#extensions#tabline#pad_with_spaces = 1
 
+let g:airline#extensions#gutentags#enabled = 1
+
 " Add the window number in front of the mode
 function! WindowNumber(...)
 	let builder = a:1

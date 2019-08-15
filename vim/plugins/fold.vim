@@ -37,3 +37,19 @@ endfunction
 " In normal/visual mode, use Space to toggle folds
 nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 vnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+
+
+""""
+" Treat folds as text objects
+
+" vim-textobj-fold
+" Adds the following text objects:
+" <count>az : A folding (and line above)
+" <count>iz : Inner folding (no line above)
+Plug 'kana/vim-textobj-fold'
+
+
+"xnoremap iz :<C-U>silent!normal![zV]z<CR>
+"onoremap iz :normal viz<CR>
+"xnoremap az :<C-U>silent!normal![zkVj]zj<CR>
+"onoremap az :normal vaz<CR>

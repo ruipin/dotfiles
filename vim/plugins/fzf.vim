@@ -13,7 +13,8 @@ Plug 'junegunn/fzf.vim'
 " Key bindings
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>g :GitFiles<CR>
-nnoremap <C-P> :Files<CR>
+nnoremap <C-P>     :Files<CR>
+nnoremap <leader>t :Tags<CR>
 
 " Remap bindings
 let $FZF_DEFAULT_OPTS = "--bind shift-tab:toggle-all"

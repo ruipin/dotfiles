@@ -10,6 +10,11 @@ if has('nvim')
 else
 	call plug#begin('~/.vim/plugged')
 endif
+	" Can be used to create new text objects
+	" Some plugins depend on this
+	Plug 'kana/vim-textobj-user'
+
+
 	"""""""""""
 	" Plugins with separate configuration
 
@@ -30,11 +35,11 @@ endif
 	" Fold
 	call SourceDotfile('plugins/fold.vim')
 
-	" System Verilog highligting
+	" System Verilog highlighting
 	call SourceDotfile('plugins/system_verilog.vim')
 
-	" indentLine
-	call SourceDotfile('plugins/indentline.vim')
+	" indent
+	call SourceDotfile('plugins/indent.vim')
 
 	" EasyAlign
 	call SourceDotfile('plugins/easyalign.vim')
@@ -65,8 +70,11 @@ endif
 	" vim-json: Better JSON formatting
 	call SourceDotfile('plugins/json.vim')
 
+	" Git plugins
 	" Gitgutter: Shows signs for added, modifed, removed lines in current git repo
-	call SourceDotfile('plugins/gitgutter.vim')
+	" Fugitive: Git vim commands
+	call SourceDotfile('plugins/git.vim')
+
 
 	"""""""""""""""
 	" Other plugins
@@ -100,7 +108,7 @@ endif
 
 	" Vim-Minimap
 	" NOTE: Requires Braille glyph support
-	Plug 'severin-lemaignan/vim-minimap', { 'on': ['Minimap'] }
+	"Plug 'severin-lemaignan/vim-minimap', { 'on': ['Minimap'] }
 
 	" HiLinkTrace - debug highlight groups using :HLT
 	Plug 'gerw/vim-HiLinkTrace', { 'on': ['HLT', 'HLT!'] }
@@ -113,7 +121,7 @@ endif
 	Plug 'tpope/vim-commentary'
 
 	" vc.vim: VCS commands
-	Plug 'juneedahamed/vc.vim'
+	"Plug 'juneedahamed/vc.vim'
 
 
 call plug#end()

@@ -1,12 +1,13 @@
 """""""""""""""""""""""""""""""""""""""""
-" gitgutter.vim
+" git.vim
 " Author: Rui Pinheiro
 "
-" Gitgutter plugin and related configuration
+" Git plugins and related configuration
 """""""""""""""""""""""""""""""""""""""""
 
 " Load plugins
 Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
 
 """"
 " Configuration

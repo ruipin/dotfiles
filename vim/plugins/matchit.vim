@@ -39,4 +39,4 @@ let g:matchup_delim_noskips = 2
 let g:matchup_matchparen_deferred = 1
 
 " Highlight surrounding delimiters (requires deferred highlighting)
-let g:matchup_matchparen_hi_surround_always = 1
+let g:matchup_matchparen_hi_surround_always = 0

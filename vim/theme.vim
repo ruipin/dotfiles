@@ -79,3 +79,21 @@ set laststatus=2
 " Only redraw modified parts of the screen
 "set lazyredraw
 "set ttyfast
+
+" GUI
+"set guifont=MesloLGSDZ\ Nerd\ Font\ Mono:h10
+set linespace=0
+
+autocmd VimEnter * call SetupNeovimQt()
+function SetupNeovimQt()
+	if exists('g:GuiLoaded')
+		" force font
+		GuiFont! MesloLGSDZ Nerd Font Mono:h10
+
+		" disable automatic mouse hiding
+		call GuiMousehide(0)
+
+		" disable Tabline
+		GuiTabline 0
+	endif
+endfunction

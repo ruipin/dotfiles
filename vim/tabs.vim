@@ -112,9 +112,9 @@ let g:default_concealcursor = "nc"
 
 function! ShowBlanks()
 	let g:blanks_shown=1
-	hi SpecialKey ctermfg=240 ctermbg=NONE
-	hi Conceal    ctermfg=240 ctermbg=NONE
-	hi NonText    ctermfg=240 ctermbg=NONE
+	hi SpecialKey ctermfg=240 ctermbg=NONE guifg=gray30 guibg=NONE
+	hi Conceal    ctermfg=240 ctermbg=NONE guifg=gray30 guibg=NONE
+	hi NonText    ctermfg=240 ctermbg=NONE guifg=gray30 guibg=NONE
 	if has('nvim')
 		set conceallevel=2
 		set concealcursor=nvic
@@ -132,9 +132,9 @@ endfunction
 function! HideBlanks()
 	let g:blanks_shown=0
 	" Default values:
-	hi SpecialKey ctermfg=238 ctermbg=NONE
-	hi Conceal    ctermfg=238 ctermbg=NONE
-	hi NonText    ctermfg=238 ctermbg=NONE
+	hi SpecialKey ctermfg=238 ctermbg=NONE guifg=gray26 guibg=NONE
+	hi Conceal    ctermfg=238 ctermbg=NONE guifg=gray26 guibg=NONE
+	hi NonText    ctermfg=238 ctermbg=NONE guifg=gray26 guibg=NONE
 	if has('nvim')
 		set conceallevel=2
 		exe "set concealcursor=".g:default_concealcursor

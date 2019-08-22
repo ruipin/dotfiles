@@ -27,8 +27,8 @@ let g:fastfold_fold_command_suffixes = ['x','X','a','A','o','O','c','C','r','R',
 """""
 " Color scheme
 function SetFoldColorScheme()
-	hi FoldColumn cterm=bold ctermfg=167 ctermbg=black
-	hi Folded cterm=bold ctermfg=167 ctermbg=52
+	hi FoldColumn cterm=bold ctermfg=167 ctermbg=black guifg=PaleVioletRed guibg=#073642
+	hi Folded     cterm=bold ctermfg=167 ctermbg=52    guifg=PaleVioletRed guibg=Maroon
 endfunction
 
 """""

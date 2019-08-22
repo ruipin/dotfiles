@@ -33,7 +33,8 @@ let g:rainbow_active = 1
 	endfunction
 
 let g:rainbow_conf = {
-\  'ctermfgs': ['Darkblue', '34', 'darkred', '207', 'brown', '129', '202', '12'],
+\  'ctermfgs': ['DarkBlue', '34', 'DarkRed', '207', 'brown', '129', '202', '12'],
+\  'guifgs': ['CornflowerBlue', 'Green', 'DarkRed', 'HotPink', 'SaddleBrown', 'MediumPurple', 'OrangeRed', 'PaleGreen'],
 \  'operators': CreateRainbowParenthesesOperators(),
 \  'parentheses': ['start=/(/ skip=/\/\/.*$/ end=/)/ fold extend'],
 \  'separately': {

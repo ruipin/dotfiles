@@ -9,34 +9,44 @@
 alias tmux='tmux -u -2'
 
 ##########
+
+function tmux_has_session {
+	[[ -z "$@" ]] && echo_error "No session name provided." "$0" && return 1
+
+	tmux has-session -t "$@" > /dev/null 2>&1
+}
+
 # Tmux helper: Create new session, attach to main session if it exists
 function tmux_new {
-	if [[ ! -z "$@" ]]; then
-		tmux new $@
-		return $?
-	fi
-
+	# Sanity check
 	if [[ ! -z "$TMUX" ]]; then
-		echo_error "Already inside a tmux session" "tmux_new"
+		echo_error "Already inside a tmux session" "$0"
 		return 1
 	fi
 
-	local has_session
-	tmux has-session -t "$TMUX_MAIN_SESSION" > /dev/null 2>&1
-	has_session=$?
+	local session_name="${1:-${TMUX_MAIN_SESSION}}"
+	[[ -z "$session_name" ]] && echo_error "\$session_name needs to be set" "$0" && return 1
 
-	# If main session doesn't exist, create it (in detached form)
-	if [[ "$has_session" -ne "0" ]]; then
-		echo_info "Creating tmux session \"$TMUX_MAIN_SESSION\"..." "tmux_new"
-		tmux new -s "$TMUX_MAIN_SESSION" -d
+	# If session doesn't exist, create it (in detached form)
+	if ! tmux_has_session "$session_name" ; then
+		echo_info "Creating tmux session \"$session_name\"..." "$0"
+		tmux new -s "$session_name" -d
 	fi
 
-	# Attach to the main session
-	echo_info "Attaching to tmux session \"$TMUX_MAIN_SESSION\"..." "tmux_new"
-	tmux_set_env
-	tmux new -t "$TMUX_MAIN_SESSION"
+	# Attach to the session
+	local i=0
+	while true ; do
+		i=$((i+1))
 
-	echo_info "Done." "tmux_new"
+		if ! tmux_has_session "$session_name-$i" ; then
+			echo_info "Creating tmux session \"$session_name-$i\"..." "$0"
+			tmux new -t "$session_name" -s "$session_name-$i"
+			break
+		fi
+	done
+
+	# Done
+	echo_info "Done." "$0"
 	return 0
 }
 
@@ -44,9 +54,13 @@ function tmux_new {
 typeset -g _tmux_env_variables=("SSH_AUTH_SOCK" "DISPLAY" "SSH_CONNECTION")
 
 function tmux_set_env {
+	local args=()
+
+	[[ ! -z "$1" ]] && args+=("-t" "$1")
+
 	for var in $_tmux_env_variables ; do
 		echo_info "\"$var\"=\"${(P)var}\"" "tmux_set_env"
-		tmux set-environment -g "$var" "${(P)var}"
+		tmux set-environment $args -g "$var" "${(P)var}"
 	done
 }
 
@@ -79,6 +93,7 @@ function tmux_load_env {
 	done
 }
 
+alias t='tmux'
 alias tn="tmux_new"
 alias ta="tmux attach"
 alias tl="tmux list-sessions"

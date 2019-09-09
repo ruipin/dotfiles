@@ -25,7 +25,7 @@ setw -g pane-base-index 1
 
 # Titles
 set -g set-titles on
-set -g set-titles-string "tmux (#I:#W)"
+set -g set-titles-string "#S (#I:#W)"
 
 
 ################################
@@ -33,7 +33,7 @@ set -g set-titles-string "tmux (#I:#W)"
 set -g status-position bottom
 set -g status-style fg=colour137,bg=colour234,dim
 set -g status-left ''
-set -g status-right '#[fg=colour231,bg=colour04]#(tmux show-option -qv key-table)#{prefix_highlight} #(hostname) #{cpu_fg_color}#{cpu_percentage} #[fg=colour233,bg=colour241,bold] %d/%m #[fg=colour233,bg=colour245,bold] %H:%M:%S '
+set -g status-right '#[fg=colour231,bg=colour04]#(tmux show-option -qv key-table)#{prefix_highlight} #(hostname) #S #{cpu_fg_color}#{cpu_percentage} #[fg=colour233,bg=colour241,bold] %d/%m #[fg=colour233,bg=colour245,bold] %H:%M:%S '
 set -g status-right-length 50
 set -g status-left-length 20
 

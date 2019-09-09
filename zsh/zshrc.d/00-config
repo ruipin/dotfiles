@@ -56,4 +56,4 @@ typeset -g ZSH_MKPROMPT_CACHE=0
 
 ########################
 # Tmux
-typeset -g TMUX_MAIN_SESSION="main"
+typeset -g TMUX_MAIN_SESSION="tmux"

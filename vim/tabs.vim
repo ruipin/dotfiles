@@ -14,6 +14,8 @@ set autoindent
 
 if g:expand_tabs
 	set expandtab
+else
+	set noexpandtab
 endif
 
 " Some filetypes ignore the above settings
@@ -30,6 +32,7 @@ function! AutoFileTypeSetl(ftype,...)
 endfunction
 
 call AutoFileTypeSetl('python')
+call AutoFileTypeSetl('ruby')
 
 
 """""""""""""""""

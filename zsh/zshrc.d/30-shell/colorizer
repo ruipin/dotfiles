@@ -1,0 +1,90 @@
+#########################################
+# shell/colorizer
+# Author: Rui Pinheiro
+#
+# Colorizer-related shell commands and aliases
+
+
+###################
+# default colorizer
+if in_path "colout" ; then
+	export COLORIZER="colout"
+else
+	# Fall-back to 'cat'
+	export COLORIZER="cat"
+fi
+
+alias colorizer="\$COLORIZER"
+alias ccat="\$COLORIZER"
+
+
+
+##############################
+# grcat
+
+# Provide a function with similar usage to grcat, to avoid breaking scripts
+function grcat {
+	if ! in_path "grcat" ; then
+		echo_warn "grcat not found in path, falling back to 'cat'" "grcat"
+		cat
+		return $?
+	fi
+
+	command grcat "$@"
+}
+
+
+
+##############################
+# colout
+function colout {
+	if ! in_path "colout" ; then
+		echo_warn "'colout' not found in path, falling back to 'cat'" "colout"
+		cat
+		return $?
+	fi
+
+	# Parse arguments
+	local args=()
+	local theme=""
+	local theme_dir=""
+
+	if [[ "$#" -eq "0" ]]; then
+		theme="generic"
+	else
+		while [[ "$#" -gt "0" ]]; do
+			case "$1" in
+			# Theme
+			"-t"|"--theme")
+				theme="$2"
+				shift 1
+				;;
+			# Theme directory
+			"-T"|"--themes-dir")
+				themes_dir="$2"
+				shift 1
+				;;
+			# Pass-through everything else
+			*)
+				args+=("$1")
+			esac
+			shift 1
+		done
+	fi
+
+	# Find theme
+	if [[ ! -z "$theme" ]]; then
+		if [[ -z "$themes_dir" ]]; then
+			for theme_dir in "$LOCAL_DOTFILES/colout" "$DOTFILES/colout"; do
+				[[ -f "$theme_dir/colout_$theme.py" ]] && break
+				theme_dir=""
+			done
+		fi
+
+		[[ ! -z "$theme_dir" ]] && args+=("--themes-dir" "$theme_dir")
+		args+=("-t" "$theme")
+	fi
+
+	#echo "${args[@]}"
+	command colout "${args[@]}"
+}

@@ -1,0 +1,15 @@
+#########################################
+# shell/stdbuf
+# Author: Rui Pinheiro
+#
+# stdbuf aliases
+
+# Disable buffering for stdin/stdout/stderr
+alias nobuf="stdbuf -o0 -e0"
+# Also disable stdin buffering
+alias noibuf="stdbuf -i0 -o0 -e0"
+
+# Set line buffering for stdout/stderr
+alias lnbuf="stdbuf -oL -eL"
+# Also disable stdin buffering
+alias lnibuf="stdbuf -i0 -oL -eL"

@@ -188,7 +188,7 @@ function _parse_refs {
       local br sha
       br="$(git rev-parse --verify -q --abbrev-ref "$1")"
       [[ "$?" -ne "0" ]] && echo "ERROR: '$1' is not a valid reference" && exit 1
-      sha="$(git rev-parse --verify -q --short "$1")"
+      sha="$(git rev-parse --verify -q --short "$1^{commit}")"
       [[ "$?" -ne "0" || -z "$sha" ]] && echo "ERROR: '$1' is not a valid reference" && exit 2
 
       if [[ -z "$br" ]]; then

@@ -10,11 +10,17 @@ git_args=()
 refs=()
 files=()
 
-color=0
-color_arg=""
-
 use_alias=1
 highlight=1
+
+# Delimiters
+# NOTE: These must not have a meaning to sed, and should be something that would be extremely unlikely to show up in commit messages
+delimiter1=$'@!£@'
+delimiter2=$'£!@£'
+
+# Color
+color=0
+color_arg=""
 
 function _color_auto {
   color=0
@@ -22,6 +28,7 @@ function _color_auto {
 }
 _color_auto
 
+# Parse arguments
 function _parse_args {
   local saw_files=0
 
@@ -80,6 +87,8 @@ function _parse_args {
   else
     color_arg="--no-color"
   fi
+
+  [[ "$color" -eq "0" ]] && highlight=0
 }
 _parse_args "$@"
 
@@ -137,12 +146,12 @@ function _parse_cfg {
 
         fmt="${fmt#t}"
         fmt="${fmt#format:}"
-        
+
         # unquote/trim
         fmt="$(echo "$fmt" | xargs)"
 
-        # prepend %h %p
-        fmt="@%h% p@$fmt"
+        # prepend necessary hashes
+        fmt="${delimiter1}%h% p${delimiter1}${fmt}"
 
         # re-quote
         if [[ "$has_tformat" -eq "0" ]]; then
@@ -162,23 +171,49 @@ function _parse_cfg {
   fi
 
   # If no '--format' specified, choose the default
-  [[ "$has_format" -eq "0" ]] && cfg_args+=("--format=format:@%h% p@%C(yellow)%h%C(cyan)%d%Creset %s")
+  [[ "$has_format" -eq "0" ]] && cfg_args+=("--format=format:${delimiter1}%h% p${delimiter1}%C(yellow)%h%C(cyan)%d%Creset %s")
 
   #echo "${#cfg_args[@]}: ${cfg_args[@]}"
 }
 cfg_args=()
 _parse_cfg
 
-[[ "$color" -eq "0" ]] && highlight=0
+
+##################
+# Symbols
+# Don't use fancy non-ASCII symbols outside of UTF8 locales
+if [[ "$LANG" != *'utf8'* ]]; then
+  commit_sym='*'
+  merge_sym='>'
+
+else
+  # make the graph prettier
+  commit_sym=$'●'
+  merge_sym=$'◐'
+
+  sutd2_cnt=0
+  function substitute_up_to_delimiter2 {
+    sutd2_cnt="$((sutd2_cnt+1))"
+    sed_exprs+=(-e '{:loop'"${sutd2_cnt}"' /'"${delimiter2}"'/{/'"$1"'.*'"${delimiter2}"'/!{b end'"${sutd2_cnt}"'}}; s~'"$1"'~'"$2"'~; t loop'"${sutd2_cnt}"'; :end'${sutd2_cnt}'}')
+  }
+
+  substitute_up_to_delimiter2 '\|' '│'
+  substitute_up_to_delimiter2 '\/' '╱'
+  substitute_up_to_delimiter2 '\\' '╲'
+
+  #sed_exprs+=(-e '~s~\|~│~g') # |
+  #sed_exprs+=(-e '~s~/~╱~g' ) # /
+  #sed_exprs+=(-e '~s~\\~╲~g') # \
+fi
+
 
 ##################
 # Parse references
 
 function _parse_refs {
-  # start with clean refs
   refs=()
 
-  # highlighting control codes
+  # VT100 highlighting escape codes
   c_hl='\x1B\[7m'
   c_hlrst='\x1B\[27m'
 
@@ -200,7 +235,7 @@ function _parse_refs {
       fi
 
       # Add highlighting sed command
-      [[ "$highlight" -ne "0" ]] && sed_exprs+=(-e '~s~£@(.*'"$sha"'.*)$~'"$c_hl"'\1'"$c_hlrst"'~')
+      [[ "$highlight" -ne "0" ]] && sed_exprs+=(-e '~s~('"${delimiter2}"'.*'"$sha"'.*)$~'"$c_hl"'\1'"$c_hlrst"'~')
     fi
     shift 1
   done
@@ -208,36 +243,17 @@ function _parse_refs {
 _parse_refs "${refs[@]}"
 
 
-
-##################
-# Symbols
-# Don't use fancy non-ASCII symbols outside of UTF8 locales
-if [[ "$LANG" != *'utf8'* ]]; then
-  commit_sym='*'
-  merge_sym='>'
-
-else
-  # make the graph prettier
-  commit_sym=$'●'
-  merge_sym=$'◐'
-
-  sed_exprs+=(-e '~s~\|~│~g') # |
-  sed_exprs+=(-e '~s~/~╱~g' ) # /
-  sed_exprs+=(-e '~s~\\~╲~g') # \
-fi
-
-
 ##################
 # Main expressions
-# The prefixed hashes are delimited by '@'
-# We replace these with '£@' for other regexes to use
+# The prefixed hashes are delimited by '$delimiter1'
+# We replace these with '$delimiter2' for other regexes to use
 re_sha='\<[a-f0-9]{7,}\>\s?'
-sed_exprs_main+=(-e '~s~^(.*)\*(.*)@('"$re_sha"'){3,}\@~\1'"$merge_sym"'\2£@~') # merge commits
-sed_exprs_main+=(-e '~s~^(.*)\*(.*)@('"$re_sha"')+@~\1'"$commit_sym"'\2£@~') # normal commits
+sed_exprs_main+=(-e '~s~^(.*)\*(.*)'"${delimiter1}"'('"${re_sha}"'){3,}'"${delimiter1}"'~\1'"${merge_sym}"'\2'"${delimiter2}"'~') # merge commits
+sed_exprs_main+=(-e '~s~^(.*)\*(.*)'"${delimiter1}"'('"${re_sha}"')+'"${delimiter1}"'~\1'"${commit_sym}"'\2'"${delimiter2}"'~') # normal commits
 
-# clean up any remaining '£@'
+# clean up any remaining '${delimiter2}'
 # NOTE: Must be the last expression
-sed_exprs+=(-e '~s~£@~~')
+sed_exprs+=(-e '~s~'"${delimiter2}"'~~')
 
 
 ##################

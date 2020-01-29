@@ -125,7 +125,8 @@
 
   ##############
   # Current revision
-  # NOTE: Separate quiet versions are necessary to guarantee the output is really silent ('-q' is not enough)
+  # NOTE: Separate quiet versions are necessary to guarantee the output is really silent
+  #       when used in scripts or other aliases ('-q' is not enough)
   rev      = !sh -c 'git rev-parse --verify --short    \"${@-HEAD}\"' -
   rev-q    = !sh -c 'git rev-parse --verify --short -q \"${@-HEAD}\" 2> /dev/null' -
   abbrev   = !sh -c 'git rev-parse --verify --abbrev-ref    \"${@-HEAD}\"' -
@@ -219,13 +220,10 @@
 
   ##################
   # Aliases
-  # Better: zsh "git_aliases" helper
   alias = "!git config -l | grep alias | cut -c 7- | sort -u -k1 -t= | sed \"s/ \\+/ /g\""
 
 
   ##################
-  # Directory traversal
-
-  # Go to git root
+  # Directory queries
   root = rev-parse --show-toplevel
   dir  = rev-parse --absolute-git-dir

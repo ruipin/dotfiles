@@ -105,7 +105,7 @@
 
   unstage = reset HEAD --
   cbranch = checkout -b
-  squash = merge --squash
+  squash = merge -ff --squash
   squash-merge = !git squash
 
   ff-merge = merge --ff-only

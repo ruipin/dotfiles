@@ -1,0 +1,316 @@
+#!/bin/bash
+
+shopt -s extglob
+
+##################
+# Parameters
+sed_exprs=()
+sed_exprs_main=()
+git_args=()
+
+files=()
+in_refs=()
+
+use_alias=1
+highlight=1
+
+# Delimiters
+# NOTE: These must not have a meaning to sed, and should be something that would be extremely unlikely to show up in commit messages
+delimiter1=$'@!£@'
+delimiter2=$'£!@£'
+
+# Parse arguments
+function _parse_args {
+  local saw_files=0
+
+  while [[ "$#" -gt "0" ]]; do
+    case "$1" in
+      # Highlight refs
+      "--highlight")
+        highlight=1
+        ;;
+      "--no-highlight")
+        highlight=0
+        ;;
+      # Whether to use the git-config alias or not
+      "--no-alias")
+        use_alias=0
+        ;;
+      # Special git-log arguments that have a second parameter, e.g. '-n <number>'
+      "-n")
+        git_args+=("$1" "$2")
+        shift 1
+        ;;
+      # used to distinguish refs from files
+      "--")
+        saw_files=1
+        ;;
+      "-"*)
+        git_args+=("$1")
+        ;;
+      # References / file names
+      *)
+        # This should be a file name
+        if [[ "$saw_files" -eq "1" ]]; then
+          files+=("$1")
+        # This should be a reference
+        else
+          in_refs+=("$1")
+        fi
+        ;;
+    esac
+    shift 1
+  done
+}
+_parse_args "$@"
+
+
+##################
+# get git-config parameters
+function _parse_cfg {
+  local tmp_cfg_args=() has_format=0
+  local alias_name="log1"
+
+  # Get alias from git config
+  if [[ "$use_alias" -ne "0" ]]; then
+    tmp_cfg_args=($(git config --get "alias.${alias_name}"))
+
+    if [[ "${#tmp_cfg_args[@]}" -eq "0" || "${tmp_cfg_args[0]}" != "log" ]]; then
+      echo "Warning: Could not find a valid 'git $alias_name' alias, using defaults"
+      use_alias=0
+    fi
+  fi
+
+  # Parse alias
+  if [[ "$use_alias" -ne "0" ]]; then
+    # Strip away 'log'
+    tmp_cfg_args=("${tmp_cfg_args[@]:1}")
+
+    # Correct shell expansion to fix quotes in the middle of strings
+    local saw_quotes=""
+    local ca_len=0
+    while [[ "${#tmp_cfg_args[@]}" -gt "0" ]]; do
+      local x="${tmp_cfg_args[0]}"
+
+      # Find unterminated quotes inside parameters
+      if [[ ! -z "$saw_quotes" ]]; then
+        [[ "$x" == !(*\\)"$saw_quotes" ]] && saw_quotes=""
+        cfg_args[${ca_len}-1]="${cfg_args[${ca_len}-1]} $x"
+      else
+        [[ "$x" == !(*\'*)'"'* ]] && saw_quotes='"'
+        [[ "$x" == !(*\"*)"'"* ]] && saw_quotes="'"
+        cfg_args+=("$x")
+        ca_len="${#cfg_args[@]}"
+      fi
+
+      tmp_cfg_args=("${tmp_cfg_args[@]:1}")
+    done
+
+    # Prepend '%h %p ' to pretty-print format
+    local i=0
+    while [[ "${#cfg_args[@]}" -gt "$i" ]]; do
+      local x="${cfg_args[$i]}"
+
+      if [[ "$x" == "--format="* || "$x" == "--pretty"* ]]; then
+        local fmt has_tformat=0
+        fmt="${x#--format=}"
+        fmt="${fmt#--pretty=}"
+
+        [[ "$fmt" != ?(t)"format:"* ]] && echo "ERROR: Cannot parse 'git graph' alias. Parameter '$x' not supported by custom git-graph script" && exit 1
+        [[ "$fmt" == "t"* ]] && has_tformat=1
+
+        fmt="${fmt#t}"
+        fmt="${fmt#format:}"
+
+        # unquote/trim
+        fmt="$(echo "$fmt" | xargs)"
+
+        # prepend necessary hashes
+        fmt="${delimiter1}%h% p${delimiter1}${fmt}"
+
+        # re-quote
+        if [[ "$has_tformat" -eq "0" ]]; then
+          fmt="--format=format:$fmt"
+        else
+          fmt="--format=tformat:$fmt"
+        fi
+
+        # store back in array
+        cfg_args[$i]="$fmt"
+        has_format=1
+        break
+      fi
+
+      i=$((i+1))
+    done
+  fi
+
+  # If no alias found, or no '--format' specified, use the default
+  [[ "$has_format" -eq "0" ]] && cfg_args+=("--format=format:${delimiter1}%h% p${delimiter1}%C(yellow)%h%C(cyan)%d%Creset %s")
+
+  #echo "${#cfg_args[@]}: ${cfg_args[@]}"
+}
+cfg_args=()
+_parse_cfg
+
+
+##################
+# Post-process args
+is_graph=0
+use_color=0
+
+function _color_auto {
+  use_color=0
+  [[ -t 1 ]] && use_color=1
+}
+_color_auto
+
+# Post-process
+function _postprocess_args {
+  while [[ "$#" -gt "0" ]]; do
+    case "$1" in
+      # Color arguments
+      "--color"|"--color=always")
+        use_color=1
+        ;;
+      "--no-color"|"--color=never")
+        use_color=0
+        ;;
+      "--color=auto")
+        _color_auto
+        ;;
+      # Graph
+      "--graph")
+        is_graph=1
+        ;;
+      # Pass-through remaining arguments
+      "-"*)
+        args+=("$1")
+        ;;
+      "*")
+        echo "Illegal argument '$1'"
+        exit 1
+        ;;
+    esac
+    shift 1
+  done
+
+  # Color
+  [[ "$use_color" -ne "0" ]] && args+=("--color")
+  [[ "$use_color" -eq "0" ]] && highlight=0
+
+  # Graph
+  [[ "$is_graph" -ne "0" ]] && args+=("--graph")
+}
+args=()
+_postprocess_args "${git_args[@]}" "${cfg_args[@]}"
+
+
+##################
+# Parse references
+
+function _parse_refs {
+  # VT100 highlighting escape codes
+  c_hl='\x1B\[7m'
+  c_hlrst='\x1B\[27m'
+
+  # Figure out which refs are branches/tags and which are commits, and add the relevant regexes
+  while [[ "$#" -gt "0" ]]; do
+    if [[ ! -z "$1" ]]; then
+      # Have git parse the revisions given for us, since they might be e.g. a range
+      local revparse
+      IFS=$'\n' command eval 'revparse=($( git rev-parse --symbolic "$1" 2> /dev/null ))'
+      [[ "$?" -ne "0" || -z "$revparse" ]] && echo "ERROR: '$1' is not a valid reference" && exit 1
+
+      # Process each individual match
+      for rev in "${revparse[@]}"; do
+        local br="" sha=""
+
+        [[ -z "$rev" ]] && continue
+
+        br="$(git rev-parse --verify -q --abbrev-ref "$rev")"
+        [[ "$?" -ne "0" ]] && echo "ERROR: '$rev' is not a valid reference" && exit 2
+
+        if [[ "$rev" != '^'* ]]; then
+          sha="$(git rev-parse --verify -q --short "$rev^{commit}")"
+          [[ "$?" -ne "0" || -z "$sha" ]] && echo "ERROR: '$rev' is not a valid reference" && exit 3
+        fi
+
+        # Add reference
+        #echo "\$1=$1 rev=$rev br=$br sha=$sha"
+        if [[ -z "$br" && -z "$sha" ]]; then
+          # something else
+          refs+=("$rev")
+        elif [[ -z "$br" ]]; then
+          # commit hash
+          refs+=("$sha")
+        else
+          # branch name
+          refs+=("$br")
+        fi
+
+        # Add highlighting sed command
+        [[ "$highlight" -ne "0" && ! -z "$sha" ]] && sed_exprs+=(-e '~s~('"${delimiter2}"'.*'"$sha"'.*)$~'"$c_hl"'\1'"$c_hlrst"'~')
+      done
+    fi
+    shift 1
+  done
+}
+refs=()
+_parse_refs "${in_refs[@]}"
+
+
+##################
+# Graph Symbols
+if [[ "$is_graph" -ne "0" ]]; then
+  # Don't use fancy non-ASCII symbols outside of UTF8 locales
+  if [[ "$LANG" != *'utf8'* ]]; then
+    commit_sym='*'
+    merge_sym='>'
+
+  else
+    # make the graph prettier
+    commit_sym=$'●'
+    merge_sym=$'◐'
+
+    sutd2_cnt=0
+    function substitute_up_to_delimiter2 {
+      sutd2_cnt="$((sutd2_cnt+1))"
+      sed_exprs+=(-e '{:loop'"${sutd2_cnt}"' /'"${delimiter2}"'/{/'"$1"'.*'"${delimiter2}"'/!{b end'"${sutd2_cnt}"'}}; s~'"$1"'~'"$2"'~; t loop'"${sutd2_cnt}"'; :end'${sutd2_cnt}'}')
+    }
+
+    substitute_up_to_delimiter2 '\|' '│'
+    substitute_up_to_delimiter2 '\/' '╱'
+    substitute_up_to_delimiter2 '\\' '╲'
+
+    #sed_exprs+=(-e '~s~\|~│~g') # |
+    #sed_exprs+=(-e '~s~/~╱~g' ) # /
+    #sed_exprs+=(-e '~s~\\~╲~g') # \
+  fi
+fi
+
+
+##################
+# Main expressions
+# The prefixed hashes are delimited by '$delimiter1'
+# We replace these with '$delimiter2' for other regexes to use
+
+if [[ "$is_graph" -ne "0" ]]; then
+  re_sha='\<[a-f0-9]{7,}\>\s?'
+  sed_exprs_main+=(-e '~s~^(.*)\*(.*)'"${delimiter1}"'('"${re_sha}"'){3,}'"${delimiter1}"'~\1'"${merge_sym}"'\2'"${delimiter2}"'~') # merge commits
+  sed_exprs_main+=(-e '~s~^(.*)\*(.*)'"${delimiter1}"'('"${re_sha}"')+'"${delimiter1}"'~\1'"${commit_sym}"'\2'"${delimiter2}"'~') # normal commits
+fi
+
+sed_exprs_main+=(-e '~s~'"${delimiter1}"'.*'"${delimiter1}"'~'"${delimiter2}"'~') # generic
+
+# clean up any remaining delimited strings
+# NOTE: Must be the last expression
+sed_exprs+=(-e '~s~'"${delimiter2}"'~~')
+
+
+
+##################
+# Actual command
+git log "${args[@]}" "${refs[@]}" -- "${files[@]}" \
+  | sed -E "${sed_exprs_main[@]}" "${sed_exprs[@]}" \
+  | ${PAGER:-less}

@@ -141,6 +141,12 @@
   dlast = diff --cached HEAD^
   dl = !git dlast
 
+  ###################
+  # Log
+
+  log1 = log --oneline --date=short --pretty=format:\"%Cred%h %C(yellow)%ad%C(cyan)%d%Creset %s %C(bold)(%an)%Creset\"
+  l1 = !git log1
+
 
   ###################
   # Listing
@@ -170,7 +176,7 @@
   # Graphing
 
   # short-hand
-  graph = log --graph --oneline --date=short --pretty=format:\"%Cred%h %C(yellow)%ad%C(cyan)%d%Creset %s %C(bold)(%an)%Creset\"
+  graph = !git log1 --graph
   gr = !git graph
 
   # graph all branches

@@ -10,9 +10,8 @@ function has_custom_module {
 	return $_has_custom_module
 }
 
-# To wrap 'module', this must be called after 'module' is loaded by the shell
-
 # Main 'module' functionality
+# Should be called after DEPOT_SETUP_ROOT is defined
 function init_custom_module {
 	if [[ -z "$DEPOT_SETUP_ROOT" ]]; then
 		echo_error "\$DEPOT_SETUP_ROOT undefined!" "module"
@@ -38,14 +37,14 @@ function init_custom_module {
 		eval "function _orig_$( typeset -f module )"
 
 		function module {
-			_module_wrapper $@
+			_module_wrapper "$@"
 		}
 
 		_module_wrapped=1
 
 		# Purge existing modules and load defaults
 		module orig purge
-		[[ ! -z "$_module_defaults" ]] && module load $@ $_module_defaults || return $?
+		[[ ! -z "$_module_defaults" ]] && module load "$@" $_module_defaults || return $?
 
 		# Restore variables
 		[[ ! -z "$tz" ]] && export TZ="$tz"
@@ -99,14 +98,14 @@ function init_custom_module {
 			in_path "activate_local_prefix" && activate_local_prefix 1
 			;;
 		*)
-			module orig $@
+			module orig "$@"
 		esac
 
 		return $res
 	}
 
 	function module {
-		_module_wrapper $@
+		_module_wrapper "$@"
 	}
 
 	function mgrep {
@@ -305,7 +304,7 @@ function init_custom_module {
 
 				# Commands
 				else
-					function "$cmd" { _module_autoload_handler "$0" $@ ; }
+					function "$cmd" { _module_autoload_handler "$0" "$@" ; }
 					_module_cmd_deps[$cmd]+="$mname "
 				fi
 			esac
@@ -316,6 +315,6 @@ function init_custom_module {
 	}
 
 	function _module_add_default {
-		_module_defaults+=($@)
+		_module_defaults+=("$@")
 	}
 }

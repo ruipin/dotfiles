@@ -6,11 +6,11 @@
 
 #########################
 # Safely append/prepend to ":"-separated array
-function env_prepend { delim_prepend ":" $@ ; }
-function env_append { delim_append ":" $@ ; }
-function env_remove { delim_remove ":" $@ ; }
+function env_prepend { delim_prepend ":" "$@" ; }
+function env_append { delim_append ":" "$@" ; }
+function env_remove { delim_remove ":" "$@" ; }
 
 # Safely append/prepend to $PATH
-function path_prepend { env_prepend PATH $@ ; }
-function path_append { env_append PATH $@ ; }
-function path_remove { env_remove PATH $@ ; }
+function path_prepend { env_prepend PATH "$@" ; }
+function path_append { env_append PATH "$@" ; }
+function path_remove { env_remove PATH "$@" ; }

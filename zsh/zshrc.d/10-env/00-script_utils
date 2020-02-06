@@ -52,23 +52,23 @@ zmodload "zsh/datetime"
 # Returns 0 if at least $1 seconds have elapsed since $2
 function time_elapsed {
 	local res=0
-	local start=${2-0}
-	local seconds=${1-0}
+	local start="${2-0}"
+	local seconds="${1-0}"
 
 	[[ "$start" -eq "0" ]] && return 0
 
-	local now=$EPOCHSECONDS
+	local now="$EPOCHSECONDS"
 	integer elapsed=$now-$start
 	if (($elapsed < ${seconds})); then
 		res=1
 	fi
 	unset elapsed
-	return $res
+	return "$res"
 }
 
 # Returns 0 if $EPOCHSECONDS >= $1
 function time_passed {
-	local val=${1-0}
+	local val="${1-0}"
 	[[ "$val" -eq "0" ]] && return 0
 
 	(( $EPOCHSECONDS >= $val )) && return 0
@@ -77,11 +77,11 @@ function time_passed {
 
 # Echos $1 seconds as a human-readable "Xd Yh Wm Zs"
 function human_readable_seconds {
-	local tmp=$1
-	local days=$(( tmp / 60 / 60 / 24 ))
-	local hours=$(( tmp / 60 / 60 % 24 ))
-	local minutes=$(( tmp / 60 % 60 ))
-	local seconds=$(( tmp % 60 ))
+	local tmp="$1"
+	local days="$(( tmp / 60 / 60 / 24 ))"
+	local hours="$(( tmp / 60 / 60 % 24 ))"
+	local minutes="$(( tmp / 60 % 60 ))"
+	local seconds="$(( tmp % 60 ))"
 	(( $days > 0 )) && echo -n "${days}d"
 	(( $hours > 0 )) && echo -n "${hours}h"
 	(( $minutes > 0 )) && echo -n "${minutes}m"
@@ -119,25 +119,25 @@ function echo_debug {
 
 # Echos command using echo_debug, then runs it
 function echo_run {
-	echo_debug "${@}"
-	eval ${@}
+	echo_debug "$@"
+	eval "$@"
 }
 
 #################
 # Confirm something from user
 function confirm_yn {
 	read -q \?"$fg[white][$ZSH_SCRIPT_TITLE] $@ [yn] $reset_color"
-	local retval=$?
+	local retval="$?"
 
 	echo
 
-	return $retval
+	return "$retval"
 }
 
 #################
 # Check if path is inside home
 function path_in_home {
-	local abs_path=$(readlink -f "$@")
+	local abs_path="$(readlink -f "$@")"
 
 	if [[ "$abs_path/" == "$HOME/"* ]]; then
 		return 0
@@ -191,7 +191,7 @@ function is_uint {
 #################
 # Check if executable is in path
 function in_path {
-	whence -w $1 >/dev/null
+	whence -w "$@" >/dev/null
 }
 
 
@@ -209,13 +209,6 @@ function delim_prepend {
 	delim_remove "$delim" "$name" "$prepend_str"
 
 	# Prepend to variable
-	#local new_val=""
-	#local old_val="${(P)1}"
-	#if [[ ! -z "$old_val" ]]; then
-	#	new_val=":${old_val}"
-	#fi
-	#new_val="${prepend_str}${new_val}"
-
 	local old_val="${(P)name}"
 	local new_val="${prepend_str}${old_val:+${delim}}${old_val}"
 
@@ -233,12 +226,6 @@ function delim_append {
 	delim_remove "$delim" "$name" "$append_str"
 
 	# Prepend to variable
-	#local new_val=""
-	#local old_val="${(P)1}"
-	#if [[ ! -z "$old_val" ]]; then
-	#	new_val="${old_val}:"
-	#fi
-	#new_val="${new_val}${append_str}"
 	local old_val="${(P)name}"
 	local new_val="${old_val}${old_val:+${delim}}${append_str}"
 
@@ -252,24 +239,12 @@ function delim_remove {
 	local name="$2"
 	local search_str="${@:3}"
 
-	############
-	# Method 1: Perl regex, slow because it requires shelling out, but has regex support
-	#new_val=$( \
-	#	echo "$new_val" |                    \
-	#	\perl -p -e "s#:${search_str}:#:#g;" \
-	#	         -e "s#:${search_str}\$##g;" \
-	#	         -e "s#^${search_str}:##g;"  \
-	#	         -e "s#^${search_str}\$##g;" \
-	#)
-
-	##########
-	# Method 2: Parameter expansion
-	# Faster (no shelling out), but no regex support
+	# Remove delimiter using parameter expansion
 	local new_val="${(P)name}"
-	new_val=${new_val//${delim}${~search_str}${delim}/${delim}}
-	new_val=${new_val#${~search_str}${delim}}
-	new_val=${new_val%${delim}${~search_str}}
-	new_val=${new_val:/${~search_str}/}
+	new_val="${new_val//${delim}${~search_str}${delim}/${delim}}"
+	new_val="${new_val#${~search_str}${delim}}"
+	new_val="${new_val%${delim}${~search_str}}"
+	new_val="${new_val:/${~search_str}/}"
 
 	export "$name"="$new_val"
 }

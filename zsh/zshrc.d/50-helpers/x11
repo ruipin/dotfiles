@@ -83,3 +83,9 @@ function xbuffer {
 
 alias xp2c="xbuffer primary   | xbuffer clipboard"
 alias xc2p="xbuffer clipboard | xbuffer primary  "
+
+alias xs2c="xbuffer secondary | xbuffer clipboard"
+alias xc2s="xbuffer clipboard | xbuffer secondary"
+
+alias xp2s="xbuffer primary   | xbuffer secondary"
+alias xs2p="xbuffer secondary | xbuffer primary  "

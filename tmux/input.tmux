@@ -106,8 +106,8 @@ bind -n C-S-Left swap-window -t -1
 bind -n C-S-Right swap-window -t +1
 
 # Page-up/down without prefix
-bind -n PPage copy-mode\; send-keys PPage
-bind -n NPage copy-mode\; send-keys NPage
+bind -n PPage if -Ft= '#{alternate_on}' "send-keys PPage" "copy-mode\; send-keys PPage"
+bind -n NPage if -Ft= '#{alternate_on}' "send-keys NPage" "copy-mode\; send-keys NPage"
 
 # Page-up/down in copy-mode
 bind -T copy-mode-vi PPage send-keys -X       stop-selection  \;\
@@ -142,13 +142,13 @@ bind -T copy-mode-vi y send-keys -X copy-pipe "xclip -selection primary" \;\
                        send-keys -X clear-selection
 
 # v starts selection in copy-mode
-bind -T copy-mode-vi   v if -Ft= "#{rectangle_toggle}" "send-keys -X rectangle-toggle" \;\
+bind -T copy-mode-vi   v if -Ft= '#{rectangle_toggle}' "send-keys -X rectangle-toggle" \;\
                          send-keys -X begin-selection
 
-bind -T copy-mode-vi   V if -Ft= "#{rectangle_toggle}" "send-keys -X rectangle-toggle" \;\
+bind -T copy-mode-vi   V if -Ft= '#{rectangle_toggle}' "send-keys -X rectangle-toggle" \;\
                          send-keys -X select-line
 
-bind -T copy-mode-vi C-v if -t= "[[\"#{rectangle_toggle}\" -eq "0"]]" "send-keys -X rectangle-toggle" \;\
+bind -T copy-mode-vi C-v if -t= '[[\"#{rectangle_toggle}\" -eq "0"]]' "send-keys -X rectangle-toggle" \;\
                          send-keys -X begin-selection
 
 ##############################

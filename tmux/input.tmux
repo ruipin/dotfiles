@@ -13,6 +13,9 @@ set -g @shell_mode 'vi'
 set -g status-keys vi
 set -g mode-keys vi
 
+# Kill emacs bindings
+unbind -T copy-mode -a
+
 # Dont wait for escape keybinds
 set-option -sg escape-time 0
 
@@ -87,30 +90,91 @@ bind Escape confirm kill-session
 bind -n M-r confirm-before -p "respawn-pane -k #P? (y/n)" "respawn-pane -k"
 
 # Bindings: Select Window By Number (Alt+Number)
-bind -n M-1 select-window -t :1 
-bind -n M-2 select-window -t :2 
-bind -n M-3 select-window -t :3 
-bind -n M-4 select-window -t :4 
-bind -n M-5 select-window -t :5 
-bind -n M-6 select-window -t :6 
-bind -n M-7 select-window -t :7 
-bind -n M-8 select-window -t :8 
-bind -n M-9 select-window -t :9 
-bind -n M-0 select-window -t :0 
+bind -n M-1 select-window -t :1
+bind -n M-2 select-window -t :2
+bind -n M-3 select-window -t :3
+bind -n M-4 select-window -t :4
+bind -n M-5 select-window -t :5
+bind -n M-6 select-window -t :6
+bind -n M-7 select-window -t :7
+bind -n M-8 select-window -t :8
+bind -n M-9 select-window -t :9
+bind -n M-0 select-window -t :0
 
 # Bindings: Swap Window Position
-bind-key -n C-S-Left swap-window -t -1
-bind-key -n C-S-Right swap-window -t +1
+bind -n C-S-Left swap-window -t -1
+bind -n C-S-Right swap-window -t +1
 
+# Page-up/down without prefix
+bind -n PPage copy-mode\; send-keys PPage
+bind -n NPage copy-mode\; send-keys NPage
+
+# Page-up/down in copy-mode
+bind -T copy-mode-vi PPage send-keys -X       stop-selection  \;\
+                           send-keys -X       top-line        \;\
+                           send-keys -X -N 16 cursor-up
+
+bind -T copy-mode-vi NPage send-keys -X       stop-selection  \;\
+                           send-keys -X       bottom-line     \;\
+                           send-keys -X -N 16 cursor-down
+
+# Find non-breaking spaces (useful if the prompt contains a NBSP)
+bind -T copy-mode-vi Home send-keys -X start-of-line            \;\
+                          send-keys -X search-backward "\u00A0" \;\
+                          send-keys -X select-line              \;\
+                          send-keys -X stop-selection
+
+bind -T copy-mode-vi End  send-keys -X end-of-line              \;\
+                          send-keys -X search-forward  "\u00A0" \;\
+                          send-keys -X select-line              \;\
+                          send-keys -X stop-selection
+
+bind -n Home copy-mode \; send-keys Home
+bind -n End  copy-mode \; send-keys End
+
+bind -T copy-mode-vi '~' send-keys Home
+bind -T copy-mode-vi '#' send-keys End
+bind '~' copy-mode \; send-keys Home
+bind '#' copy-mode \; send-keys End
+
+# copy-mode copy behaviour
+bind -T copy-mode-vi y send-keys -X copy-pipe "xclip -selection primary" \;\
+                       send-keys -X clear-selection
+
+# v starts selection in copy-mode
+bind -T copy-mode-vi   v if -Ft= "#{rectangle_toggle}" "send-keys -X rectangle-toggle" \;\
+                         send-keys -X begin-selection
+
+bind -T copy-mode-vi   V if -Ft= "#{rectangle_toggle}" "send-keys -X rectangle-toggle" \;\
+                         send-keys -X select-line
+
+bind -T copy-mode-vi C-v if -t= "[[\"#{rectangle_toggle}\" -eq "0"]]" "send-keys -X rectangle-toggle" \;\
+                         send-keys -X begin-selection
 
 ##############################
 # Mouse
 
-# Mouse support (Tmux 2.2+)
 set -g mouse on
 
-# Tmux 2.1 or older:
-#set -g mouse-utf8 on
-#set-option -g mouse-select-pane on
-#set-option -g mouse-resize-pane on
-#set-option -g mouse-select-window on
+# Mouse press selects pane and (in copy mode) cancels selection
+bind -T copy-mode-vi MouseDown1Pane select-pane \;\
+                                    send-keys -X clear-selection
+bind -T copy-mode-vi MouseDown2Pane send-keys MouseDown1Pane
+bind -T copy-mode-vi MouseDown3Pane send-keys MouseDown1Pane
+
+bind -n MouseDown2Pane select-pane
+bind -n MouseDown3Pane select-pane
+
+# Mouse drags enter copy-mode
+#bind -n MouseDrag1Pane copy-mode -M \; send-keys -M
+bind -n MouseDrag2Pane copy-mode -M \; send-keys -M
+bind -n MouseDrag3Pane copy-mode -M \; send-keys -M
+
+# Mouse drag with right/middle buttons inside copy-mode
+bind -T copy-mode-vi MouseDrag2Pane select-pane \; send-keys -X begin-selection
+bind -T copy-mode-vi MouseDrag3Pane select-pane \; send-keys -X begin-selection
+
+# Right/Middle Mouse drag copies automatically on release
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X stop-selection # override the default left-click binding
+bind -T copy-mode-vi MouseDragEnd2Pane send-keys -X stop-selection \; send-keys -X copy-pipe "xclip -selection primary"
+bind -T copy-mode-vi MouseDragEnd3Pane send-keys -X stop-selection \; send-keys -X copy-pipe "xclip -selection clipboard"

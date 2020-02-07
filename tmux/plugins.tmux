@@ -18,8 +18,11 @@ set -ga @tpm_plugins 'tmux-plugins/tmux-cpu ' # CPU usage in status bar
 
 
 ###########################
-# tmux-yank: Use "Shift-insert" buffer
+# tmux-yank
+# Use "Shift-insert" buffer
 set -g @yank_selection 'secondary'
+# Do not exit copy mode on mouse release
+set -g @yank_action 'copy-pipe' # instead of 'copy-pipe-and-cancel'
 
 
 ###########################

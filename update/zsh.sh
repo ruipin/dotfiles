@@ -7,8 +7,8 @@ clone "zsh" --github "zsh-users/zsh" --ver "zsh-5.7.1.tar.gz" $@
 
 # Build
 ./Util/preconfig
-./configure --prefix=$LOCAL_PREFIX \
-   --exec-prefix=$LOCAL_PREFIX \
+./configure --prefix="$LOCAL_PREFIX" \
+   --exec-prefix="$LOCAL_PREFIX" \
    --enable-multibyte \
    --with-term-lib="ncursesw tinfo" \
    --enable-zsh-mem \

@@ -6,6 +6,6 @@ clone "libevent" --github "libevent/libevent" --ver "release-2.1.8-stable.tar.gz
 
 # Build
 ./autogen.sh
-./configure --prefix=$LOCAL_PREFIX
+./configure --prefix="$LOCAL_PREFIX"
 make
 make install

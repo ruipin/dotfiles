@@ -7,7 +7,7 @@ clone "valgrind" --targz "http://www.valgrind.org/downloads/valgrind-3.14.0.tar.
 
 # Build
 ./autogen.sh
-./configure --prefix=$LOCAL_PREFIX
+./configure --prefix="$LOCAL_PREFIX"
 make
 #make check
 make install

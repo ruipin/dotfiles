@@ -8,6 +8,6 @@ clone "fluxbox" --github "fluxbox/fluxbox" --ver "Release-1_3_7.tar.gz" $@
 
 # Patch + Build
 sed -i -e "s~m_bevel + m_left_padding + m_right_padding + textwidth()~m_bevel + m_left_padding + m_right_padding + textwidth()~" src/FbTk/TextButton.cc
-./configure --prefix=$LOCAL_PREFIX
+./configure --prefix="$LOCAL_PREFIX"
 make
 make install

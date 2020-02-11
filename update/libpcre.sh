@@ -6,7 +6,7 @@ clone "libpcre" --github "vmg/libpcre" --ver "pcre-8.36.tar.gz" $@
 
 # Build
 ./autogen.sh
-./configure --prefix=$LOCAL_PREFIX \
+./configure --prefix="$LOCAL_PREFIX" \
   --enable-pcre16 \
   --enable-pcre32 \
   --enable-jit \

@@ -142,13 +142,13 @@ bind -T copy-mode-vi y send-keys -X copy-pipe "xclip -selection primary" \;\
                        send-keys -X clear-selection
 
 # v starts selection in copy-mode
-bind -T copy-mode-vi   v if -Ft= '#{rectangle_toggle}' "send-keys -X rectangle-toggle" \;\
+bind -T copy-mode-vi   v if -Ft= '#{rectangle_toggle}' 'send-keys -X rectangle-toggle' \;\
                          send-keys -X begin-selection
 
-bind -T copy-mode-vi   V if -Ft= '#{rectangle_toggle}' "send-keys -X rectangle-toggle" \;\
+bind -T copy-mode-vi   V if -Ft= '#{rectangle_toggle}' 'send-keys -X rectangle-toggle' \;\
                          send-keys -X select-line
 
-bind -T copy-mode-vi C-v if -t= '[[\"#{rectangle_toggle}\" -eq "0"]]' "send-keys -X rectangle-toggle" \;\
+bind -T copy-mode-vi C-v if -Ft= '#{?rectangle_toggle,0,1}' 'send-keys -X rectangle-toggle' \;\
                          send-keys -X begin-selection
 
 ##############################

@@ -180,12 +180,12 @@
   gr = !git graph
 
   # graph all branches
-  history = !sh -c 'git graph --full-history \"${1-HEAD}\" $(git abbrev-q \"${1-HEAD}@{u}\") \"${@:2}\"' -
+  history = !bash -c 'git graph --full-history \"${1-HEAD}\" $(git abbrev-q \"${1-HEAD}@{u}\") \"${@:2}\"' -
   hist = !git history
   h = !git history
 
   # graph a current branch, together with its upstream
-  graph-upstream = !sh -c 'git graph --first-parent \"${1-HEAD}\" $(git abbrev-q \"${1-HEAD}@{u}\") \"${@:2}\"' -
+  graph-upstream = !bash -c 'git graph --first-parent \"${1-HEAD}\" $(git abbrev-q \"${1-HEAD}@{u}\") \"${@:2}\"' -
   gru = !git graph-upstream
 
   # graph current branch

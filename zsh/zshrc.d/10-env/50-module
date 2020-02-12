@@ -95,8 +95,8 @@ function init_custom_module {
 			is_false "$_module_wrapped" && _module_wrap
 			_orig_module ${@:2}
 			res=$?
-			in_path "activate_local_prefix" && activate_local_prefix 1
-			in_path "fix_locale" && fix_locale
+			is_function "activate_local_prefix" && activate_local_prefix 1
+			is_function "fix_locale" && fix_locale
 			;;
 		*)
 			module orig "$@"

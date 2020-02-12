@@ -194,6 +194,16 @@ function in_path {
 	whence -w "$@" >/dev/null
 }
 
+# Check if a function exists
+function is_function {
+	typeset -f "$@" > /dev/null
+}
+
+# Check if an alias exists
+function is_alias {
+	alias -L "$@"
+}
+
 
 #################
 # Delimiter Prepend/Append/Remove

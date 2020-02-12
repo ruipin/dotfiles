@@ -40,5 +40,17 @@ set -g @emulate-scroll-for-no-mouse-alternate-buffer on
 
 
 ###########################
+# tmux-prefix-highlight
+
+# Show 'PREFIX' when we are in prefix mode
+set -g @prefix_highlight_prefix_prompt 'PREFIX'
+
+# Show 'COPY' when we are in copy mode
+set -g @prefix_highlight_show_copy_mode 'on'
+set -g @prefix_highlight_copy_prompt 'COPY'
+set -g @prefix_highlight_copy_mode_attr 'fg=black,bg=yellow,bold'
+
+
+###########################
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'

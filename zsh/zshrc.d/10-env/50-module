@@ -96,6 +96,7 @@ function init_custom_module {
 			_orig_module ${@:2}
 			res=$?
 			in_path "activate_local_prefix" && activate_local_prefix 1
+			in_path "fix_locale" && fix_locale
 			;;
 		*)
 			module orig "$@"

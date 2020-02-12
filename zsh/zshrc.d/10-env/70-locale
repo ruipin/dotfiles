@@ -7,21 +7,26 @@
 
 ###############
 # Enforce UTF-8 locale if $ZSH_FORCE_UTF8 is set
-if is_true "$ZSH_FORCE_UTF8" && [[ "$LANG" != *".utf8" ]] ; then
-	#echo_debug "Enforcing UTF-8 locale" "locale"
+if is_true "$ZSH_FORCE_UTF8" ; then
+	function fix_locale {
+		if [[ "$LANG" != *".utf8" ]] ; then
+			#echo_debug "Enforcing UTF-8 locale" "locale"
 
-	export LANG="en_US.utf8"
-	export LC_CTYPE="en_US.utf8"
-	export LC_NUMERIC="en_US.utf8"
-	export LC_TIME="en_US.utf8"
-	export LC_COLLATE="en_US.utf8"
-	export LC_MONETARY="en_US.utf8"
-	export LC_MESSAGES="en_US.utf8"
-	export LC_PAPER="en_US.utf8"
-	export LC_NAME="en_US.utf8"
-	export LC_ADDRESS="en_US.utf8"
-	export LC_TELEPHONE="en_US.utf8"
-	export LC_MEASUREMENT="en_US.utf8"
-	export LC_IDENTIFICATION="en_US.utf8"
-	export LC_ALL="en_US.utf8"
+			export LANG="en_US.utf8"
+			export LC_CTYPE="en_US.utf8"
+			export LC_NUMERIC="en_US.utf8"
+			export LC_TIME="en_US.utf8"
+			export LC_COLLATE="en_US.utf8"
+			export LC_MONETARY="en_US.utf8"
+			export LC_MESSAGES="en_US.utf8"
+			export LC_PAPER="en_US.utf8"
+			export LC_NAME="en_US.utf8"
+			export LC_ADDRESS="en_US.utf8"
+			export LC_TELEPHONE="en_US.utf8"
+			export LC_MEASUREMENT="en_US.utf8"
+			export LC_IDENTIFICATION="en_US.utf8"
+			export LC_ALL="en_US.utf8"
+		fi
+	}
+	fix_locale
 fi

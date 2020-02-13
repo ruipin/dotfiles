@@ -7,11 +7,39 @@
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-setopt append_history
-setopt extended_history
+
+# Append to history file, instead of replacing it every time
+setopt append_history 
+
+# Add time-stamps to history file
+setopt extended_history 
+
+# Expire duplicate entries first
 setopt hist_expire_dups_first
-setopt hist_ignore_dups # ignore duplication command history list
+
+# Ignore consecutive duplicate history entries
+setopt hist_ignore_dups
+
+# Remove superfluous blanks from history entries
+setopt hist_reduce_blanks
+
+# Do not add commands to history if the first character is a space
 setopt hist_ignore_space
+
+# Do not execute history expansions immediately; first expand and reload the line into the editing buffer
 setopt hist_verify
+
+# Add history entries incrementally to history file, instead of at end of process
 setopt inc_append_history
-setopt share_history # share command history data
+
+# Share command history data between zsh processes
+setopt share_history 
+
+# When 'fcntl' API is available, use it for better performance
+setopt hist_fcntl_lock
+
+# Do not display duplicates of history entries even if not contiguous
+setopt hist_find_no_dups
+
+# Disable !<command> history completion
+unsetopt banghist

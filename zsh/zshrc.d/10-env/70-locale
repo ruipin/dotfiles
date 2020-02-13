@@ -27,6 +27,13 @@ if is_true "$ZSH_FORCE_UTF8" ; then
 			export LC_IDENTIFICATION="en_US.utf8"
 			export LC_ALL="en_US.utf8"
 		fi
+
+		# Always print eight-bit characters literally
+		setopt print_eight_bit
+		# Allow printing of multibyte characters
+		setopt multibyte
+		# Make sure to combine chars
+		setopt combining_chars
 	}
 	fix_locale
 fi

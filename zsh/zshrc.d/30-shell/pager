@@ -1,0 +1,29 @@
+#########################################
+# shell/pager
+# Author: Rui Pinheiro
+#
+# pager-related configuration
+
+# Environment variables
+if is_true "$ZSH_AUTO_DETECT_PAGER" ; then
+	# 'less' is the preferred pager
+	if [[ "$PAGER" == "less" ]] || in_path "less" ; then
+		export PAGER="less"
+		export LESS="--ignore-case --LONG-PROMPT --QUIET --chop-long-lines -Sm --RAW-CONTROL-CHARS"
+
+		is_true "$ZSH_LESS_QUIT_IF_ONE_SCREEN" && export LESS="$LESS --quit-if-one-screen"
+
+	# 'more' is an alternative
+	elif in_path "more"; then
+		export PAGER="more"
+
+	# 'most is a final alternative'
+	elif in_path "most"; then
+		export PAGER="most"
+
+	# Otherwise, use whatever PAGER is already defined. If none defined, warn user.
+	elif [[ -z "$PAGER" ]] || ! in_path "$PAGER" ; then
+		echo_warn "Could not find any installed pager." "shell/pager"
+		unset PAGER
+	fi
+fi

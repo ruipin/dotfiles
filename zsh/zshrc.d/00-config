@@ -48,6 +48,14 @@ export LOCAL_BUILD_FOLDER="$HOME/src"
 
 
 ########################
+# Pager
+typeset -g ZSH_AUTO_DETECT_PAGER=1
+
+# less: use "quit-if-one-screen". Can cause issues in less version < 530
+typeset -g ZSH_LESS_QUIT_IF_ONE_SCREEN=1
+
+
+########################
 # Prompt
 
 # Cache mkprompt results

@@ -26,11 +26,6 @@ function set_display {
 	return 0
 }
 
-# Merge ~/.Xresources
-function xrdb_merge {
-	xrdb -merge ~/.Xresources
-}
-
 # Sets DISPLAY environment variable to network gateway (host)
 # If passed a command as argument, runs only this command with the host X display
 #
@@ -39,15 +34,15 @@ function gateway_x {
 
 	local gateway
 	local display
-	gateway=$(ip route show 0.0.0.0/0 | cut -d\  -f3)
+	gateway="$(ip route show 0.0.0.0/0 | cut -d\  -f3)"
 
 	if [[ -z "$gateway" ]]; then
-		echo_error "Could not obtain gateway IP address" "gateway_x"
+		echo_error "Could not obtain gateway IP address" "$0"
 		return 1
 	fi
 
 	display="$gateway:0.0"
-	echo_info "DISPLAY=\"$display\"" "gateway_x"
+	echo_info "DISPLAY=\"$display\"" "$0"
 
 	if [[ -z "$@" ]]; then
 		set_display "$display" || return $?
@@ -62,20 +57,54 @@ function gateway_x {
 }
 alias gwx="gateway_x"
 
+
+# Merge ~/.Xresources
+function xrdb_merge {
+	xrdb -merge ~/.Xresources
+}
+
+
 # X11 buffer controls
 # Param 0: Buffer to access
 #          "primary", "secondary", "clipboard"
 # Stdin: Modify buffer contents
 # Stdout (if no stdin provided): Read buffer contents
 function xbuffer {
+	if [[ "$#" -ne "1" ]]; then
+		echo_error "Usage: xbuffer <primary/secondary/clipboard>" "$0"
+		return 1
+	fi
+
+	local selection=""
+	case "$1" in
+		"p"|"primary")
+			selection="primary"
+			;;
+		"s"|"secondary")
+			selection="secondary"
+			;;
+		"c"|"clipboard")
+			selection="clipboard"
+			;;
+		*)
+			echo_error "Usage: xbuffer <primary/secondary/clipboard>" "$0"
+			return 2
+			;;
+	esac
+
+	if [[ -z "$selection" ]]; then
+		echo_error "Usage: xbuffer <primary/secondary/clipboard>" "$0"
+		return 3
+	fi
+
 	if in_path "xclip" ; then
 		if [[ ! -t 0 ]]; then
-			xclip -i -selection "$1"
+			xclip -i -selection "$selection"
 		else
-			xclip -o -selection "$1"
+			xclip -o -selection "$selection"
 		fi
 	elif in_path "xsel" ; then
-		xsel "--$1"
+		xsel "--$selection"
 	else
 		echo_error "No clipboard provider found (xsel/xclip)" "$0"
 	fi

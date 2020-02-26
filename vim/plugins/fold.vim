@@ -47,9 +47,3 @@ vnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 " <count>az : A folding (and line above)
 " <count>iz : Inner folding (no line above)
 Plug 'kana/vim-textobj-fold'
-
-
-"xnoremap iz :<C-U>silent!normal![zV]z<CR>
-"onoremap iz :normal viz<CR>
-"xnoremap az :<C-U>silent!normal![zkVj]zj<CR>
-"onoremap az :normal vaz<CR>

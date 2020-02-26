@@ -8,7 +8,7 @@ sed_exprs=()
 sed_exprs_main=()
 git_args=()
 
-files=()
+in_files=()
 in_refs=()
 
 use_alias=1
@@ -52,7 +52,7 @@ function _parse_args {
       *)
         # This should be a file name
         if [[ "$saw_files" -eq "1" ]]; then
-          files+=("$1")
+          in_files+=("$1")
         # This should be a reference
         else
           in_refs+=("$1")
@@ -258,6 +258,28 @@ function _parse_refs {
 }
 refs=()
 _parse_refs "${in_refs[@]}"
+
+
+##################
+# Parse files
+
+function _parse_files {
+  # Figure out which refs are branches/tags and which are commits, and add the relevant regexes
+  while [[ "$#" -gt "0" ]]; do
+    if [[ ! -z "$1" ]]; then
+      local file="$1"
+
+      [[ ! -z "$GIT_PREFIX" ]] && file="$GIT_PREFIX/$file"
+
+      [[ ! -e "$file" ]] && echo "ERROR: Could not find file/folder '$file'" && exit 4
+
+      files+=("$file")
+    fi
+    shift 1
+  done
+}
+files=()
+_parse_files "${in_files[@]}"
 
 
 ##################

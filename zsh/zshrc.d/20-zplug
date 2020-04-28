@@ -49,7 +49,9 @@ function load_plugins {
 	_zplug "zsh-users/zsh-completions", defer:2
 	#_zplug "zsh-users/zsh-autosuggestions"
 	#_zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
-	_zplug "mafredri/zsh-async", defer:2
+
+	# Cygwin doesn't really like zsh-async
+	[[ "$ZSH_OS" != *"cygwin"* ]] && _zplug "mafredri/zsh-async", defer:2
 	_zplug "ruipin/zsh-mkprompt", defer:2
 	
 	unfunction _zplug

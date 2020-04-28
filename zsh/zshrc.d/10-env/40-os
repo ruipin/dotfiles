@@ -8,6 +8,7 @@ function _reset_os_info {
 	typeset -g ZSH_OS=""
 	typeset -g ZSH_OSNAME=""
 	typeset -g ZSH_OSVER=""
+	typeset -g ZSH_OSMAJVER=""
 	typeset -g ZSH_ARCH=""
 	typeset -g ZSH_BITS=""
 }
@@ -62,11 +63,13 @@ function _parse_lsf_host_type {
 		*rhel#7*)
 			ZSH_OS="rhe7"
 			ZSH_OSNAME="rhe"
+			ZSH_OSMAJVER=7
 			ZSH_OSVER=7
 			;;
 		*rhel#6*)
 			ZSH_OS="rhe6"
 			ZSH_OSNAME="rhe"
+			ZSH_OSMAJVER=6
 			ZSH_OSVER=6
 			;;
 	esac
@@ -125,27 +128,32 @@ function refresh_os_info {
 	elif [[ -f "/etc/redhat-release" ]]; then
 		osname="rhe"
 
-	else
-		# Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
-		OS="$(uname -s)"
-		VER="$(uname -r)"
+	# If $OSTYPE exists, use it
+	elif [[ ! -z "$OSTYPE" ]]; then
+		osname="$OSTYPE"
+
 	fi
+
+	# Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+	[[ -z "$osname" ]] && osname="$(uname -s)"
+	[[ -z "$osver"  ]] && osver="$(uname -r)"
 
 	# Post-process OSNAME / OSVER
 	osname="${osname:l}"
 	osver="${osver:l}"
 
-	if [[ "$osname" == "redhatenterpriseserver" || "$osname" == "rhel" ]]; then
-		osname="rhe"
-		osver="${osver%%.*}"
-	fi
+	[[ "$osname" == "redhatenterpriseserver" || "$osname" == "rhel" ]] && osname="rhe"
+
+	local osmajver="${osver%%.*}"
 
 	# Apply results
 	ZSH_OSNAME="$osname"
 	ZSH_OSVER="$osver"
+	ZSH_OSMAJVER="$osmajver"
 	ZSH_OS="${osname}${osver}"
 
-	return 0
+	has_os_info
+	return "$?"
 }
 
 # Refresh OS info once at shell startup

@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "libevent" --github "libevent/libevent" --ver "release-2.1.8-stable.tar.gz" $@
+clone "libevent" --github "libevent/libevent" --ver "release-2.1.12-stable.tar.gz" $@
 
 # Build
 ./autogen.sh

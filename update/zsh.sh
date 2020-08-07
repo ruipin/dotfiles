@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "zsh" --github "zsh-users/zsh" --ver "zsh-5.7.1.tar.gz" $@
+clone "zsh" --github "zsh-users/zsh" --ver "zsh-5.8.tar.gz" $@
 
 
 # Build

@@ -59,37 +59,40 @@
   # Simple aliases
   a = add
   aa = add -A
+  ai = add --interactive
+  ap = add --patch
 
   d = diff
-  cp = cherry-pick
   cl = clone
+
+  b = branch -vv
+  bd = branch -d
+  bD = branch -D
+
+  cp = cherry-pick
+  cpc = cherry-pick --continue
+  cpa = cherry-pick --abort
+
   co = checkout
+  cob = checkout -b
+  coB = checkout -B
   cou = !sh -c 'git checkout -B \"${1}\" \"${1}@{u}\"' -
-  b = branch
 
   rb = rebase
-  rebaseu = rebase @{u}
   rbu = rebase @{u}
-  rebasea = rebase --abort
   rba = rebase --abort
-  rebasec = rebase --continue
   rbc = rebase --continue
-  rebasei = rebase -i
+  rbs = rebase --skip
   rbi = rebase -i
-  rebaseiu = rebase -i @{u}
   rbiu = rebase -i @{u}
 
   rst     = reset
-  reseth  = reset --hard
   rsth    = reset --hard
-  resetu  = reset @{u}
   rstu    = reset @{u}
-  resethu = reset --hard @{u}
   rsthu   = reset --hard @{u}
 
   st       = status
   s        = status -s
-  statustr = status  --untracked-files=no
   sttr     = !git st --untracked-files=no
   str      = !git s  --untracked-files=no
 
@@ -99,12 +102,11 @@
 
   ci  = commit
   cm  = commit -m
-  ca  = commit --amend
-  can = commit --amend --no-edit
-  cam = commit --amend -m
+  ca  = commit --amend --no-edit
+  cae = commit --amend
 
   unstage = reset HEAD --
-  cbranch = checkout -b
+
   squash = merge -ff --squash
   squash-merge = !git squash
 
@@ -153,7 +155,7 @@
 
   # List commits showing changed files
   list-changes = log --pretty=format:\"%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]\" --first-parent --decorate --stat
-  lc           = !git list
+  lc           = !git list-changes
 
   # List branches (verbose)
   lb = branch -vv

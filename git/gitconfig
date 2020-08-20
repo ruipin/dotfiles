@@ -107,7 +107,7 @@
 
   unstage = reset HEAD --
 
-  squash = merge -ff --squash
+  squash = merge --ff --squash
   squash-merge = !git squash
 
   ff-merge = merge --ff-only

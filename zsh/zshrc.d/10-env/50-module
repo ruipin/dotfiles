@@ -7,7 +7,7 @@
 # So that scripts can query whether we are using our custom module implementation
 typeset -g _has_custom_module=0
 function has_custom_module {
-	return $_has_custom_module
+	return "$_has_custom_module"
 }
 
 # Main 'module' functionality
@@ -30,8 +30,8 @@ function init_custom_module {
 		local tz="$TZ"
 
 		# Initialize module subsystem
-		source_sh $DEPOT_SETUP_ROOT/init/sh.d/modules-init
-		source_sh $DEPOT_SETUP_ROOT/init/sh.d/shell-config
+		source_sh "$DEPOT_SETUP_ROOT/init/sh.d/modules-init"
+		source_sh "$DEPOT_SETUP_ROOT/init/sh.d/shell-config"
 
 		# Wrap module subsystem
 		eval "function _orig_$( typeset -f module )"
@@ -44,7 +44,10 @@ function init_custom_module {
 
 		# Purge existing modules and load defaults
 		module orig purge
-		[[ ! -z "$_module_defaults" ]] && module load "$@" $_module_defaults || return $?
+		if [[ ! -z "$_module_defaults" ]]; then
+			module load "$@" "${_module_defaults[@]}" \
+				|| return "$?" 
+		fi
 
 		# Restore variables
 		[[ ! -z "$tz" ]] && export TZ="$tz"
@@ -58,43 +61,43 @@ function init_custom_module {
 		local res=0
 		case "$1" in
 		"autoload")
-			_module_autoload ${@:2}
-			res=$?
+			_module_autoload "${@:2}"
+			res="$?"
 			;;
 		"alias")
-			_module_alias ${@:2}
-			res=$?
+			_module_alias "${@:2}"
+			res="$?"
 			;;
 		"has_alias")
-			_module_has_alias ${@:2}
-			res=$?
+			_module_has_alias "${@:2}"
+			res="$?"
 			;;
 		"add_default")
-			_module_add_default ${@:2}
-			res=$?
+			_module_add_default "${@:2}"
+			res="$?"
 			;;
 		"purge-if-loaded")
 			res=0
 			if [[ ! -z "$LOADEDMODULES" ]]; then
 				module purge
-				res=$?
+				res="$?"
 			fi
 			;;
 		"purge"|"wrap"|"rewrap")
 			echo_debug "Purging modules..." "module purge"
 			_module_wrap
-			res=$?
+			res="$?"
 			;;
 		"load")
-			_module_load ${@:2}
-			res=$?
+			_module_load "${@:2}"
+			res="$?"
 			;;
 		# NOTE:
 		# Any call to modules should go through this command, to make sure the local prefix is not broken
 		"orig")
 			is_false "$_module_wrapped" && _module_wrap
-			_orig_module ${@:2}
-			res=$?
+			_orig_module "${@:2}"
+			res="$?"
 			is_function "activate_local_prefix" && activate_local_prefix 1
 			is_function "fix_locale" && fix_locale
 			;;
@@ -102,7 +105,7 @@ function init_custom_module {
 			module orig "$@"
 		esac
 
-		return $res
+		return "$res"
 	}
 
 	function module {
@@ -116,7 +119,7 @@ function init_custom_module {
 		local mgrep_cmd=$( alias mgrep )
 		mgrep_cmd="${mgrep_cmd#*=\'}"
 		mgrep_cmd="${mgrep_cmd% *}"
-		$mgrep_cmd $*
+		"$mgrep_cmd" "$*"
 	}
 
 	#####
@@ -124,7 +127,7 @@ function init_custom_module {
 	typeset -gA _module_deps=()
 	typeset -gA _module_cmd_deps=()
 	typeset -gA _module_aliases=()
-	typeset -g  _modules_defaults=()
+	typeset -g  _module_defaults=()
 	
 	typeset -g _module_alias_symbol="%"
 	typeset -g _module_name_symbol=":"
@@ -134,9 +137,9 @@ function init_custom_module {
 		local old_ifs="$IFS"
 		local IFS="="
 		for arg in "$@" ; do
-			local arr=(${=arg})
-			local malias=$arr[1]
-			local mname=$arr[2,-1]
+			local arr=("${=arg}")
+			local malias="$arr[1]"
+			local mname="$arr[2,-1]"
 
 			_module_aliases[$malias]="$mname"
 		done
@@ -172,21 +175,23 @@ function init_custom_module {
 				local mdeps="${_module_deps[$mname_deps]% }"
 				if [[ ! -z "$mdeps" ]]; then
 					# Resolve the dependency
-					_module_load --resolve-only ${=mdeps} || { res=$? && break }
-					load_params+=($_module_load_return)
+					# NOTE: $mdeps is unquoted on purpose
+					_module_load --resolve-only "${=mdeps}" || { res="$?" && break }
+					load_params+=("${_module_load_return[@]}")
 					unset _module_load_return
 				fi
 
 				# Resolve aliases unless module name starts with ':'
-				if [[ "$mname[1]" != "$_mobule_name_symbol" ]]; then
+				if [[ "$mname[1]" != "$_module_name_symbol" ]]; then
 					local malias="${mname#$_module_alias_symbol}"
-					local mresolved=$_module_aliases[${malias}]
+					local mresolved="$_module_aliases[${malias}]"
 					if [[ "$mname[1]" = "$_module_alias_symbol" && -z "$mresolved" ]]; then
 						echo_error "module load: alias '$malias' does not exist" "module load"
 						return 1
 					elif [[ ! -z "$mresolved" ]]; then
-						_module_load --resolve-only $mresolved || { res=$? && break }
-						load_params+=($_module_load_return)
+						# NOTE: $mresolved is unquoted on purpose
+						_module_load --resolve-only "${=mresolved}" || { res="$?" && break }
+						load_params+=("${_module_load_return[@]}")
 						unset _module_load_return
 						continue
 					fi
@@ -199,26 +204,27 @@ function init_custom_module {
 					#echo_debug "'$mname' already loaded" "module load"
 				else
 					# Set module is to be loaded
-					load_params+=($mname)
+					load_params+=("$mname")
 				fi
 			esac
 		done
 
 		if [[ "$res" -eq "0" ]]; then
 			# Remove duplicates
-			load_params=(${(@u)load_params})
+			load_params=("${(@u)load_params[@]}")
 
 			# If we are in resolve-only mode, return $load_params
 			if is_true "$resolve_only" ; then
-				typeset -g _module_load_return=($load_params)
+				typeset -g _module_load_return=("${load_params[@]}")
 			else
 				# Load and wrap the real 'module' command
 				if is_false "$_module_wrapped" ; then
-					_module_wrap --resolve-only || return $?
-					if [[ "$#_module_load_return" -ne "0" ]]; then
-						load_params=($_module_load_return $load_params)
+					# TODO: --resolve-only ??
+					_module_wrap --resolve-only || return "$?"
+					if [[ "${#_module_load_return}" -ne "0" ]]; then
+						load_params=("${_module_load_return[@]}" "${load_params[@]}")
 						unset _module_load_return
-						load_params=(${(@u)load_params})
+						load_params=("${(@u)load_params[@]}")
 					fi
 				fi
 
@@ -226,19 +232,19 @@ function init_custom_module {
 				if [[ "$#load_params" -ne "0" ]]; then
 					# Load modules and reset list of modules to be loaded
 					echo_debug "Loading module(s) '$load_params'..." "module load"
-					module orig load $load_params || return $res
+					module orig load "${load_params[@]}" || return "$res"
 				fi
 			fi
 		else
 			unset _module_load_return
 		fi
 
-		return $res
+		return "$res"
 	}
 
 	function _module_autoload_handler {
 		local cmd="$1"
-		local args=(${@:2})
+		local args=("${@:2}")
 		local res
 
 		# Make sure this lazy-loader only runs once
@@ -247,21 +253,24 @@ function init_custom_module {
 		# Get list of module deps
 		local mnames="${_module_cmd_deps[$cmd]% }"
 		#echo_debug "Lazy-loading module(s) '${mnames}'..." "module autoload"
+
+		# Load it
+		# NOTE: $mnames is unquoted on purpose
 		module load $mnames
-		res=$?
-		[[ "$res" -ne "0" ]] && return $res
+		res="$?"
+		[[ "$res" -ne "0" ]] && return "$res"
 
 		# Clear command dependencies
 		_module_cmd_deps[$cmd]=""
 
 		# Execute shadowed command
 		#echo_debug "$cmd $args" "module_autoload"
-		"$cmd" $args
+		"$cmd" "$args"
 	}
 
 	function _module_autoload {
 		local mname="$1"
-		local commands=(${@:2})
+		local commands=("${@:2}")
 
 		# Check for implicit alias
 		local malias
@@ -284,7 +293,6 @@ function init_custom_module {
 		# Shadow commands
 		local seen_mod=1
 		local mdeps=""
-		local mcmds=""
 		local cmd
 		for cmd in $commands ; do
 			case "$cmd" in

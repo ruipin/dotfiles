@@ -54,6 +54,8 @@
 [fetch]
   # Automatically prune stale remote branches on fetch
   prune = 1
+  # Automatically prune stale tags on fetch
+  pruneTags = 1
 
 [alias]
   # Simple aliases
@@ -113,9 +115,10 @@
   ff-merge = merge --ff-only
   ff = !git ff-merge
 
-  f = fetch
-  fetch-all = fetch --all
-  fa = !git fetch-all
+  f              = fetch
+  fa             = fetch --all
+  fat            = fetch --all --tags
+  ft             = fetch --tags
 
   praise = blame
 

@@ -46,6 +46,20 @@ endif
 exe 'set backupdir=' . g:backupdir . '//'
 set backup
 
+autocmd VimLeave * call DeleteOldBackups()
+function! DeleteOldBackups()
+	" Delete backups over 14 days old
+	let l:Old = (60 * 60 * 24 * 14)
+	let l:BackupFiles = split(glob(&backupdir."/*", 1)."\n".glob(&backupdir."/.[^.]*",1), "\n")
+	let l:Now = localtime()
+
+	for l:File in l:BackupFiles
+		if (l:Now - getftime(l:File)) > l:Old
+			call delete(l:File)
+		endif
+	endfor
+endfunction
+
 " When wrapping long lines, try to keep indent
 if has("patch-7.4.354")
 	set breakindent

@@ -57,15 +57,15 @@ endif
 	call SourceDotfile('plugins/rainbow.vim')
 
 	" Matchit
-	call SourceDotfile('plugins/matchit.vim')
+	"call SourceDotfile('plugins/matchit.vim')
 
 	" Undotree
 	call SourceDotfile('plugins/undotree.vim')
 
 	" Ctags
-	if has('nvim') || v:version >= 704
-		call SourceDotfile('plugins/ctags.vim')
-	endif
+	"if has('nvim') || v:version >= 704
+	"	call SourceDotfile('plugins/ctags.vim')
+	"endif
 
 	" vim-json: Better JSON formatting
 	call SourceDotfile('plugins/json.vim')
@@ -86,7 +86,7 @@ endif
 	"Plug 'easymotion/vim-easymotion'
 
 	" Vim-autoread: Reload files when they change on disk
-	Plug 'djoshea/vim-autoread'
+	"Plug 'djoshea/vim-autoread'
 
 	" Bufexplorer: Easily navigate buffers using \be, \bv, \bs
 	if has('nvim') || v:version >= 703
@@ -94,7 +94,7 @@ endif
 	endif
 
 	" Adds XtermColorTable command to list all available terminal colors
-	Plug 'guns/xterm-color-table.vim'
+	"Plug 'guns/xterm-color-table.vim'
 
 	" i3 status syntax
 	Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'vim' }
@@ -111,14 +111,14 @@ endif
 	"Plug 'severin-lemaignan/vim-minimap', { 'on': ['Minimap'] }
 
 	" HiLinkTrace - debug highlight groups using :HLT
-	Plug 'gerw/vim-HiLinkTrace', { 'on': ['HLT', 'HLT!'] }
+	"Plug 'gerw/vim-HiLinkTrace', { 'on': ['HLT', 'HLT!'] }
 
 	" Abolish.vim: working with variants of a word
 	" See github for examples, but I use it for %S (case-aware substitution)
 	Plug 'tpope/vim-abolish'
 
 	" commentary.vim: Adds the 'gc' mappings to comment/uncomment code automatically
-	Plug 'tpope/vim-commentary'
+	"Plug 'tpope/vim-commentary'
 
 	" vc.vim: VCS commands
 	"Plug 'juneedahamed/vc.vim'

@@ -5,14 +5,19 @@
 [core]
   # Set a local excludes file
   excludesfile = ~/.gitignore
+
   # Preload the index in parallel
   preloadindex = true
+
   # Helps with large indexes by splitting the index file
   splitIndex = true
+
   # Don't perform any output conversion with regards to CR/LF
   autocrlf = input
+
   # Warn on specific whitespace issues
   whitespace = blank-at-eol,space-before-tab,-blank-at-eof
+
   # The untracked cache makes git status operations on large repos much faster
   # Some file systems do not support it (it relies on directory mtime) so we should not enable it by default
   # Test support by using "git update-index --test-untracked-cache"
@@ -22,6 +27,7 @@
 [diff]
   # Use vimdiff for diffs
   tool = vimdiff
+
   # Use a better diff algorithm
   algorithm = histogram
 
@@ -54,32 +60,57 @@
 [fetch]
   # Automatically prune stale remote branches on fetch
   prune = 1
+
   # Automatically prune stale tags on fetch
   pruneTags = 1
 
 [alias]
+  ##############
   # Simple aliases
-  a = add
-  aa = add -A
-  ai = add --interactive
-  ap = add --patch
 
-  d = diff
+  # clone
   cl = clone
 
-  b = branch -vv
-  bd = branch -d
-  bD = branch -D
-
-  cp = cherry-pick
-  cpc = cherry-pick --continue
-  cpa = cherry-pick --abort
-
+  # checkout
   co = checkout
   cob = checkout -b
   coB = checkout -B
   cou = !sh -c 'git checkout -B \"${1}\" \"${1}@{u}\"' -
 
+  # add
+  a = add
+  aa = add -A
+  ai = add --interactive
+  ap = add --patch
+
+  # reset
+  rst     = reset
+  rsth    = reset --hard
+  rstu    = reset @{u}
+  rsthu   = reset --hard @{u}
+
+  unstage = reset HEAD --
+
+  # diff
+  d = diff
+
+  # commit
+  ci  = commit
+  cim = commit -m
+  ca  = commit --amend --no-edit
+  cae = commit --amend
+
+  # branch
+  b = branch -vv
+  bd = branch -d
+  bD = branch -D
+
+  # cherry-pick
+  cp = cherry-pick
+  cpc = cherry-pick --continue
+  cpa = cherry-pick --abort
+
+  # rebase
   rb = rebase
   rbu = rebase @{u}
   rba = rebase --abort
@@ -88,41 +119,28 @@
   rbi = rebase -i
   rbiu = rebase -i @{u}
 
-  rst     = reset
-  rsth    = reset --hard
-  rstu    = reset @{u}
-  rsthu   = reset --hard @{u}
-
-  st       = status
-  s        = status -s
-  sttr     = !git st --untracked-files=no
-  str      = !git s  --untracked-files=no
-
-  sl = stash list
-  sa = stash apply
-  ss = stash save
-
-  ci  = commit
-  cm  = commit -m
-  ca  = commit --amend --no-edit
-  cae = commit --amend
-
-  unstage = reset HEAD --
-
+  # merge
   squash = merge --ff --squash
   squash-merge = !git squash
 
   ff-merge = merge --ff-only
   ff = !git ff-merge
 
+  # fetch
   f              = fetch
   fa             = fetch --all
   fat            = fetch --all --tags
   ft             = fetch --tags
 
+  # blame
   praise = blame
 
-  # Status
+  # status
+  st       = status
+  s        = status -s
+  sttr     = !git st --untracked-files=no
+  str      = !git s  --untracked-files=no
+
   slow-status = status --untracked-files=normal --ignore-submodules=none
   slow-st     = !git slow-status
   slow-s      = !git slow-status -s
@@ -139,42 +157,37 @@
 
 
   ##############
-  # Last commit shortcuts
-  last = log -1 HEAD --decorate
-  l = !git last
+  # Diff
 
+  # diff last commit against previous
   dlast = diff --cached HEAD^
   dl = !git dlast
+
+  # diff against upstream
+  diff-push = diff @{upstream}..HEAD
+  dpush = !git diff-push
+  dp    = !git diff-push
+
 
   ###################
   # Log
 
+  # log last commit
+  last = log -1 HEAD --decorate
+  l = !git last
+
+  # log using a single line per commit
   log1 = log --oneline --date=short --pretty=format:\"%Cred%h %C(yellow)%ad%C(cyan)%d%Creset %s %C(bold)(%an)%Creset\"
   l1 = !git log1
 
-
-  ###################
-  # Listing
-
-  # List commits showing changed files
-  list-changes = log --pretty=format:\"%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]\" --first-parent --decorate --stat
+  # log commits showing changed files
+  log-changes = log --pretty=format:\"%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]\" --first-parent --decorate --stat
   lc           = !git list-changes
 
-  # List branches (verbose)
-  lb = branch -vv
-  bv = branch -vv
-
-  # List commits not in upstream
-  lpush = !git graph @{upstream}..HEAD
-  lp = !git lpush
-
-  # Diff against upstream
-  dpush = diff @{upstream}..HEAD
-  dp = !git dpush
-
-  # List all changes to a file
-  file = log -u
-  fdiff = !git file
+  # log commits not in upstream
+  log-push = !git graph @{upstream}..HEAD
+  lpush = !git list-push
+  lp    = !git list-push
 
 
   ###################
@@ -193,7 +206,7 @@
   graph-upstream = !bash -c 'git graph --first-parent \"${1-HEAD}\" $(git abbrev-q \"${1-HEAD}@{u}\") \"${@:2}\"' -
   gru = !git graph-upstream
 
-  # graph current branch
+  # graph current branch (old alias, superseded by 'graph-upstream')
   lhistory = !git graph-upstream
   lhist = !git lhistory
   lh = !git lhistory

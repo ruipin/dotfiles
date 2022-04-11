@@ -74,6 +74,10 @@
     { "key": "shift+backspace", "command": "smartDelete.left"  , "when": "editorTextFocus" },
     { "key": "backspace"      , "command": "-smartDelete.left" , "when": "editorTextFocus" },
 
+    // Fix Dynamic Tab Behaviour
+    //{ "key": "tab", "command": "-extension.dynamictabkey", "when": "editorTextFocus && !editorHasSelection && !editorReadOnly && !inSnippetMode" },
+    //{ "key": "tab", "command": "extension.dynamictabkey", "when": "editorTextFocus && !editorHasSelection && !editorReadOnly && !inSnippetMode && !suggestWidgetVisible && vim.mode == 'Insert'" },
+
     // Automatically added keybindings (empty keybind is a hack to force VSCode to add new keybindings here)
-    {},
+    {}
 ]

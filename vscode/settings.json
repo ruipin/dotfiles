@@ -4,7 +4,8 @@
     "workbench.enableExperiments": false,
 
     // Color scheme
-    "workbench.colorTheme": "Better Solarized Dark",
+    "workbench.colorTheme": "Braver's Solarized Dark (themed workbench)",
+    "workbench.iconTheme": "material-icon-theme",
 
     // Editor - Tabs
     "editor.detectIndentation": true, // Automatically adapt indentation style to the file being edited
@@ -37,6 +38,9 @@
 
 
     //-----------------
+    // UI
+    "workbench.view.alwaysShowHeaderActions": true,
+
     // UI - Editor tab sizings ('shrink' = allow reducing if necessary to save space)
     "workbench.editor.tabSizing": "shrink",
 
@@ -44,6 +48,41 @@
     "workbench.colorCustomizations": {
         "editorIndentGuide.activeBackground": "#93a1a191", // Active indentation guide
         "editorRuler.foreground": "#93a1a140", // Vertical rulers
+
+        "editorWhitespace.foreground": "#93a1a135", // Whitespace indicators
+        "editor.background": "#002b36",
+
+        // Colored Brackets
+        "editorBracketHighlight.foreground1": "#ceaf00",
+        "editorBracketHighlight.foreground2": "#da70d6",
+        "editorBracketHighlight.foreground3": "#179fff",
+        "editorBracketHighlight.foreground4": "#9370DB", // MediumPurple
+        "editorBracketHighlight.foreground5": "#ff6b35", // OrangeRed
+        "editorBracketHighlight.foreground6": "#74c074", // PaleGreen
+        "editorBracketHighlight.unexpectedBracket.foreground": "#ff1212",
+    },
+
+    // UI - Tokens
+    "editor.tokenColorCustomizations": {
+        // Use lime keywords, rather than the theme default (1)
+        "keywords": "#859900",
+
+        // Complex rules here
+        "textMateRules": [
+            {
+                "scope": [ "constant.character", "constant.other" ],
+                "settings": { "foreground": "#44c0d6cb" }
+            },{
+                "scope": [ "constant.other.define.systemverilog"],
+                "settings": { "foreground": "#ff5c5cd2" }
+            },{
+                "scope": "support.function",
+                "settings": { "foreground": "#B58900" }
+            },{
+                "scope": "keyword.control",
+                "settings": { "foreground": "#B58900" }
+            },
+        ],
     },
 
 
@@ -53,6 +92,7 @@
         "**/.git*": true, // Git
         "**/.vscode": true, // Visual Studio Code
         "**/.dvt": true, // DVT Eclipse IDE
+        "**/eclipse": true, // More DVT Eclipse IDE
         "**/.favorites*.json": true, // Favorites extension storage
         "**/.*": true, // Anything else starting with a dot
     },
@@ -60,9 +100,9 @@
 
     //-----------------
     // Favourites
-    "favorites.storageFilePath": ".favorites.local.json",
+    "favorites.storageFilePath": ".favorites.json",
     "favorites.storageRegistry": [
-        ".favorites.json"
+        "../favorites.json"
     ],
 
 
@@ -72,12 +112,52 @@
     "git.autofetch": false, // No auto-fetching
     "gitlens.codeLens.enabled": false, // Disable codelens
     "gitlens.currentLine.enabled": false, // Disable codelens on cursor line
-    "gitlens.hovers.currentLine.over": "line", // Trigger hovers when hovering anywhere over a line
+    "gitlens.hovers.currentLine.enabled": false, // Disable codelens when hovering on a line
+    "gitlens.hovers.currentLine.over": "line", // Trigger hovers when hovering anywhere over a line (if enabled with *.enabled)
     "gitlens.statusBar.command": "gitlens.revealCommitInView", // Clicking the gitlens entry in the statusbar goes to the commit
+    "gitlens.showWhatsNewAfterUpgrades": false, // Don't show "What's new" page
+    "gitlens.showWelcomeOnInstall": false, // Don't show "Welcome" page
+    "gitlens.plusFeatures.enabled": false, // Don't enable Gitlens+ features which need login/subscription
+    "gitlens.currentLine.pullRequests.enabled": false, // Disable support for pull request information
 
 
     //-----------------
-    // Vim - see https://marketplace.visualstudio.com/items?itemName=vscodevim.vim
+    // Error Lens
+    "errorLens.gutterIconsEnabled": true, // Enable gutter icons
+
+
+    //-----------------
+    // Indentation Guides + Colored Brackets
+    "editor.guides.indentation": true, // Render Indentation Guides
+    "editor.bracketPairColorization.enabled": true, // Enable bracket pair colorisation
+    "editor.guides.bracketPairs": true, // Color the indentation guides as well
+    "editor.guides.bracketPairsHorizontal": true, // Add horizontal bracket pair guides, not just indentation guides
+
+
+    //-----------------
+    // Better Comments
+    "better-comments.tags": [
+        // Copied from the default config
+        { "tag": "!", "color": "#FF2D00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "?", "color": "#3498DB", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "//", "color": "#474747", "strikethrough": true, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "todo", "color": "#FF8C00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "*", "color": "#98C379", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        // Custom ones start here
+        { "tag": "revisit", "color": "#FF8C00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "fixme", "color": "#FF2D00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "warn", "color": "#ffcc00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+    ],
+
+
+    //-----------------
+    // Dynamic Tabs
+    "dynamicTab.indentBasedOnPrecedingLine": true, // Match indent with previous line
+    "dynamicTab.numberOfPreviousLinesToSearch": 2, // Search up to two lines
+
+
+    //-----------------
+    // VSCodeVim - see https://marketplace.visualstudio.com/items?itemName=vscodevim.vim
     "vim.visualstar": true, // Allow searching using */# in visual mode
     "vim.highlightedyank.enable": true, // Highlight yank target when yanking
     "vim.debug.silent": true, // Disable logging for performance
@@ -85,6 +165,7 @@
     "vim.hlsearch": true, // Show text matches of the most recent search command
     "vim.ignorecase": false, // Do not ignore case when searching - can use '\c' to ignore case
     "vim.maxmapdepth": 100, // Reduce number of recursive key mappings allowed
+    "vim.useSystemClipboard": true,
 
     // Vim keybindings
     "vim.leader": "\\", // Set <leader> key
@@ -95,6 +176,7 @@
         "<C-V>": true, // Enter Visual Block Mode
         "<C-r>": true, // Redo
     },
+
 
     "vim.normalModeKeyBindings": [
         // Shift + Leader => 2x Leader
@@ -134,6 +216,7 @@
     "vim.normalModeKeyBindingsNonRecursive": [
         // Tab enters insert mode with proper indentation
         { "before": ["<Tab>"], "commands": ["tab"], "after": ["i"], "silent": true },
+        //{ "before": ["<Tab>"], "commands": ["extension.dynamictabkey"], "after": ["i"], "silent": true },
 
         // Use <leader> + / to disable search highlights (:nohl)
         { "before": ["<leader>", "/"], "commands": [":nohl"] },
@@ -196,7 +279,6 @@
 
         // Use semicolon (and colon) to open the command palette (Ctrl-Shift-P)
         { "before": [";"], "commands": ["workbench.action.showCommands"] },
-        { "before": [":"], "commands": ["workbench.action.showCommands"] },
     ],
 
     // Vim - EasyMotion

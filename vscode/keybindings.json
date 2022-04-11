@@ -1,0 +1,79 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+    // Move between groups using Ctrl+hjkl / Ctrl+Arrows
+    { "key": "ctrl+k"    , "command": "workbench.action.navigateUp"    },
+    { "key": "ctrl+up"   , "command": "workbench.action.navigateUp"    },
+    { "key": "ctrl+j"    , "command": "workbench.action.navigateDown"  },
+    { "key": "ctrl+down" , "command": "workbench.action.navigateDown"  },
+    { "key": "ctrl+h"    , "command": "workbench.action.navigateLeft"  },
+    { "key": "ctrl+left" , "command": "workbench.action.navigateLeft"  },
+    { "key": "ctrl+l"    , "command": "workbench.action.navigateRight" },
+    { "key": "ctrl+right", "command": "workbench.action.navigateRight" },
+
+    // Move editors between groups with Ctrl+hjkl / Ctrl+Arrows
+    { "key": "ctrl+shift+k"    , "command": "workbench.action.moveEditorToAboveGroup", "when": "editorFocus" },
+    { "key": "ctrl+shift+up"   , "command": "workbench.action.moveEditorToAboveGroup", "when": "editorFocus" },
+    { "key": "ctrl+shift+j"    , "command": "workbench.action.moveEditorToBelowGroup", "when": "editorFocus" },
+    { "key": "ctrl+shift+down" , "command": "workbench.action.moveEditorToBelowGroup", "when": "editorFocus" },
+    { "key": "ctrl+shift+h"    , "command": "workbench.action.moveEditorToLeftGroup" , "when": "editorFocus" },
+    { "key": "ctrl+shift+left" , "command": "workbench.action.moveEditorToLeftGroup" , "when": "editorFocus" },
+    { "key": "ctrl+shift+l"    , "command": "workbench.action.moveEditorToRightGroup", "when": "editorFocus" },
+    { "key": "ctrl+shift+right", "command": "workbench.action.moveEditorToRightGroup", "when": "editorFocus" },
+
+    // Move between editors within a group with Ctrl+A/D
+    { "key": "ctrl+d", "command": "workbench.action.nextEditorInGroup"    , "when": "editorFocus" },
+    { "key": "ctrl+a", "command": "workbench.action.previousEditorInGroup", "when": "editorFocus" },
+
+    // Move editors within a group with Ctrl+Shift+A/D
+    { "key": "ctrl+shift+d", "command": "workbench.action.moveEditorRightInGroup", "when": "editorFocus" },
+    { "key": "ctrl+shift+a", "command": "workbench.action.moveEditorLeftInGroup" , "when": "editorFocus" },
+
+    // Close Editor Group with Ctrl+W
+    { "key": "ctrl+w", "command": "workbench.action.closeGroup" },
+
+    // Rename in file explorer with R
+    // Condition copied from default F2 keybinding
+    { "key": "r", "command": "renameFile", "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus" },
+
+    // Disable Numbered Bookmarks default keybindings
+    { "key": "ctrl+1", "command": "-numberedBookmarks.jumpToBookmark1", "when": "editorTextFocus" },
+    { "key": "ctrl+2", "command": "-numberedBookmarks.jumpToBookmark2", "when": "editorTextFocus" },
+    { "key": "ctrl+3", "command": "-numberedBookmarks.jumpToBookmark3", "when": "editorTextFocus" },
+    { "key": "ctrl+4", "command": "-numberedBookmarks.jumpToBookmark4", "when": "editorTextFocus" },
+    { "key": "ctrl+5", "command": "-numberedBookmarks.jumpToBookmark5", "when": "editorTextFocus" },
+    { "key": "ctrl+6", "command": "-numberedBookmarks.jumpToBookmark6", "when": "editorTextFocus" },
+    { "key": "ctrl+7", "command": "-numberedBookmarks.jumpToBookmark7", "when": "editorTextFocus" },
+    { "key": "ctrl+8", "command": "-numberedBookmarks.jumpToBookmark8", "when": "editorTextFocus" },
+    { "key": "ctrl+9", "command": "-numberedBookmarks.jumpToBookmark9", "when": "editorTextFocus" },
+
+    { "key": "ctrl+shift+1", "command": "-numberedBookmarks.toggleBookmark1", "when": "editorTextFocus" },
+    { "key": "ctrl+shift+2", "command": "-numberedBookmarks.toggleBookmark2", "when": "editorTextFocus" },
+    { "key": "ctrl+shift+3", "command": "-numberedBookmarks.toggleBookmark3", "when": "editorTextFocus" },
+    { "key": "ctrl+shift+4", "command": "-numberedBookmarks.toggleBookmark4", "when": "editorTextFocus" },
+    { "key": "ctrl+shift+5", "command": "-numberedBookmarks.toggleBookmark5", "when": "editorTextFocus" },
+    { "key": "ctrl+shift+6", "command": "-numberedBookmarks.toggleBookmark6", "when": "editorTextFocus" },
+    { "key": "ctrl+shift+7", "command": "-numberedBookmarks.toggleBookmark7", "when": "editorTextFocus" },
+    { "key": "ctrl+shift+8", "command": "-numberedBookmarks.toggleBookmark8", "when": "editorTextFocus" },
+    { "key": "ctrl+shift+9", "command": "-numberedBookmarks.toggleBookmark9", "when": "editorTextFocus" },
+
+    // Disable replace keybindings
+    { "key": "ctrl+h", "command": "-editor.action.startFindReplaceAction", "when": "editorFocus || editorIsOpen" },
+    { "key": "ctrl+shift+h", "command": "-workbench.action.replaceInFiles" },
+
+    // Do not select input suggestions with "Enter". Enter should be line-breaks, that is what "Tab" is for.
+    { "key": "enter", "command": "-acceptSelectedSuggestion", "when": "acceptSuggestionOnEnter && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus" },
+
+    // Toggle side-bar with Ctrl-N
+    { "key": "ctrl+n", "command": "-workbench.action.files.newUntitledFile" },
+    { "key": "ctrl+n", "command": "workbench.action.toggleSidebarVisibility" },
+
+    // Extension - Smart Delete
+    // Use Shift+Delete and Shift+Backspace
+    { "key": "shift+delete"   , "command": "smartDelete.right" , "when": "editorTextFocus" },
+    { "key": "delete"         , "command": "-smartDelete.right", "when": "editorTextFocus" },
+    { "key": "shift+backspace", "command": "smartDelete.left"  , "when": "editorTextFocus" },
+    { "key": "backspace"      , "command": "-smartDelete.left" , "when": "editorTextFocus" },
+
+    // Automatically added keybindings (empty keybind is a hack to force VSCode to add new keybindings here)
+    {},
+]

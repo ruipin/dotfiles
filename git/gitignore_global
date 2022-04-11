@@ -4,3 +4,5 @@
 
 # Ctags file at the root of the repository
 .tags
+.favorites*.json
+.vscode

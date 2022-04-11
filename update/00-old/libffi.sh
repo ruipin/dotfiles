@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "libffi" --github "libffi/libffi" --ver "v3.2.1.tar.gz" $@
+clone "libffi" --github "libffi/libffi" --ver "v3.4.2.tar.gz" $@
 
 # Build
 ./autogen.sh

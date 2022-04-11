@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "valgrind" --targz "http://www.valgrind.org/downloads/valgrind-3.14.0.tar.bz2" $@
+clone "valgrind" --targz "https://sourceware.org/pub/valgrind/valgrind-3.18.1.tar.bz2" $@
 
 
 # Build

@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "ag" --github "ggreer/the_silver_searcher" --ver "2.1.0.tar.gz" $@
+clone "ag" --github "ggreer/the_silver_searcher" --ver "2.2.0.tar.gz" $@
 
 # Build
 ./autogen.sh

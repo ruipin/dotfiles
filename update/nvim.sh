@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "neovim" --github "neovim/neovim" --ver "master" $@
+clone "neovim" --github "neovim/neovim" --ver "v0.6.1" $@
 
 # Build
 make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH=${LOCAL_PREFIX}" CMAKE_BUILD_TYPE=RelWithDebInfo 

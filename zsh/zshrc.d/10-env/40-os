@@ -60,13 +60,13 @@ function _parse_lsf_host_type {
 
 	# OS Info
 	case "${HOSTTYPE:l}" in
-		*rhel#7*)
+		*rhe#7*)
 			ZSH_OS="rhe7"
 			ZSH_OSNAME="rhe"
 			ZSH_OSMAJVER=7
 			ZSH_OSVER=7
 			;;
-		*rhel#6*)
+		*rhe#6*)
 			ZSH_OS="rhe6"
 			ZSH_OSNAME="rhe"
 			ZSH_OSMAJVER=6
@@ -150,7 +150,7 @@ function refresh_os_info {
 	ZSH_OSNAME="$osname"
 	ZSH_OSVER="$osver"
 	ZSH_OSMAJVER="$osmajver"
-	ZSH_OS="${osname}${osver}"
+	ZSH_OS="${osname}${osmajver}"
 
 	has_os_info
 	return "$?"

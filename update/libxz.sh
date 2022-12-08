@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "libxz" --targz "https://tukaani.org/xz/xz-5.2.5.tar.gz" $@
+clone "libxz" --targz "https://tukaani.org/xz/xz-5.2.9.tar.gz" $@
 
 # Build
 ./autogen.sh

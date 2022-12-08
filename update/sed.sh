@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "sed" -t "http://ftp.gnu.org/gnu/sed/sed-4.8.tar.gz" "$@"
+clone "sed" -t "http://ftp.gnu.org/gnu/sed/sed-4.9.tar.gz" "$@"
 
 
 # Build

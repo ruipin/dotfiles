@@ -6,3 +6,5 @@
 .tags
 .favorites*.json
 .vscode
+.svls.toml
+.svlint.toml

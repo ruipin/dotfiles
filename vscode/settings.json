@@ -19,7 +19,7 @@
 
     // Editor - Smooth scrolling
     "editor.smoothScrolling": true,
-    "editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorSmoothCaretAnimation": "on",
     "workbench.list.smoothScrolling": true,
 
     // Editor - Force a minimum of N surrounding lines above/below cursor
@@ -35,6 +35,10 @@
     "editor.mouseWheelZoom": true, // Allow Ctrl+MouseWheel to zoom font size in/out
     "editor.wrappingIndent": "indent", // Add one extra indent when wordwrapping
     "editor.mouseWheelScrollSensitivity": 2, // Increase scrolling sensitivity
+    "editor.stickyScroll.enabled": true, // Show nested scopes during scroll at top of editor
+
+    // Terminal - Misc
+    "terminal.integrated.smoothScrolling": true, // Smooth scroll terminal
 
 
     //-----------------
@@ -110,6 +114,7 @@
     // Git / Gitlens
     "git.enableSmartCommit": false, // No automatic commits
     "git.autofetch": false, // No auto-fetching
+    "git.mergeEditor": true, // Use VSCode's merge editor
     "gitlens.codeLens.enabled": false, // Disable codelens
     "gitlens.currentLine.enabled": false, // Disable codelens on cursor line
     "gitlens.hovers.currentLine.enabled": false, // Disable codelens when hovering on a line

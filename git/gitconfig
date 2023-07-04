@@ -64,6 +64,9 @@
   # Automatically prune stale tags on fetch
   pruneTags = 1
 
+  # Do not automatically fetch submodules
+  recurseSubmodules = no
+
 [alias]
   ##############
   # Simple aliases

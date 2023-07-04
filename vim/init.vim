@@ -37,3 +37,6 @@ call SourceDotfile('auto_highlight.vim')
 
 " Large Files
 call SourceDotfile('large_files.vim')
+
+" WSL
+if has('wsl') | call SourceDotfile('wsl.vim') | endif

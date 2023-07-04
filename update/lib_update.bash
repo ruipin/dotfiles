@@ -6,6 +6,20 @@
 
 set -e
 
+function confirm_yn {
+  local yn
+  read -p "$@ [yn] " yn
+  echo
+
+  case "$yn" in
+    [Yy]) return 0 ;;
+    *   ) return 1 ;;
+  esac
+}
+
+
+#################
+
 # Check setup
 if [[ -z "$LOCAL_BUILD_FOLDER" ]]; then
 	echo "Please define \$LOCAL_BUILD_FOLDER"
@@ -13,9 +27,12 @@ if [[ -z "$LOCAL_BUILD_FOLDER" ]]; then
 fi
 
 if [[ -z "$LOCAL_PREFIX" ]]; then
-	echo "Please define \$LOCAL_PREFIX"
-	exit -2
+  confirm_yn "No local prefix defined. Use default '/usr/local'?" \
+    || exit -2
+  export LOCAL_PREFIX="/usr/local"
 fi
+
+exit 0
 
 # Save current PWD
 export OLD_PWD="$PWD"

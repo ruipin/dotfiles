@@ -38,44 +38,67 @@ function load_plugins {
 	else
 		is_true "$_zplug_loaded" && return
 		source "$ZPLUG_ROOT/init.zsh"
+		_zplug_loaded=1
 		function _zplug {
 			zplug $@
 		}
-		_zplug "zplug/zplug"
+
+		# No need to manage zplug, its better to manage it with git/ansible
+		#_zplug "zplug/zplug" , hook-build:'zplug --self-manage'
 	fi
+
+	# Cygwin doesn't really like zsh-async
+	[[ "$ZSH_OS" != *"cygwin"* ]] && _zplug "mafredri/zsh-async", defer:2
 
 	_zplug "zsh-users/zsh-syntax-highlighting", defer:2
 	_zplug "zsh-users/zsh-history-substring-search", defer:2
 	_zplug "zsh-users/zsh-completions", defer:2
 	#_zplug "zsh-users/zsh-autosuggestions"
 	#_zplug "rupa/z", use:z.sh # Disabled as it slows down Zsh quite a bit
-
-	# Cygwin doesn't really like zsh-async
-	[[ "$ZSH_OS" != *"cygwin"* ]] && _zplug "mafredri/zsh-async", defer:2
 	_zplug "ruipin/zsh-mkprompt", defer:2
+
 	
 	unfunction _zplug
-	if [[ "$type" -ne "0" ]]; then
-		# Install new plugins
+	case "$type" in
+	0)
+		# Do nothing
+		;;
+	1|2)
+		# Query user to install new plugins
 		if ! zplug check --verbose; then
 			printf "Install? [y/N]: "
 			if read -q; then
 				echo; zplug install
+				echo "Install done"
 			fi
 		fi
 
 		# Update plugins
+		echo "Update"
 		[[ "$type" -eq "1" ]] && zplug update #--verbose
 
 		# Finalize plugin loading
+		echo "Load"
 		zplug load #--verbose
-
-		_zplug_loaded=1
-	fi
+		echo "Load done"
+		;;
+	3)
+		# Install and update plugins
+		echo "Running 3"
+		if ! zplug check ; then
+			zplug install
+		fi
+		zplug update
+		;;
+	*)
+		# Unknown
+		echo_error "Unknown zplug initialisation type '$type'."
+		;;
+	esac
 }
 
 # Load plugins at shell startup
-load_plugins 0
+load_plugins "${ZSHRC_ZPLUG_INIT_TYPE:-0}"
 
 # Allow easy lazy-loading of zplug
 function zplug {

@@ -1,0 +1,55 @@
+- name: Check if /bin/zsh exists
+  ansible.builtin.stat:
+    path: /bin/zsh
+  register: bin_zsh
+
+- name: Pick zsh executable to use
+  ansible.builtin.set_fact:
+    zsh_path: "{{ '/bin/zsh' if bin_zsh.stat.executable else lookup('pipe', 'which zsh') }}"
+
+- name: Symlink ~/dotfiles/zsh/zshrc to ~/.zshrc
+  ansible.builtin.file:
+    src: dotfiles/zsh/zshrc
+    path: ~/.zshrc
+    state: link
+
+- name: Clone dircolors-solarized
+  ansible.builtin.git:
+    repo: https://github.com/seebi/dircolors-solarized.git
+    update: true
+    dest: ~/src/dircolors-solarized
+    umask: '0067'
+  environment:
+    GIT_TERMINAL_PROMPT: '0'
+
+- name: Clone zplug
+  ansible.builtin.git:
+    repo: https://github.com/zplug/zplug
+    clone: true
+    update: true
+    force: true
+    dest: ~/.zplug
+    umask: '0067'
+  environment:
+    GIT_TERMINAL_PROMPT: '0'
+  register: zplug_clone
+  changed_when:
+    - zplug_clone.changed
+    - "not 'msg' in zplug_clone or not 'Local modifications exist' in zplug_clone.msg"
+
+- name: Install and update zplug plugins
+  ansible.builtin.script:
+    executable: "{{ zsh_path }}"
+    cmd: files/install_zplug.sh
+  register: zplug_install
+  changed_when:
+    - zplug_install.changed
+    - zplug_install.stdout
+
+- name: Change user's default shell
+  become: true
+  become_user: root
+  when: zsh_change_default_shell
+  ansible.builtin.user:
+    name: "{{ whoami.stdout }}"
+    shell: "{{ zsh_path }}"

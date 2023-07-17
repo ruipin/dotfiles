@@ -1,0 +1,19 @@
+# Can be executed in a one-liner by running one of the following commands:
+#
+# HTTPS:
+#   ansible-pull -U https://github.com/ruipin/dotfiles.git -d ~/dotfiles
+# SSH:
+#   ansible-pull -U git@github.com:ruipin/dotfiles.git -d ~/dotfiles
+
+- name: Install ruipin's dotfiles
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Fail if incorrect playbook directory
+      fail:
+        msg: "Incorrect playbook directory passed. Please use '-d ~/dotfiles' when calling 'ansible-pull'."
+      when: playbook_dir != lookup('pipe', 'echo ~/dotfiles')
+
+    - name: Run dotfiles role
+      ansible.builtin.import_role:
+        name: ansible

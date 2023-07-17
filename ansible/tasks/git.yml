@@ -1,0 +1,11 @@
+- name: Symlink ~/dotfiles/gitconfig to ~/.gitconfig
+  ansible.builtin.file:
+    src: dotfiles/git/gitconfig
+    path: ~/.gitconfig
+    state: link
+
+- name: Symlink ~/dotfiles/gitignore_global to ~/.gitignore
+  ansible.builtin.file:
+    src: dotfiles/git/gitignore_global
+    path: ~/.gitignore
+    state: link

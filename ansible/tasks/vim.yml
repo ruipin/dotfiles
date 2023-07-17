@@ -1,0 +1,30 @@
+- name: Create vim directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '750'
+  with_items:
+    - ~/.vim/autoload
+
+- name: Symlink ~/dotfiles/vim/vimrc to ~/.vimrc
+  ansible.builtin.file:
+    src: dotfiles/vim/vimrc
+    path: ~/.vimrc
+    state: link
+
+- name: Symlink ~/dotfiles/vim/vimrc to ~/.config/nvim/init.vim
+  ansible.builtin.file:
+    src: ../../dotfiles/vim/vimrc
+    path: ~/.config/nvim/init.vim
+    state: link
+
+- name: Download vim-plug for vim
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    dest: ~/.vim/autoload/plug.vim
+  register: vim_vimplug
+
+- name: Update vim plugins
+  ansible.builtin.command: vim +PlugUpdate +qall
+  changed_when: vim_vimplug.changed
+  register: vim_plugins

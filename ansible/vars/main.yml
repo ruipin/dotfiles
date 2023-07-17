@@ -1,0 +1,6 @@
+#####
+# ZSH
+
+# Whether to change the user's default shell or not
+# Requires being root, or otherwise be able to escalate privileges
+zsh_change_default_shell: false

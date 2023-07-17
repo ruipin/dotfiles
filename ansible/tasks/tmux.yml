@@ -1,0 +1,25 @@
+- name: Symlink ~/dotfiles/tmux/tmux.conf to ~/.tmux.conf
+  ansible.builtin.file:
+    src: dotfiles/tmux/tmux.conf
+    path: ~/.tmux.conf
+    state: link
+
+- name: Clone tmux plugin manager
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm
+    clone: true
+    update: true
+    force: true
+    dest: ~/.tmux/plugins/tpm
+    umask: '0067'
+  environment:
+    GIT_TERMINAL_PROMPT: '0'
+
+- name: Install TPM plugins
+  ansible.builtin.shell: |-
+    export DOTFILES=~/dotfiles
+    ~/.tmux/plugins/tpm/bin/install_plugins
+  register: tpm_install
+  changed_when:
+    - tpm_install.changed
+    - "'Installing' in tpm_install.stdout"

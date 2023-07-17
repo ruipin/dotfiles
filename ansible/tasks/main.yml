@@ -1,0 +1,21 @@
+# Needs to be done manually since we don't know whether these roles are being called with 'become' or not
+- name: Discover who we're running as
+  command: whoami
+  register: whoami
+  changed_when: false
+  tags: always
+
+- import_tasks: git.yml
+  tags: git
+
+- import_tasks: zsh.yml
+  tags: zsh
+
+- import_tasks: neovim.yml
+  tags: neovim
+
+- import_tasks: vim.yml
+  tags: vim
+
+- import_tasks: tmux.yml
+  tags: tmux

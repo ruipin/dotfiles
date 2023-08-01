@@ -9,7 +9,6 @@
 #########################
 # List of plugins
 set -g @tpm_plugins 'tmux-plugins/tpm '
-#set -ga @tpm_plugins 'tmux-plugins/tmux-sensible ' # Sensible default config
 set -ga @tpm_plugins 'tmux-plugins/tmux-sidebar ' # cwd tree sidebar using prefix-tab and prefix-backspace
 set -ga @tpm_plugins 'tmux-plugins/tmux-prefix-highlight ' # highlight on statusbar is prefix is pressed
 set -ga @tpm_plugins 'tmux-plugins/tmux-yank ' # Allow copy to system clipboard using prefix + y (or Y for PWD)

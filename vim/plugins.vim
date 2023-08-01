@@ -5,123 +5,158 @@
 " Loads and configures plugins
 """""""""""""""""""""""""""""""""""""""""
 
+"""""
+" Default to minimal mode when running as root, to reduce exposure
+let g:minimalPlugins = get(g:, 'minimalPlugins', ($USER == 'root'))
+
+
+" Utility functions
+function! s:PlugFile(fname, is_minimal=0)
+	if g:minimalPlugins && !a:is_minimal
+		return
+	endif
+
+	call SourceDotfile(a:fname)
+endfunction
+
+function! s:Plug(...)
+	if g:minimalPlugins
+		return
+	endif
+
+	call call("plug#", a:000)
+endfunction
+
+function! s:PlugMinimal(...)
+	call call("plug#", a:000)
+endfunction
+
+
+"""""
+" Load vim-plugged
 if has('nvim')
 	call plug#begin('~/.config/nvim/plugged')
 else
 	call plug#begin('~/.vim/plugged')
 endif
+
+
+"""""
+" Load plugins
 	" Can be used to create new text objects
 	" Some plugins depend on this
-	Plug 'kana/vim-textobj-user'
+	call s:Plug('kana/vim-textobj-user')
 
 
 	"""""""""""
 	" Plugins with separate configuration
 
 	" Vim theme, color, etc
-	call SourceDotfile('theme.vim')
+	call s:PlugFile('theme.vim', 1)
 
 	" Vim-airline
-	call SourceDotfile('plugins/airline.vim')
+	call s:PlugFile('plugins/airline.vim', 1)
 
 	" Autocomplete
-	call SourceDotfile('plugins/autocomplete.vim')
+	call s:PlugFile('plugins/autocomplete.vim')
 
 	" NERDTree
 	if !exists("g:gui_oni") && (has('nvim') || v:version >= 704)
-		call SourceDotfile('plugins/nerdtree.vim')
+		call s:PlugFile('plugins/nerdtree.vim', 1)
 	endif
 
 	" Fold
-	call SourceDotfile('plugins/fold.vim')
+	call s:PlugFile('plugins/fold.vim')
 
 	" System Verilog highlighting
-	call SourceDotfile('plugins/system_verilog.vim')
+	call s:PlugFile('plugins/system_verilog.vim')
 
 	" indent
-	call SourceDotfile('plugins/indent.vim')
+	call s:PlugFile('plugins/indent.vim', 1)
 
 	" EasyAlign
-	call SourceDotfile('plugins/easyalign.vim')
+	call s:PlugFile('plugins/easyalign.vim')
 
 	" Fzf fuzzy finder
-	call SourceDotfile('plugins/fzf.vim')
+	call s:PlugFile('plugins/fzf.vim')
 
 	" Auto pairs
-	call SourceDotfile('plugins/auto-pairs.vim')
+	call s:PlugFile('plugins/auto-pairs.vim', 1)
 
 	" Bufkill
-	call SourceDotfile('plugins/bufkill.vim')
+	call s:PlugFile('plugins/bufkill.vim')
 
 	" Rainbow Parentheses
-	call SourceDotfile('plugins/rainbow.vim')
+	call s:PlugFile('plugins/rainbow.vim')
 
 	" Matchit
-	"call SourceDotfile('plugins/matchit.vim')
+	"call s:PlugFile('plugins/matchit.vim')
 
 	" Undotree
-	call SourceDotfile('plugins/undotree.vim')
+	call s:PlugFile('plugins/undotree.vim')
 
 	" Ctags
 	"if has('nvim') || v:version >= 704
-	"	call SourceDotfile('plugins/ctags.vim')
+	"	call s:PlugFile('plugins/ctags.vim')
 	"endif
 
 	" vim-json: Better JSON formatting
-	call SourceDotfile('plugins/json.vim')
+	call s:PlugFile('plugins/json.vim')
 
 	" Git plugins
 	" Gitgutter: Shows signs for added, modifed, removed lines in current git repo
 	" Fugitive: Git vim commands
-	call SourceDotfile('plugins/git.vim')
+	call s:PlugFile('plugins/git.vim')
 
 
 	"""""""""""""""
 	" Other plugins
 
 	" Vim-Signature: Show marks
-	Plug 'kshenoy/vim-signature' "Show marks
+	call s:Plug('kshenoy/vim-signature') "Show marks
 
 	" Vim-Easymotion: Faster motions
-	"Plug 'easymotion/vim-easymotion'
+	"call s:Plug('easymotion/vim-easymotion')
 
 	" Vim-autoread: Reload files when they change on disk
-	"Plug 'djoshea/vim-autoread'
+	"call s:Plug('djoshea/vim-autoread')
 
 	" Bufexplorer: Easily navigate buffers using \be, \bv, \bs
 	if has('nvim') || v:version >= 703
-		Plug 'jlanzarotta/bufexplorer'
+		call s:Plug('jlanzarotta/bufexplorer')
 	endif
 
 	" Adds XtermColorTable command to list all available terminal colors
-	"Plug 'guns/xterm-color-table.vim'
+	"call s:Plug('guns/xterm-color-table.vim')
 
 	" i3 status syntax
-	Plug 'PotatoesMaster/i3-vim-syntax', { 'for': 'vim' }
+	call s:Plug('PotatoesMaster/i3-vim-syntax', { 'for': 'vim' })
 
 	" Tmux syntax highlighting
-	Plug 'tmux-plugins/vim-tmux', { 'for': 'tmux' }
+	call s:Plug('tmux-plugins/vim-tmux', { 'for': 'tmux' })
 
 	" Vim-DevIcons: Adds a lot more icons to vim (e.g. NerdTree file types)
 	" NOTE: Requires a "Nerd Font" (i.e. patched font), from https://github.com/ryanoasis/nerd-fonts
-	Plug 'ryanoasis/vim-devicons'
+	call s:PlugMinimal('ryanoasis/vim-devicons')
 
 	" Vim-Minimap
 	" NOTE: Requires Braille glyph support
-	"Plug 'severin-lemaignan/vim-minimap', { 'on': ['Minimap'] }
+	"call s:Plug('severin-lemaignan/vim-minimap', { 'on': ['Minimap')] }
 
 	" HiLinkTrace - debug highlight groups using :HLT
-	"Plug 'gerw/vim-HiLinkTrace', { 'on': ['HLT', 'HLT!'] }
+	"call s:Plug('gerw/vim-HiLinkTrace', { 'on': ['HLT', 'HLT!')] }
 
 	" Abolish.vim: working with variants of a word
 	" See github for examples, but I use it for %S (case-aware substitution)
-	Plug 'tpope/vim-abolish'
+	call s:Plug('tpope/vim-abolish')
 
 	" commentary.vim: Adds the 'gc' mappings to comment/uncomment code automatically
-	"Plug 'tpope/vim-commentary'
+	"call s:Plug('tpope/vim-commentary')
 
 	" vc.vim: VCS commands
-	"Plug 'juneedahamed/vc.vim'
+	"call s:Plug('juneedahamed/vc.vim')
 
 
+"""""
+" Done
 call plug#end()

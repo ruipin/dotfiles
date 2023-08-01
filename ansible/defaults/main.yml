@@ -1,0 +1,16 @@
+#####
+# ZSH
+
+# Whether to change the user's default shell or not
+# Requires being root, or otherwise be able to escalate privileges
+cfg_zsh__change_default_shell: false
+
+
+#####
+# Vim / Neovim
+
+# Whether to configure vim
+cfg_vim__enabled: false
+
+# Whether to configure neovim
+cfg_neovim__enabled: true

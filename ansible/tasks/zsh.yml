@@ -1,6 +1,7 @@
 - name: Check if /bin/zsh exists
   ansible.builtin.stat:
     path: /bin/zsh
+    get_checksum: false
   register: bin_zsh
 
 - name: Pick zsh executable to use
@@ -49,7 +50,7 @@
 - name: Change user's default shell
   become: true
   become_user: root
-  when: zsh_change_default_shell
+  when: cfg_zsh__change_default_shell
   ansible.builtin.user:
     name: "{{ whoami.stdout }}"
     shell: "{{ zsh_path }}"

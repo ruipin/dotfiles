@@ -13,9 +13,11 @@
 
 - import_tasks: neovim.yml
   tags: neovim
+  when: cfg_neovim__enabled
 
 - import_tasks: vim.yml
   tags: vim
+  when: cfg_vim__enabled
 
 - import_tasks: tmux.yml
   tags: tmux

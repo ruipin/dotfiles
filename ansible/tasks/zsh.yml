@@ -43,6 +43,7 @@
     executable: "{{ zsh_path }}"
     cmd: files/install_zplug.sh
   register: zplug_install
+  timeout: 30
   changed_when:
     - zplug_install.changed
     - zplug_install.stdout

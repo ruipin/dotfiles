@@ -9,7 +9,7 @@
 # Left prompt
 mkprompt_start "PROMPT"
 
-if is_ssh ; then
+if is_ssh || is_sudo ; then
 	mkprompt_username "$fg[blue]" --root-style "$bg[magenta]$fg_bold[black]"
 	mkprompt_set_delim "@"
 	mkprompt_hostname "$fg[yellow]"

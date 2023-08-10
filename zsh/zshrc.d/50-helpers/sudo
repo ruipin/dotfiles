@@ -1,0 +1,12 @@
+#########################################
+# helpers/sudo
+# Author: Rui Pinheiro
+#
+# sudo-related helpers
+
+
+# Returns non-zero if this is a sudo session
+function is_sudo {
+	[[ -n "$SUDO_USER" || -n "$SUDO_COMMAND" || -n "$SUDO_UID" || -n "$SUDO_GID" ]] && return 0
+	return 1
+}

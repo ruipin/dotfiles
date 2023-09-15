@@ -39,6 +39,8 @@
     - "not 'msg' in zplug_clone or not 'Local modifications exist' in zplug_clone.msg"
 
 - name: Install and update zplug plugins
+  vars:
+    ansible_shell_allow_world_readable_temp: true
   ansible.builtin.script:
     executable: "{{ zsh_path }}"
     cmd: files/install_zplug.sh

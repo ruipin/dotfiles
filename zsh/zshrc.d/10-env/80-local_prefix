@@ -13,6 +13,12 @@ if [[ ! -z "${ZSH_ARCH}" && ! "${LOCAL_PREFIX}" == *"_${ZSH_ARCH}" && -d "${LOCA
 	LOCAL_PREFIX="${LOCAL_PREFIX}_${ZSH_ARCH}"
 fi
 
+# Use .local if present
+if [[ -z "$LOCAL_PREFIX" && -d ~/.local ]]; then
+	LOCAL_PREFIX=~/.local
+fi
+
+
 function activate_local_prefix {
 	# Do nothing is no local prefix is defined
 	[[ -z "$LOCAL_PREFIX" ]] && return 1
@@ -40,7 +46,7 @@ function activate_local_prefix {
 
 	# LUA override
 	#export LUA_PREFIX="${LOCAL_PREFIX}"
-	
+
 	is_true "${1:-1}" && rehash
 
 }

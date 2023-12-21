@@ -39,6 +39,7 @@
 
     // Terminal - Misc
     "terminal.integrated.smoothScrolling": true, // Smooth scroll terminal
+    "terminal.integrated.stickyScroll.enabled": true, // Sticky scroll in terminal
 
 
     //-----------------

@@ -32,8 +32,6 @@ if [[ -z "$LOCAL_PREFIX" ]]; then
   export LOCAL_PREFIX="/usr/local"
 fi
 
-exit 0
-
 # Save current PWD
 export OLD_PWD="$PWD"
 

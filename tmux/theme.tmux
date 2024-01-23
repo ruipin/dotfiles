@@ -38,12 +38,16 @@ set -g status-right-length 60
 set -g status-left-length 20
 
 setw -g window-status-current-style fg=colour81,bg=colour238,bold
-setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F #[fg=colour250]#T '
+setw -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour255]#W#[fg=colour50]#F #[fg=colour250]#{=/30/⋯:pane_title} '
 
 setw -g window-status-style fg=colour138,bg=colour235
-setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F #T '
+setw -g window-status-format ' #I#[fg=colour237]:#[fg=colour250]#W#[fg=colour244]#F #{=/30/⋯:pane_title} '
 
 setw -g window-status-bell-style fg=colour138,bg=colour235
+
+set -g pane-border-indicators both
+set-hook -g window-layout-changed 'set-window -F pane-border-status "#{?#{==:#{window_panes},1},off,top}"'
+set -g pane-border-format '#{?#{==:#{pane_active},1},#[bg=colour2]#[bold],#[bg=colour14]} #[fg=colour130]#P#{?#{==:#{pane_active},1},#[fg=colour252]:#[fg=colour255], #[fg=colour253]}#{pane_current_command}#{?#{==:#{pane_active},1},#[fg=colour235],#[fg=colour240]} #{pane_title} '
 
 set -g status-interval 5 # refresh 'status-left' and 'status-right' more often
 setw -g aggressive-resize on # super useful when using "grouped sessions" and multi-monitor setup

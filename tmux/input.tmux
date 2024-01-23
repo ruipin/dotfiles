@@ -27,7 +27,7 @@ setw -g xterm-keys on
 # Key bindings
 
 # Reload config file
-bind r source-file ~/.tmux.conf
+bind M-r source-file ~/.tmux.conf
 
 # Re-map prefix
 set -g prefix M-Space
@@ -80,14 +80,15 @@ bind -n M-a previous-window
 bind -n M-á previous-window
 bind -n M-d next-window
 
+# Switch sessions
+bind -n M-x switch-client -p
+bind -n M-z switch-client -n
+
 # Open/Close Windows/Sessions/Server
 bind -n M-w new-window -c '#{pane_current_path}'
 bind -n M-s confirm kill-window
 bind DC confirm kill-server # Delete
 bind Escape confirm kill-session
-
-# Restart Current Pane
-bind -n M-r confirm-before -p "respawn-pane -k #P? (y/n)" "respawn-pane -k"
 
 # Select Window By Number (Alt+Number)
 bind -n M-1 select-window -t :1
@@ -100,6 +101,27 @@ bind -n M-7 select-window -t :7
 bind -n M-8 select-window -t :8
 bind -n M-9 select-window -t :9
 bind -n M-0 select-window -t :0
+
+# Select Session By Number (Prefix followed by Number)
+bind 1 switch-client -t $1:
+bind 2 switch-client -t $2:
+bind 3 switch-client -t $3:
+bind 4 switch-client -t $4:
+bind 5 switch-client -t $5:
+bind 6 switch-client -t $6:
+bind 7 switch-client -t $7:
+bind 8 switch-client -t $8:
+bind 9 switch-client -t $9:
+bind 0 switch-client -t $0:
+
+# Create Session
+bind -n M-c new-session
+
+# Rename Window
+bind -n M-r command-prompt -I "#W" { rename-window "%%" }
+
+# Rename Session
+bind r command-prompt -I "#S" { rename-session "%%" }
 
 # Page-up/down without prefix
 bind -n PPage if -Ft= '#{alternate_on}' "send-keys PPage" "copy-mode\; send-keys PPage"

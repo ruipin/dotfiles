@@ -7,7 +7,9 @@
 
 ###################
 # default colorizer
-if in_path "colout" ; then
+if in_path "grcat" ; then
+	export COLORIZER="grcat"
+elif in_path "colout" ; then
 	export COLORIZER="colout"
 else
 	# Fall-back to 'cat'

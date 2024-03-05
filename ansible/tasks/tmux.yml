@@ -16,9 +16,10 @@
     GIT_TERMINAL_PROMPT: '0'
 
 - name: Install TPM plugins
-  ansible.builtin.shell: |-
-    export DOTFILES=~/dotfiles
-    ~/.tmux/plugins/tpm/bin/install_plugins
+  ansible.builtin.shell:
+    cmd: |-
+      export DOTFILES=~/dotfiles
+      ~/.tmux/plugins/tpm/bin/install_plugins
   register: tpm_install
   changed_when:
     - tpm_install.changed

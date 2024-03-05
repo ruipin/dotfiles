@@ -6,7 +6,17 @@
 
 #######
 # Aliases
-alias ls="ls --color=auto --human-readable --hide='*.pyc' --hide='__pycache__'"
+function _set_ls_alias {
+	local ls="ls --color=auto -h"
+
+	if [[ "$ZSH_OSNAME" != "freebsd" ]]; then
+		ls="$ls --hide='*.pyc' --hide='__pycache__'"
+	fi
+
+	alias ls="$ls"
+}
+_set_ls_alias
+unfunction _set_ls_alias
 
 function ls. {
 	setopt local_options null_glob
@@ -25,4 +35,18 @@ alias lla="ll -A"
 
 #######
 # LS_COLORS
-[[ ! -z "$ZSH_DIRCOLORS_PATH" ]] && eval `dircolors --sh $ZSH_DIRCOLORS_PATH`
+function generate_dircolors {
+	[[ -z "$ZSH_DIRCOLORS_PATH" ]] && return
+
+	local dircolors
+	if in_path "dircolors" ; then
+		dircolors="dircolors"
+	elif in_path "gdircolors" ; then
+		dircolors="gdircolors"
+	fi
+
+	if [[ ! -z "$dircolors" ]]; then
+		eval `"$dircolors" --sh "$ZSH_DIRCOLORS_PATH"`
+	fi
+}
+generate_dircolors

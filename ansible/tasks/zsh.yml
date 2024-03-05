@@ -4,9 +4,23 @@
     get_checksum: false
   register: bin_zsh
 
+- name: Check if /usr/local/bin/zsh exists
+  ansible.builtin.stat:
+    path: /usr/local/bin/zsh
+    get_checksum: false
+  register: usr_local_bin_zsh
+  when: not (bin_zsh.stat.executable|d(false))
+
+- debug: var=usr_local_bin_zsh
+
 - name: Pick zsh executable to use
   ansible.builtin.set_fact:
-    zsh_path: "{{ '/bin/zsh' if bin_zsh.stat.executable else lookup('pipe', 'which zsh') }}"
+    zsh_path: |-
+      {{
+        bin_zsh          .stat.path if (bin_zsh          .stat.executable|d(false)) else
+        usr_local_bin_zsh.stat.path if (usr_local_bin_zsh.stat.executable|d(false)) else
+        lookup('pipe', 'which zsh')
+      }}
 
 - name: Symlink ~/dotfiles/zsh/zshrc to ~/.zshrc
   ansible.builtin.file:

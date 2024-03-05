@@ -9,7 +9,14 @@
 # NOTE: Requires shelling out, so shouldn't be abused during shell init
 function get_fs_name {
 	local fspath="${1-.}"
-	stat -f -L -c %T "$fspath"
+	local fstype err
+
+	fstype="$(stat -f -L -c %T "$fspath" 2>/dev/null)"
+	err="$?"
+
+	[[ "$err" -ne "0" ]] && return "$err"
+
+	echo "$fstype"
 }
 
 
@@ -18,7 +25,11 @@ function get_fs_name {
 # NOTE (2): The list of remote file systems is not exhaustive
 # NOTE (3): Does not necessarily return the opposite of is_local_fs
 function is_remote_fs {
-	local fstype=$( get_fs_name $* )
+	local fstype err
+
+	fstype="$( get_fs_name $@ )"
+	err="$?"
+	[[ "$err" -ne "0" ]] && return 1
 
 	case "$fstype" in
 	"nfs"|"cifs"|"sshfs")
@@ -35,7 +46,11 @@ function is_remote_fs {
 # NOTE (2): The list of local file systems is not exhaustive
 # NOTE (3): Does not necessarily return the opposite of is_remote_fs
 function is_local_fs {
-	local fstype=$( get_fs_name $@ )
+	local fstype err
+
+	fstype="$( get_fs_name $@ )"
+	err="$?"
+	[[ "$err" -ne "0" ]] && return 0
 
 	case "$fstype" in
 	"ext"*|"ntfs"*)

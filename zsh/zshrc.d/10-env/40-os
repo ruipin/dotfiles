@@ -143,6 +143,7 @@ function refresh_os_info {
 	osver="${osver:l}"
 
 	[[ "$osname" == "redhatenterpriseserver" || "$osname" == "rhel" ]] && osname="rhe"
+	[[ "$osname" == "freebsd"* ]] && osname="freebsd"
 
 	local osmajver="${osver%%.*}"
 

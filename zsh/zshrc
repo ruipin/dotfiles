@@ -139,9 +139,12 @@ function _zshrcd {
 
 	# Detect network file system
 	if [[ "$_zshrcd_concatenate" -eq "2" ]]; then
-		local fstype=$( stat -f -L -c %T "$ZSH_HOME" )
+		local fstype err
+		fstype="$( stat -f -L -c %T "$ZSH_HOME" 2>/dev/null )"
+		err="$?"
+
 		_zshrcd_debug "\$ZSH_HOME file system is '$fstype'"
-		if [[ "$fstype" = "nfs" ]]; then
+		if [[ "$err" -eq "0" && "$fstype" = "nfs" ]]; then
 			_zshrcd_concatenate=1
 		else
 			_zshrcd_concatenate=0

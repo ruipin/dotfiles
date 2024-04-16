@@ -10,7 +10,15 @@ if ! in_path "pyenv" ; then
 fi
 
 if in_path "pyenv" ; then
-	eval "$(pyenv init -)"
+	function pyenv {
+		echo_info "Lazy-loading 'pyenv'..." "pyenv"
 
-	[[ -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ]] && eval "$(pyenv virtualenv-init -)"
+		unfunction pyenv
+
+		eval "$(pyenv init -)"
+		[[ -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ]] && eval "$(pyenv virtualenv-init -)"
+
+		[[ -z "$@" ]] && return 0
+		pyenv "$@"
+	}
 fi

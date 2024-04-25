@@ -11,8 +11,6 @@
   register: usr_local_bin_zsh
   when: not (bin_zsh.stat.executable|d(false))
 
-- debug: var=usr_local_bin_zsh
-
 - name: Pick zsh executable to use
   ansible.builtin.set_fact:
     zsh_path: |-

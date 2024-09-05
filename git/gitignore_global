@@ -9,3 +9,4 @@
 .svls.toml
 .svlint.toml
 .dvt
+dvt_build.log

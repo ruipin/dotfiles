@@ -2,7 +2,7 @@
 
 # Init
 source "$(dirname $(readlink -f $0))/lib_update.bash"
-clone "tmux" --github "tmux/tmux" --ver "3.3a.tar.gz" $@
+clone "tmux" --github "tmux/tmux" --ver "3.4.tar.gz" $@
 
 
 # Disable reflow functionality

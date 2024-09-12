@@ -9,3 +9,12 @@ setopt autocd
 
 # Make cd behave like pushd
 setopt pushdtohome autopushd
+
+# Support using standalone . to cd $PWD
+function . {
+	if [[ "$#" -ne 0 ]]; then
+		builtin . "$@"
+	else
+		cd "$PWD"
+	fi
+}

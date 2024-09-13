@@ -96,8 +96,13 @@ function init_completion {
 	####################
 	# Disable ~<user> directory autocompletion as it's slow in systems with a lot of users
 	function _users {
-		compadd -X "users" "$USER" 
+		compadd -X "users" "$USER"
 	}
+
+	####################
+	# Add support for bash autocompletion
+	autoload -U bashcompinit
+	bashcompinit
 
 	####################
 	# Unset function to avoid accidental calls

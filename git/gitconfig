@@ -98,6 +98,8 @@
   d = diff
 
   # commit
+  c   = commit
+  cm  = commit -m
   ci  = commit
   cim = commit -m
   ca  = commit --amend --no-edit

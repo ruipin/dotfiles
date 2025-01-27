@@ -46,7 +46,7 @@ function init_custom_module {
 		module orig purge
 		if [[ ! -z "$_module_defaults" ]]; then
 			module load "$@" "${_module_defaults[@]}" \
-				|| return "$?" 
+				|| return "$?"
 		fi
 
 		# Restore variables
@@ -128,7 +128,7 @@ function init_custom_module {
 	typeset -gA _module_cmd_deps=()
 	typeset -gA _module_aliases=()
 	typeset -g  _module_defaults=()
-	
+
 	typeset -g _module_alias_symbol="%"
 	typeset -g _module_name_symbol=":"
 
@@ -265,7 +265,7 @@ function init_custom_module {
 
 		# Execute shadowed command
 		#echo_debug "$cmd $args" "module_autoload"
-		"$cmd" "$args"
+		"$cmd" "${args[@]}"
 	}
 
 	function _module_autoload {
@@ -318,7 +318,7 @@ function init_custom_module {
 				fi
 			esac
 		done
-		
+
 		_module_deps[${malias}]="$mdeps"
 		return 0
 	}

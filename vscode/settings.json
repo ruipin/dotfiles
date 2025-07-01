@@ -14,7 +14,7 @@
 
     // Editor - Font
     "editor.fontFamily": "MesloLGSDZ NF",
-    "editor.fontSize": 13,
+    "editor.fontSize": 14,
     "editor.fontLigatures": true,
 
     // Editor - Smooth scrolling
@@ -45,6 +45,7 @@
 
     //-----------------
     // UI
+    "workbench.activityBar.location": "top",
     "workbench.view.alwaysShowHeaderActions": true,
 
     // UI - Editor tab sizings ('shrink' = allow reducing if necessary to save space)
@@ -52,7 +53,7 @@
 
     // UI - Colors
     "workbench.colorCustomizations": {
-        "editorIndentGuide.activeBackground": "#93a1a191", // Active indentation guide
+        "editorIndentGuide.activeBackground1": "#93a1a191", // Active indentation guide
         "editorRuler.foreground": "#93a1a140", // Vertical rulers
 
         "editorWhitespace.foreground": "#93a1a135", // Whitespace indicators
@@ -105,14 +106,6 @@
 
 
     //-----------------
-    // Favourites
-    "favorites.storageFilePath": ".favorites.json",
-    "favorites.storageRegistry": [
-        "../favorites.json"
-    ],
-
-
-    //-----------------
     // Git / Gitlens
     "git.enableSmartCommit": false, // No automatic commits
     "git.autofetch": false, // No auto-fetching
@@ -158,12 +151,6 @@
 
 
     //-----------------
-    // Dynamic Tabs
-    "dynamicTab.indentBasedOnPrecedingLine": true, // Match indent with previous line
-    "dynamicTab.numberOfPreviousLinesToSearch": 2, // Search up to two lines
-
-
-    //-----------------
     // Copilot
     "chat.commandCenter.enabled": true,
     "github.copilot.enable": {
@@ -183,7 +170,6 @@
     // VSCodeVim - see https://marketplace.visualstudio.com/items?itemName=vscodevim.vim
     "vim.visualstar": true, // Allow searching using */# in visual mode
     "vim.highlightedyank.enable": true, // Highlight yank target when yanking
-    "vim.debug.silent": true, // Disable logging for performance
     "vim.gdefault": true, // Assume '/g' is default when doing text replacement commands
     "vim.hlsearch": true, // Show text matches of the most recent search command
     "vim.ignorecase": false, // Do not ignore case when searching - can use '\c' to ignore case
@@ -240,7 +226,6 @@
     "vim.normalModeKeyBindingsNonRecursive": [
         // Tab enters insert mode with proper indentation
         { "before": ["<Tab>"], "commands": ["tab"], "after": ["i"], "silent": true },
-        //{ "before": ["<Tab>"], "commands": ["extension.dynamictabkey"], "after": ["i"], "silent": true },
 
         // Use <leader> + / to disable search highlights (:nohl)
         { "before": ["<leader>", "/"], "commands": [":nohl"] },
@@ -250,32 +235,6 @@
 
         // Use semicolon to open the command palette (Ctrl-Shift-P)
         { "before": [";"], "commands": ["workbench.action.showCommands"] },
-
-        // Extension - Numbered Bookmarks
-        // Use 'm' to create numbered bookmarks
-        { "before": ["m","0"], "commands": ["numberedBookmarks.toggleBookmark0"] },
-        { "before": ["m","1"], "commands": ["numberedBookmarks.toggleBookmark1"] },
-        { "before": ["m","2"], "commands": ["numberedBookmarks.toggleBookmark2"] },
-        { "before": ["m","3"], "commands": ["numberedBookmarks.toggleBookmark3"] },
-        { "before": ["m","4"], "commands": ["numberedBookmarks.toggleBookmark4"] },
-        { "before": ["m","5"], "commands": ["numberedBookmarks.toggleBookmark5"] },
-        { "before": ["m","6"], "commands": ["numberedBookmarks.toggleBookmark6"] },
-        { "before": ["m","7"], "commands": ["numberedBookmarks.toggleBookmark7"] },
-        { "before": ["m","8"], "commands": ["numberedBookmarks.toggleBookmark8"] },
-        { "before": ["m","9"], "commands": ["numberedBookmarks.toggleBookmark9"] },
-        // Jump to numbered bookmarks with '#
-        { "before": ["'","0"], "commands": ["numberedBookmarks.jumpToBookmark0"] },
-        { "before": ["'","1"], "commands": ["numberedBookmarks.jumpToBookmark1"] },
-        { "before": ["'","2"], "commands": ["numberedBookmarks.jumpToBookmark2"] },
-        { "before": ["'","3"], "commands": ["numberedBookmarks.jumpToBookmark3"] },
-        { "before": ["'","4"], "commands": ["numberedBookmarks.jumpToBookmark4"] },
-        { "before": ["'","5"], "commands": ["numberedBookmarks.jumpToBookmark5"] },
-        { "before": ["'","6"], "commands": ["numberedBookmarks.jumpToBookmark6"] },
-        { "before": ["'","7"], "commands": ["numberedBookmarks.jumpToBookmark7"] },
-        { "before": ["'","8"], "commands": ["numberedBookmarks.jumpToBookmark8"] },
-        { "before": ["'","9"], "commands": ["numberedBookmarks.jumpToBookmark9"] },
-        // Clear all bookmarks with <leader> + m
-        { "before": ["<leader>", "m"], "commands": ["numberedBookmarks.clear"] },
     ],
 
     "vim.visualModeKeyBindings": [

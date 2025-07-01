@@ -36,6 +36,7 @@
     "editor.wrappingIndent": "indent", // Add one extra indent when wordwrapping
     "editor.mouseWheelScrollSensitivity": 2, // Increase scrolling sensitivity
     "editor.stickyScroll.enabled": true, // Show nested scopes during scroll at top of editor
+    "workbench.tree.enableStickyScroll": true, // Show nested scopes during scroll at top of tree view
 
     // Terminal - Misc
     "terminal.integrated.smoothScrolling": true, // Smooth scroll terminal
@@ -163,6 +164,22 @@
 
 
     //-----------------
+    // Copilot
+    "chat.commandCenter.enabled": true,
+    "github.copilot.enable": {
+        "*": true
+    },
+    "github.copilot.nextEditSuggestions.enabled": true,
+
+    // Inline Suggestions
+    "editor.inlineSuggest.enabled": true,
+    "editor.inlineSuggest.showToolbar": "always", // 'never', 'always', 'onHover'
+    "editor.inlineSuggest.edits.allowCodeShifting": "always", // 'always', 'horizontal', 'never'
+    "editor.inlineSuggest.edits.renderSideBySide": "auto", // 'auto', 'never'
+    "editor.inlineSuggest.syntaxHighlightingEnabled": true,
+
+
+    //-----------------
     // VSCodeVim - see https://marketplace.visualstudio.com/items?itemName=vscodevim.vim
     "vim.visualstar": true, // Allow searching using */# in visual mode
     "vim.highlightedyank.enable": true, // Highlight yank target when yanking
@@ -171,6 +188,7 @@
     "vim.hlsearch": true, // Show text matches of the most recent search command
     "vim.ignorecase": false, // Do not ignore case when searching - can use '\c' to ignore case
     "vim.maxmapdepth": 100, // Reduce number of recursive key mappings allowed
+    "vim.showMarksInGutter": true, // Show vim-marks ('mX') in gutter
     "vim.useSystemClipboard": true,
 
     // Vim keybindings
@@ -289,6 +307,13 @@
 
     // Vim - EasyMotion
     "vim.easymotion": true, // Enable vim-easymotion
+
+    //-----------------
+    // Extension Affinity
+    // See https://github.com/microsoft/vscode/issues/75627#issuecomment-1078827311
+    "extensions.experimental.affinity": {
+        "vscodevim.vim": 1,
+    },
 
 
     //-----------------

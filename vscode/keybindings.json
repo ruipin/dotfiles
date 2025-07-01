@@ -67,6 +67,29 @@
     { "key": "ctrl+n", "command": "-workbench.action.files.newUntitledFile" },
     { "key": "ctrl+n", "command": "workbench.action.toggleSidebarVisibility" },
 
+    // Inline Suggestions / Github Copilot
+    {
+        "key": "ctrl+shift",
+        "command": "editor.action.inlineSuggest.acceptNextLine",
+        "when": "inlineEditIsVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !suggestWidgetVisible || inlineSuggestionVisible && !editorHoverFocused && !suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+shift+tab",
+        "command": "editor.action.inlineSuggest.commit",
+        "when": "inlineEditIsVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !suggestWidgetVisible || inlineSuggestionVisible && !editorHoverFocused && !suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+tab",
+        "command": "editor.action.inlineSuggest.jump",
+        "when": "inlineEditIsVisible && tabShouldJumpToInlineEdit && !editorHoverFocused && !suggestWidgetVisible"
+    },
+    { "key": "ctrl+oem_8" /* oem_8 = ` */, "command": "editor.action.inlineSuggest.showPrevious", "when": "inlineSuggestionVisible && !editorReadonly" },
+    { "key": "ctrl+1", "command": "editor.action.inlineSuggest.showNext", "when": "inlineSuggestionVisible && !editorReadonly" },
+    { "key": "alt+i", "command": "editor.action.inlineSuggest.trigger", "when": "editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible" },
+
+    { "key": "ctrl+tab", "command": "-workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup", "when": "!activeEditorGroupEmpty" },
+    { "key": "ctrl+tab", "command": "-workbench.action.quickOpenNavigateNextInEditorPicker", "when": "inEditorsPicker && inQuickOpen" },
+
     // Extension - Smart Delete
     // Use Shift+Delete and Shift+Backspace
     { "key": "shift+delete"   , "command": "smartDelete.right" , "when": "editorTextFocus" },
@@ -79,5 +102,5 @@
     //{ "key": "tab", "command": "extension.dynamictabkey", "when": "editorTextFocus && !editorHasSelection && !editorReadOnly && !inSnippetMode && !suggestWidgetVisible && vim.mode == 'Insert'" },
 
     // Automatically added keybindings (empty keybind is a hack to force VSCode to add new keybindings here)
-    {}
+    {},
 ]

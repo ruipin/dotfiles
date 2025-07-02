@@ -101,6 +101,8 @@
         "**/.dvt": true, // DVT Eclipse IDE
         "**/eclipse": true, // More DVT Eclipse IDE
         "**/.favorites*.json": true, // Favorites extension storage
+        "**/__pycache__": true, // Python cache
+        "**/node_modules": true, // Node.js modules
         "**/.*": true, // Anything else starting with a dot
     },
 

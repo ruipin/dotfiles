@@ -153,6 +153,14 @@
 
 
     //-----------------
+    // Python - Pylance
+    "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
+    "python.analysis.typeCheckingMode": "standard",
+    // Python - Mypy
+    "python.createEnvironment.trigger": "off",
+
+
+    //-----------------
     // Copilot
     "chat.commandCenter.enabled": true,
     "github.copilot.enable": {

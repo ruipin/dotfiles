@@ -22,7 +22,7 @@
 
     // Move between editors within a group with Ctrl+A/D
     { "key": "ctrl+d", "command": "workbench.action.nextEditorInGroup"    , "when": "editorFocus" },
-    { "key": "ctrl+a", "command": "workbench.action.previousEditorInGroup", "when": "editorFocus" },
+    { "key": "ctrl+a", "command": "workbench.action.previousEditorInGroup", "when": "editorFocus && !findInputFocussed" },
 
     // Move editors within a group with Ctrl+Shift+A/D
     { "key": "ctrl+shift+d", "command": "workbench.action.moveEditorRightInGroup", "when": "editorFocus" },
@@ -50,12 +50,12 @@
     {
         "key": "ctrl+tab",
         "command": "editor.action.inlineSuggest.commit",
-        "when": "inlineEditIsVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !suggestWidgetVisible || inlineSuggestionVisible && !editorHoverFocused && !suggestWidgetVisible"
+        "when": "inlineEditIsVisible && tabShouldAcceptInlineEdit && !editorHoverFocused || inlineSuggestionVisible && !editorHoverFocused"
     },
     {
         "key": "ctrl+shift+tab",
         "command": "editor.action.inlineSuggest.acceptNextLine",
-        "when": "inlineEditIsVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !suggestWidgetVisible || inlineSuggestionVisible && !editorHoverFocused && !suggestWidgetVisible"
+        "when": "inlineEditIsVisible && tabShouldAcceptInlineEdit && !editorHoverFocused || inlineSuggestionVisible && !editorHoverFocused"
     },
     {
         "key": "ctrl+tab",

@@ -6,7 +6,7 @@
 """""""""""""""""""""""""""""""""""""""""
 
 if has('nvim')
-	Plug 'iCyMind/NeoSolarized'
+	Plug 'maxmx03/solarized.nvim'
 else
 	Plug 'altercation/vim-colors-solarized'
 endif
@@ -18,11 +18,7 @@ set background=dark
 autocmd VimEnter * call SetColorScheme()
 function SetColorScheme()
 	" Color Scheme
-	if has('nvim')
-		colorscheme NeoSolarized
-	else
-		colorscheme solarized
-	endif
+	colorscheme solarized
 
 	" Plugins
 	if exists("*SetFoldColorScheme")

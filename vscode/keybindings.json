@@ -76,6 +76,9 @@
     { "key": "shift+backspace", "command": "smartDelete.left"  , "when": "editorTextFocus" },
     { "key": "backspace"      , "command": "-smartDelete.left" , "when": "editorTextFocus" },
 
+    // Disable terminal keybindings that overlap with common vim keybindings
+    { "key": "ctrl+v", "command": "-workbench.action.terminal.paste", "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported" },
+
     // Automatically added keybindings (empty keybind is a hack to force VSCode to add new keybindings here)
     {},
 ]

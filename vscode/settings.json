@@ -13,9 +13,14 @@
     "editor.tabSize": 4, // Use 4-space tabs
 
     // Editor - Font
-    "editor.fontFamily": "MesloLGSDZ NF",
-    "editor.fontSize": 14,
+    "editor.fontFamily": "MesloLGSDZ Nerd Font Mono, monospace",
+    "editor.fontSize": 13,
     "editor.fontLigatures": true,
+
+    // Terminal - Font
+    "terminal.integrated.fontFamily": "MesloLGSDZ Nerd Font Mono, monospace",
+    "terminal.integrated.fontSize": 13,
+    "terminal.integrated.minimumContrastRatio": 1,
 
     // Editor - Smooth scrolling
     "editor.smoothScrolling": true,
@@ -25,6 +30,11 @@
     // Editor - Force a minimum of N surrounding lines above/below cursor
     "editor.cursorSurroundingLines": 3,
     "editor.cursorSurroundingLinesStyle": "all",
+
+    // Editor - Minimap
+    "editor.minimap.enabled": true, // Enable minimap
+    "editor.minimap.scale": 2, // Scale minimap to 2x
+    "editor.minimap.maxColumn": 120, // Show minimap up to 120 columns wide
 
     // Editor - Misc
     "editor.renderControlCharacters": true, // Always render all control character
@@ -156,8 +166,11 @@
     // Python - Pylance
     "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
     "python.analysis.typeCheckingMode": "standard",
-    // Python - Mypy
     "python.createEnvironment.trigger": "off",
+    "python.analysis.generateWithTypeAnnotation": true,
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.variableTypes": true,
+    "python.analysis.languageServerMode": "full",
 
 
     //-----------------
@@ -283,6 +296,11 @@
     "extensions.experimental.affinity": {
         "vscodevim.vim": 1,
     },
+
+
+    //-----------------
+    // Terminal
+    "terminal.integrated.defaultProfile.windows": "Arch (WSL)",
 
 
     //-----------------

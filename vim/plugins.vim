@@ -112,6 +112,11 @@ endif
 	"""""""""""""""
 	" Other plugins
 
+	" Needed for solarized theme
+	if has('nvim')
+		call s:PlugMinimal('nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'})
+	endif
+
 	" Vim-Signature: Show marks
 	call s:Plug('kshenoy/vim-signature') "Show marks
 
@@ -160,3 +165,5 @@ endif
 """""
 " Done
 call plug#end()
+
+lua require'nvim-treesitter.configs'.setup{highlight={enable=true}}

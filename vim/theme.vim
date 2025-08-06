@@ -6,7 +6,9 @@
 """""""""""""""""""""""""""""""""""""""""
 
 if has('nvim')
-	Plug 'maxmx03/solarized.nvim'
+	"Plug 'maxmx03/solarized.nvim'
+	Plug 'shaunsingh/solarized.nvim'
+	"Plug 'ishan9299/nvim-solarized-lua'
 else
 	Plug 'altercation/vim-colors-solarized'
 endif

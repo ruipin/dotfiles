@@ -60,7 +60,7 @@
   timeout: 30
   changed_when:
     - zplug_install.changed
-    - zplug_install.stdout
+    - zplug_install.stdout is truthy
 
 - name: Change user's default shell
   become: true

@@ -2,7 +2,7 @@
 
 # We need to patch zplug to run properly without an interactive shell
 # Otherwise it believes we are trying to pipe in a command
-sed -i '' -e 's~\[\[ -p /dev/stdin ]]~false~' ~/.zplug/base/core/add.zsh
+sed -i -e 's~\[\[ -p /dev/stdin ]]~false~' ~/.zplug/base/core/add.zsh
 
 # Prepare environment
 export ZPLUG_ROOT=~/.zplug

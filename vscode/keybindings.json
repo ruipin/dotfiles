@@ -69,6 +69,11 @@
     { "key": "ctrl+tab", "command": "-workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup", "when": "!activeEditorGroupEmpty" },
     { "key": "ctrl+tab", "command": "-workbench.action.quickOpenNavigateNextInEditorPicker", "when": "inEditorsPicker && inQuickOpen" },
 
+    // Disable default 'Tab' keybinding for accepting suggestions
+    { "key": "tab", "command": "-editor.action.inlineSuggest.commit", "when": "inlineEditIsVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible || inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible || inlineEditIsVisible && inlineSuggestionHasIndentationLessThanTabSize && inlineSuggestionVisible && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible || inlineEditIsVisible && inlineSuggestionVisible && tabShouldAcceptInlineEdit && !editorHoverFocused && !editorTabMovesFocus && !suggestWidgetVisible" },
+    { "key": "tab", "command": "-editor.action.inlineSuggest.commit", "when": "inInlineEditsPreviewEditor" },
+    { "key": "tab", "command": "-ansible.lightspeed.inlineSuggest.accept", "when": "inlineSuggestionVisible && editorLangId == 'ansible'" },
+
     // Extension - Smart Delete
     // Use Shift+Delete and Shift+Backspace
     { "key": "shift+delete"   , "command": "smartDelete.right" , "when": "editorTextFocus" },

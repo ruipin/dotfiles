@@ -2,7 +2,7 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: '750'
+    mode: '0750'
   with_items:
     - ~/.config/nvim
     - ~/.local/share/nvim/site/autoload

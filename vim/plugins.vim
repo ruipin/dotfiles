@@ -113,7 +113,7 @@ endif
 	" Other plugins
 
 	" Needed for solarized theme
-	if has('nvim')
+	if has('nvim-0.10')
 		call s:PlugMinimal('nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'})
 	endif
 
@@ -166,4 +166,6 @@ endif
 " Done
 call plug#end()
 
-lua require'nvim-treesitter.configs'.setup{highlight={enable=true}}
+if has('nvim-0.10')
+	lua require'nvim-treesitter.configs'.setup{highlight={enable=true}}
+endif

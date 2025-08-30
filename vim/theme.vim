@@ -5,10 +5,12 @@
 " Vim color/theme configuration
 """""""""""""""""""""""""""""""""""""""""
 
-if has('nvim')
-	"Plug 'maxmx03/solarized.nvim'
+if has('nvim-0.10')
 	Plug 'shaunsingh/solarized.nvim'
+	"Plug 'maxmx03/solarized.nvim'
 	"Plug 'ishan9299/nvim-solarized-lua'
+elseif has('nvim')
+	Plug 'iCyMind/NeoSolarized'
 else
 	Plug 'altercation/vim-colors-solarized'
 endif
@@ -20,7 +22,11 @@ set background=dark
 autocmd VimEnter * call SetColorScheme()
 function SetColorScheme()
 	" Color Scheme
-	colorscheme solarized
+	if has('nvim') && !has('nvim-0.10')
+		colorscheme NeoSolarized
+	else
+		colorscheme solarized
+	endif
 
 	" Plugins
 	if exists("*SetFoldColorScheme")

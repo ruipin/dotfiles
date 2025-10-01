@@ -10,6 +10,7 @@ bierner.markdown-yaml-preamble
 bmalehorn.shell-syntax
 braver.vscode-solarized
 bung87.vscode-gemfile
+charliermarsh.ruff
 christian-kohler.path-intellisense
 coolbear.systemd-unit-file
 ctf0.smart-delete
@@ -41,6 +42,7 @@ redhat.ansible
 redhat.vscode-yaml
 shd101wyy.markdown-preview-enhanced
 sianglim.slim
+tamasfe.even-better-toml
 twxs.cmake
 usernamehw.errorlens
 visualstudioexptteam.intellicode-api-usage-examples

@@ -163,7 +163,7 @@
 
 
     //-----------------
-    // Python - Pylance
+    // Python
     "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
     "python.analysis.typeCheckingMode": "standard",
     "python.createEnvironment.trigger": "off",
@@ -171,6 +171,15 @@
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.variableTypes": true,
     "python.analysis.languageServerMode": "full",
+
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            //"source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
 
 
     //-----------------
@@ -180,6 +189,7 @@
         "*": true
     },
     "github.copilot.nextEditSuggestions.enabled": true,
+    "chat.agent.maxRequests": 100,
 
     // Inline Suggestions
     "editor.inlineSuggest.enabled": true,
